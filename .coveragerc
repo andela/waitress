@@ -1,0 +1,16 @@
+[run]
+parallel = True
+
+[report]
+omit =  
+    */python?.?/*
+    */site-packages/*
+    *__init__*
+    */photo_editor/settings/*.py
+    */migrations/*
+    */urls.py
+exclude_lines =
+    pragma: no cover
+    def
+    import
+    from

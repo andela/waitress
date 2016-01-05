@@ -1,0 +1,28 @@
+{
+  "name": "Waitress",
+  "version": "0.0.1",
+  "authors": [
+    "Oluwafemi Sule <oluwafemi.sule@andela.com>"
+  ],
+  "description": "Meal tracking application",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "waiter.herokuapp.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.5.0",
+    "jquery": "~2.1.4",
+    "angular": "~1.4.8",
+    "angular-animate": "~1.4.8",
+    "angular-moment": "~0.10.3 ",
+  }
+}

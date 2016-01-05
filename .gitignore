@@ -1,0 +1,12 @@
+# Environment file
+.env.yml
+.coveralls.yml
+
+# Logs
+*.log
+
+# Mac OS X
+.DS_Store
+
+# Virtual Environment
+env
