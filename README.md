@@ -13,7 +13,8 @@ __Available Endpoints__
             "id": 1,
             "firstname": "E",
             "lastname": "",
-            "photo": "https://avatars.slack-edge.com/...jpg"
+            "photo": "https://avatars.slack-edge.com/...jpg",
+            "is_tapped": false
         },
     ]
     ```
@@ -25,7 +26,9 @@ __Available Endpoints__
             "id": 5,
             "firstname": "A...",
             "lastname": "J...",
-            "photo": "https://avatars.slack-edge.com/...jpg"
+            "photo": "https://avatars.slack-edge.com/...jpg",
+            "is_tapped": false
+            ""
         },
     ]
     ```
