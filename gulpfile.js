@@ -98,6 +98,6 @@ gulp.task('default', function() {
 gulp.task('build', function() {
   runSequence(
     ['clean'],
-    ['lint', 'minify-css', 'browserifyDist', 'copy-html-files', 'copy-bower-components', 'connectDist']
+    ['copy-html-files', 'copy-bower-components', 'minify-css', 'browserifyDist']
   );
 });

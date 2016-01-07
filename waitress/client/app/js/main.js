@@ -16,9 +16,9 @@
       $locationProvider.hashPrefix('!');
       // routes
       $routeProvider
-        .when("/", {
-          templateUrl: "./partials/partial1.html",
-          controller: "MainController"
+        .when('/', {
+          templateUrl: './client/dist/partials/partial1.html',
+          controller: 'MainController'
         })
         .otherwise({
            redirectTo: '/'
