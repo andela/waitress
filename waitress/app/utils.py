@@ -28,7 +28,11 @@ class UserRepository(object):
             if len(difference):
                 # get user info
                 if user_info.successful:
-                    cls.filter_add_user(user_info.body['members'], difference)
+                    return cls.filter_add_user(
+                        user_info.body['members'], difference
+                    )
+            else:
+                return "Users list is remains unchanged"
 
     @classmethod
     def difference(cls, repo_users, db_users):
@@ -40,7 +44,7 @@ class UserRepository(object):
         unsaved_users = []
         if len(db_users):
             for user in db_users:
-                users.setdefault(user, 0)
+                users.setdefault(user.get('id'), 0)
 
         for user in repo_users:
             if user not in users:
@@ -58,14 +62,17 @@ class UserRepository(object):
             """
             user_dict = {}
             for item in info:
-                if (not getattr(item, 'deleted', False) or not getattr(
-                        item, 'is_bot')):
+                if not getattr(item, 'deleted', False) and not getattr(
+                        item, 'is_bot', False):
                     if 'image_original' not in item['profile']:
                         continue
                     if 'email' not in item['profile']:
                         continue
+                    print item['profile']['email']
                     firstname, lastname = re.match(
-                        '^(\w+).(\w+)', item['profile']['email']).groups()
+                        '^([\w-]+)[.]{0,1}([\w-]+){0,1}@',
+                        item['profile']['email']).groups()
+                    lastname = '' if lastname is None else lastname
                     user_dict[item['id']] = {
                         'id': item['id'],
                         'email': item['profile']['email'],
@@ -77,6 +84,15 @@ class UserRepository(object):
 
         info = normalize(info)
 
-        for user in difference:
-            if user in info:
-                SlackUser.create(info[user])
+        try:
+            not_person = []
+            for user in difference:
+                if user in info:
+                    SlackUser.create(info[user])
+                else:
+                    not_person.append(user)
+            if len(not_person):
+                return "Users list not changed"
+            return "Users updated successfully"
+        except Exception:
+            return "Users couldn't be updated successfully"
