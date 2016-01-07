@@ -44,7 +44,7 @@ class UserRepository(object):
         unsaved_users = []
         if len(db_users):
             for user in db_users:
-                users.setdefault(user.get('id'), 0)
+                users.setdefault(user.get('slack_id'), 0)
 
         for user in repo_users:
             if user not in users:
@@ -74,7 +74,7 @@ class UserRepository(object):
                         item['profile']['email']).groups()
                     lastname = '' if lastname is None else lastname
                     user_dict[item['id']] = {
-                        'id': item['id'],
+                        'slack_id': item['id'],
                         'email': item['profile']['email'],
                         'photo': item['profile']['image_original'],
                         'firstname': firstname.title(),
