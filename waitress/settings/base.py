@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangobower',
+    'rest_framework',
     'app',
 )
 
@@ -35,7 +36,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'app.middleware.SocialBinderMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -125,3 +125,9 @@ BOWER_INSTALLED_APPS = (
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+USE_TZ = True
+
+# Slack configuration parameters
+SLACK_API_TOKEN = os.getenv('SLACK_API_TOKEN')
+SLACK_GROUP = os.getenv('SLACK_GROUP')
