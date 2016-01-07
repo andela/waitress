@@ -1,1 +1,83 @@
 /* css */
+header {
+  top: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  background: #3054E3;
+  z-index: 99;
+}
+
+header .container {
+  height: 100px;
+}
+
+header .logo {
+  width: 200px;
+  padding-right: 50px;
+}
+
+header .app-title h2 {
+  margin: 0;
+  color: #fff;
+}
+
+main {
+  margin-top: 150px;
+  margin-bottom: 100px;
+}
+
+.grid-box {
+  display: block;
+  color: #323232;
+  cursor: pointer;
+  background: #CCC;
+  padding: 30px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.grid-box:hover {
+  text-decoration: none;
+  color: #fff;
+  background: #3054E3
+}
+
+.letter {
+  font-size: 3.0em;
+}
+
+.name {
+  padding: 20px;
+}
+
+.name h1 {
+  margin: 2px 0 0 0;
+  font-weight: 300;
+}
+
+.name h3 {
+  margin: 4px 0 0 0;
+}
+
+.name .thumb {
+  width: 80px;
+  height: 80px;
+  margin-right: 20px;
+  background: #fff;
+}
+
+h1.page-description {
+  font-weight: 300;
+  color: #999;
+  margin-bottom: 30px;
+}
+
+.back-link {
+  color: #3054E3;
+}
+
+.back-link:hover {
+  text-decoration: none;
+  color: #192A71;
+}

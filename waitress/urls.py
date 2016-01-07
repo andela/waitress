@@ -4,6 +4,6 @@ from app import urls as app_urls
 
 
 urlpatterns = [
-    url(r'^', include(app_urls)),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include(app_urls)),
 ]
