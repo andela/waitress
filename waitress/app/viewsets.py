@@ -27,11 +27,9 @@ class UserViewSet(viewsets.ViewSet):
 
     @list_route(methods=['get'], url_path='update-users')
     def update_users(self, request):
-        try:
-            UserRepository.update()
-            content = {'status': 'Users updated successfully'}
-        except:
-            content = {'status': 'Users couldn\'t be updated successfully'}
+        status = UserRepository.update()
+        content = {"status": status}
+
         return Response(content)
 
     def retrieve(self, request, pk=None):
