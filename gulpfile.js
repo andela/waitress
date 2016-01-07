@@ -101,3 +101,9 @@ gulp.task('build', function() {
     ['copy-html-files', 'copy-bower-components', 'minify-css', 'browserifyDist']
   );
 });
+
+gulp.task('simple-build', function() {
+  runSequence(
+    ['copy-html-files', 'copy-bower-components', 'minify-css', 'browserifyDist']
+  );
+});

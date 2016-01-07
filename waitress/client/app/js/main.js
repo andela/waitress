@@ -3,30 +3,42 @@
   'use strict';
 
   require('angular');
-  require('angular-route');
+  require('angular-ui-router');
   require('angular-animate');
-  var mainCtrl = require('./controllers/mainctrl');
 
-  angular.module('SampleApp', ['ngRoute', 'ngAnimate'])
+  var mainCtrl = require('./controllers/mainctrl');
+  var listCtrl = require('./controllers/listctrl');
+
+  var userFactory = require('./services/user');
+
+  angular.module('WaitressApp', ['ui.router', 'ngAnimate'])
 
   .config([
+    '$urlRouterProvider',
+    '$stateProvider',
     '$locationProvider',
-    '$routeProvider',
-    function($locationProvider, $routeProvider) {
-      $locationProvider.hashPrefix('!');
+    function($urlRouterProvider, $stateProvider, $locationProvider) {
+      $locationProvider.html5Mode(true);
+
       // routes
-      $routeProvider
-        .when('/', {
-          templateUrl: './client/dist/partials/partial1.html',
+      $urlRouterProvider.otherwise("/")
+      $stateProvider
+        .state('start', {
+          url: '/',
+          templateUrl: './client/dist/partials/start.html',
           controller: 'MainController'
         })
-        .otherwise({
-           redirectTo: '/'
+        .state('list', {
+          url: '/list/:character',
+          templateUrl: './client/dist/partials/list.html',
+          controller: 'ListController'
         });
     }
   ])
 
   //Load controller
-  .controller('MainController', ['$scope', mainCtrl]);
+  .factory('User', ['$http', userFactory])
+  .controller('MainController', ['$scope', mainCtrl])
+  .controller('ListController', ['$scope', '$stateParams', 'User', listCtrl]);
 
 }());
