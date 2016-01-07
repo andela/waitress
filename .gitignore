@@ -10,3 +10,8 @@
 
 # Virtual Environment
 env
+
+node_modules/
+waitress/client/app/lib/
+npm-debug.log
+client/dist
