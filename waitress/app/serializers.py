@@ -9,3 +9,4 @@ class UserSerializer(serializers.Serializer):
     firstname = serializers.CharField()
     lastname = serializers.CharField()
     photo = serializers.CharField()
+    is_tapped = serializers.BooleanField()
