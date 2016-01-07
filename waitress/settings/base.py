@@ -35,7 +35,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'app.middleware.SocialBinderMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -125,3 +124,11 @@ BOWER_INSTALLED_APPS = (
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+<<<<<<< HEAD
+=======
+
+# Skill tree user
+AUTH_USER_MODEL = 'app.SkillTreeUser'
+
+USE_TZ = True
+>>>>>>> (chore) fix merge conflict
