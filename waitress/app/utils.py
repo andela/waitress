@@ -1,7 +1,8 @@
 from app.models import SlackUser
-from app.serializers import UserSerializer
 from django.conf import settings
+from django.utils import timezone
 from slacker import Slacker
+import pytz
 import re
 
 slack = Slacker(settings.SLACK_API_TOKEN)
@@ -9,13 +10,13 @@ slack = Slacker(settings.SLACK_API_TOKEN)
 
 class UserRepository(object):
     """
-    A wrapper class for methods that update the list of users
+    A wrapper class for methods that update the list of users.
     """
 
     @classmethod
     def update(cls):
         """
-        A method that update the user records
+        A method that update the user records.
         """
         group_info = slack.groups.info(settings.SLACK_GROUP)
         user_info = slack.users.list()
@@ -37,7 +38,7 @@ class UserRepository(object):
     def difference(cls, repo_users, db_users):
         """
         A method that gets the difference between users in the system and
-        users in slack group
+        users in slack group.
         """
         users = {}
         unsaved_users = []
@@ -54,10 +55,11 @@ class UserRepository(object):
     @classmethod
     def filter_add_user(cls, info, difference):
         """
-        A method that retrieves users' info using the difference
+        A method that retrieves users' info using the difference.
         """
         def normalize(info):
-            """ A function that normalizes retrieved information from Slack
+            """
+            A function that normalizes retrieved information from Slack.
             """
             user_dict = {}
             not_user_list = []
@@ -104,3 +106,20 @@ class UserRepository(object):
             return "Users updated successfully"
         except Exception:
             return "Users couldn't be updated successfully"
+
+
+class Time:
+    """
+    A class that with methods for time time functions.
+    """
+
+    @classmethod
+    def is_before_midday(cls):
+        """
+        A method that return True if the time is before midday.
+        """
+        timezone.activate(pytz.timezone('Africa/Lagos'))
+        time = timezone.now().hour
+        if 0 < time < 12:
+            return True
+        return False
