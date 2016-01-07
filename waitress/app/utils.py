@@ -22,8 +22,7 @@ class UserRepository(object):
         if group_info.successful:
             members = group_info.body['group']['members']
             user_queryset = SlackUser.objects.all()
-            serializer = UserSerializer(user_queryset, many=True)
-            difference = cls.difference(members, serializer.data)
+            difference = cls.difference(members, user_queryset)
 
             if len(difference):
                 # get user info
@@ -44,7 +43,7 @@ class UserRepository(object):
         unsaved_users = []
         if len(db_users):
             for user in db_users:
-                users.setdefault(user.get('slack_id'), 0)
+                users.setdefault(user.slack_id, 0)
 
         for user in repo_users:
             if user not in users:
@@ -61,38 +60,47 @@ class UserRepository(object):
             """ A function that normalizes retrieved information from Slack
             """
             user_dict = {}
+            not_user_list = []
             for item in info:
-                if not getattr(item, 'deleted', False) and not getattr(
-                        item, 'is_bot', False):
-                    if 'image_original' not in item['profile']:
-                        continue
-                    if 'email' not in item['profile']:
-                        continue
-                    print item['profile']['email']
-                    firstname, lastname = re.match(
-                        '^([\w-]+)[.]{0,1}([\w-]+){0,1}@',
-                        item['profile']['email']).groups()
-                    lastname = '' if lastname is None else lastname
-                    user_dict[item['id']] = {
-                        'slack_id': item['id'],
-                        'email': item['profile']['email'],
-                        'photo': item['profile']['image_original'],
-                        'firstname': firstname.title(),
-                        'lastname': lastname.title()
-                    }
-            return user_dict
+                if 'deleted' in item and item['deleted'] is True:
+                    not_user_list.append(item['id'])
+                    continue
+                if 'is_bot' in item and item['is_bot'] is True:
+                    not_user_list.append(item['id'])
+                    continue
+                if 'image_original' not in item['profile']:
+                    not_user_list.append(item['id'])
+                    continue
+                if 'email' not in item['profile']:
+                    not_user_list.append(item['id'])
+                    continue
 
-        info = normalize(info)
+                firstname, lastname = re.match(
+                    '^([\w-]+)[.]{0,1}([\w-]+){0,1}@',
+                    item['profile']['email']).groups()
+                lastname = '' if lastname is None else lastname
+                user_dict[item['id']] = {
+                    'slack_id': item['id'],
+                    'email': item['profile']['email'],
+                    'photo': item['profile']['image_original'],
+                    'firstname': firstname.title(),
+                    'lastname': lastname.title()
+                }
+
+            return user_dict, not_user_list
+
+        info, not_user = normalize(info)
 
         try:
-            not_person = []
+            difference_copy = difference[:]
+            for item in difference_copy:
+                if item in not_user:
+                    difference.remove(item)
+            if len(difference) == 0:
+                return "Users list not changed"
             for user in difference:
                 if user in info:
                     SlackUser.create(info[user])
-                else:
-                    not_person.append(user)
-            if len(not_person):
-                return "Users list not changed"
             return "Users updated successfully"
         except Exception:
             return "Users couldn't be updated successfully"
