@@ -13,6 +13,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
+    "waitress/client/app/lib",
     "bower_components",
     "test",
     "tests"
@@ -24,5 +25,9 @@
     "angular": "~1.4.8",
     "angular-animate": "~1.4.8",
     "angular-moment": "~0.10.3 ",
+    "angular-route": "*",
+    "animate.css": "*",
+    "angular-ui-router": "~0.2.15",
+    "flxgrid": "~1.0.0"
   }
 }
