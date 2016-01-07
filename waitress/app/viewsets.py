@@ -19,7 +19,7 @@ class UserViewSet(viewsets.ViewSet):
         filter = request.GET.get('filter')
         queryset = SlackUser.objects.all()
         if request.GET.get('filter'):
-            queryset = queryset.filter(name__startswith=filter)
+            queryset = queryset.filter(firstname__startswith=filter)
         else:
             queryset = queryset.all()
         serializer = UserSerializer(queryset, many=True)
