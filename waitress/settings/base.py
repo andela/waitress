@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangobower',
+    'rest_framework',
     'app',
 )
 
@@ -124,11 +125,9 @@ BOWER_INSTALLED_APPS = (
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
-<<<<<<< HEAD
-=======
-
-# Skill tree user
-AUTH_USER_MODEL = 'app.SkillTreeUser'
 
 USE_TZ = True
->>>>>>> (chore) fix merge conflict
+
+# Slack configuration parameters
+SLACK_API_TOKEN = os.getenv('SLACK_API_TOKEN')
+SLACK_GROUP = os.getenv('SLACK_GROUP')

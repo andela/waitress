@@ -4,22 +4,23 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 
 
-class SkillTreeUserManager(models.Manager):
-    '''Manages `SkillTreeUser` model'''
+class SlackUserManager(models.Manager):
+    '''Manages `SlackUser` model'''
     def __init__(self, *args):
-        super(SkillTreeUserManager, self).__init__()
+        super(SlackUserManager, self).__init__()
 
     def create_user(self, *args, **kwargs):
         '''Create a new user'''
-        return SkillTreeUser(**kwargs)
+        return SlackUser(**kwargs)
 
 
-class SkillTreeUser(AbstractBaseUser):
-    '''Represents a `SkillTreeUser` account'''
-    id = models.BigIntegerField(unique=True, primary_key=True)
+class SlackUser(AbstractBaseUser):
+    '''Represents a `SlackUser` account'''
+    id = models.CharField(unique=True, primary_key=True, max_length=20)
     firstname = models.CharField(max_length=20,)
     lastname = models.CharField(max_length=20,)
-    objects = SkillTreeUserManager()
+    email = models.CharField(max_length=60,)
+    objects = SlackUserManager()
     photo = models.CharField(max_length=512, default="",)
     USERNAME_FIELD = 'id'
 
@@ -69,7 +70,7 @@ class Service(models.Model):
     '''Represents a service record for a day'''
     breakfast = models.BooleanField(default=False)
     lunch = models.BooleanField(default=False)
-    user = models.ForeignKey(SkillTreeUser)
+    user = models.ForeignKey(SlackUser)
     untapped = JSONField('Untapped', default=untapped_default, blank=True)
     date = models.DateField()
     date_modified = models.DateTimeField(null=True)

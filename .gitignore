@@ -73,3 +73,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# SQLite
+db.sqlite3
