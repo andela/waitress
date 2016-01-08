@@ -6,8 +6,8 @@ from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
+import json
 import pytz
-
 
 class UserViewSet(viewsets.ViewSet):
     """
@@ -51,8 +51,8 @@ class UserViewSet(viewsets.ViewSet):
             content['status'] = 'There is no meal in progress'
         else:
             before_midday = Time.is_before_midday()
-            date_today = meal_in_progress.date
-            mealservice = MealService.filter(user=user, date=date_today)
+            date_today = meal_in_progress[0].date
+            mealservice = MealService.objects.filter(user=user, date=date_today)
 
             if not mealservice.count():
                 mealservice = MealService()
@@ -68,10 +68,11 @@ class UserViewSet(viewsets.ViewSet):
             mealservice.date = date_today
             mealservice.date_modified = timezone.now()
             mealservice.save()
+            content['status'] = 'Tap was successful'
 
         return Response(content)
 
-    @detail_route(methods=['post'], url_path='tap')
+    @detail_route(methods=['post'], url_path='untap')
     def untap(self, request, pk):
         """
         A method that untaps a user.
@@ -82,24 +83,32 @@ class UserViewSet(viewsets.ViewSet):
         passphrase = request.POST.get('passphrase')
         user = get_object_or_404(self.queryset, pk=pk)
         mealservice = MealService.objects.get(
-                user=user, date=meal_in_progress.date
+                user=user, date=meal_in_progress[0].date
             )
-
         if not meal_in_progress:
             content['status'] = 'There is no meal in progress'
         else:
-            if Passphrase.objects.filter(word=passphrase).count():
+            passphrase = Passphrase.objects.filter(word=passphrase)
+            if passphrase.count():
                 if before_midday:
                     mealservice.breakfast = False
                 else:
                     mealservice.lunch = False
                 timenow = timezone.now()
-                mealservice.untapped.update({
-                    'date_untapped': timenow,
-                    'user': Passphrase.user.id
-                })
+                if not mealservice.untapped:
+                    untapped = []
+                else:
+                    untapped = json.loads(mealservice.untapped)
+                log = {
+                        'date_untapped': str(timenow),
+                        'user': passphrase[0].user.id
+                    }
+                untapped.append(log)
+                mealservice.untapped = untapped
                 mealservice.date_modified = timenow
                 mealservice.save()
+                content['status'] = 'Untap was successful'
+                return Response(content)
 
 
 class MealSessionViewSet(viewsets.ViewSet):
@@ -158,5 +167,5 @@ class MealSessionViewSet(viewsets.ViewSet):
         if Passphrase.objects.filter(word=passphrase).count():
             if meal_in_progress:
                 meal_in_progress[0].status = False
-                meal_in_progress.save()
+                meal_in_progress[0].save()
         return Response(content)
