@@ -49,6 +49,9 @@ class SlackUser(AbstractBaseUser):
         return "{} {} {}".format(str(self.id), self.firstname, self.lastname)
 
     def is_tapped(self):
+        """
+        An instance method for a user's meal service status
+        """
         time_now = timezone.now()
         date_today = time_now.date()
         mealservice = self.mealservice_set.filter(date=date_today)
@@ -63,47 +66,67 @@ def untapped_default():
     """
     A method that sets the default field value
     """
-    return json.dumps([])
+    return "[]"
 
 
-class JSONField(models.TextField):
+class JSONField(models.Field):
     """
     A custom JSON field
     """
     description = "A JSON field representing a untapped event"
 
-    def __init__(self, value, *args, **kwargs):
-        self.value = value
-        super(JSONField, self).__init__(args)
+    __metaclass__ = models.SubfieldBase
 
-    def deconstruct(self):
-        """
-        A method which deconstructs a JSON value for db entry
-        """
-        name, path, args, kwargs = super(JSONField, self).deconstruct()
-        # Only include kwarg if it's not the default
-        if self.value != "":
-            kwargs['value'] = json.dumps(self.value)
-        else:
-            kwargs['value'] = json.dumps(kwargs.get('default')())
-        return name, path, args, kwargs
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('null', True)
+        kwargs.setdefault('editable', False)
+        super(JSONField, self).__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
+    def get_internal_type(self):
         """
-        A method which recontructs a JSON value from its db entry
+        A method that sets the field column type
         """
-        if value == '':
-            return self.value
-        value = value.replace("'", '"')
-        return json.loads(str(value))
+        return "TextField"
+
+    def value_to_string(self, obj):
+        """
+        A method that converts a python object to its string value
+        """
+        value = self._get_val_from_obj(obj)
+        return self.get_db_prep_value(value)
+
+    def get_db_prep_value(self, value, connection, prepared=False):
+        """
+        A method that converts python object to its string value for db input
+        """
+        if value is not None and isinstance(value, list):
+            value = json.dumps(self.get_default())
+        return value
+
+    def get_default(self):
+        """
+        A method that returns the default value for this field.
+        """
+        if self.has_default():
+            if callable(self.default):
+                return self.default()
+            return self.default
+        # If the field doesn't have a default, then we punt to models.Field.
+        return super(JSONField, self).get_default()
 
     def to_python(self, value):
         """
         A method which recontructs a JSON value/dict from its db entry
         """
-        if value == '':
-            return self.value
-        return json.loads(value)
+        if value != "" or value is not None:
+            try:
+                value = json.loads(value)
+            except:
+                if isinstance(value, list):
+                    return value
+                if isinstance(value, unicode):
+                    return json.loads(value)
+        return value
 
 
 class MealService(models.Model):
@@ -141,6 +164,7 @@ class Passphrase(models.Model):
     A model that represents a passphrase
     """
     word = models.CharField(max_length=100, unique=True)
+    user = models.ForeignKey('SlackUser')
 
 
 class MealSession(models.Model):

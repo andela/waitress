@@ -10,7 +10,7 @@ router.register(r'users', UserViewSet)
 # router.register(r'meal-sessions/{meal_type}/$', MealSessionViewSet)
 
 urlpatterns = [
-    url(r'^', include(app_urls)),
     url(r'^', include(router.urls, namespace='api')),
+    url(r'^', include(app_urls)),
     url(r'^admin/', include(admin.site.urls)),
 ]
