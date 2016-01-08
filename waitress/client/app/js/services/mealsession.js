@@ -13,7 +13,7 @@ module.exports = function($http) {
       url: url,
       data: data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }, url, { data: data })
+    })
     .then(function(res) {
       cb(res.data)
     }, function(res) {

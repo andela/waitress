@@ -17,6 +17,7 @@
     "angular-localforage": "^1.2.5",
     "angular-moment": "^0.10.3",
     "angular-route": "^1.2.17-build.163.1",
+    "angular-toastr": "^1.6.0",
     "angular-ui-router": "^0.2.15",
     "bower": "^1.7.2",
     "browserify": "^5.10.0",

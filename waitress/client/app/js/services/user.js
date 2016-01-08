@@ -47,17 +47,18 @@ module.exports = function($http) {
    */
   User.untap = function(userId, passphrase, cb) {
     var url = '/users/' + userId + '/untap/';
+    console.log(url);
 
     var data = $.param({
       passphrase: passphrase
     })
 
-    $http.post({
+    $http({
       method: 'POST',
       url: url,
       data: data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }, url, { data: data })
+    })
     .then(function(res) {
       cb(res.data)
     }, function() {

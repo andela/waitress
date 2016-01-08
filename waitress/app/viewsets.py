@@ -107,7 +107,9 @@ class UserViewSet(viewsets.ViewSet):
                 mealservice.date_modified = timenow
                 mealservice.save()
                 content['status'] = 'Untap was successful'
-                return Response(content)
+            else:
+                content = {'status': 'Invalid passphrase'}
+        return Response(content)
 
 
 class MealSessionViewSet(viewsets.ViewSet):

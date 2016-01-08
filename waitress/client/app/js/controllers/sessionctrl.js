@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function($scope, $state, $localForage, MealSession) {
+module.exports = function($scope, $state, $localForage, toastr, MealSession) {
   function startTime() {
     var today = new Date();
     var h = today.getHours();
@@ -37,9 +37,26 @@ module.exports = function($scope, $state, $localForage, MealSession) {
   $scope.passphrase = "";
   $scope.passphraseDialogVisible = false;
 
-  MealSession.which(function(res) {
-    $scope.beforeMidday = res.before_midday;
-  });
+  $scope.start = function() {
+    MealSession.start($scope.beforeMidday, $scope.passphrase, function(res) {
+      if (res.status == "Invalid passphrase") {
+        toastr.error('Invalid Passphrase!');
+      } else {
+        $localForage.setItem('waitressSession', {
+          date: moment().format("YYYY-MM-DD"),
+          before: $scope.beforeMidday
+        }).then(function() {
+          toastr.success('Session started!');
+          $scope.clearDialog();
+          window.location = '/start';
+        });
+      }
+    });
+  };
+
+  $scope.showPassphraseDialog = function() {
+    $scope.passphraseDialogVisible = true;
+  }
 
   $scope.secureAction = function(action) {
     _nextAction = action;
@@ -62,26 +79,6 @@ module.exports = function($scope, $state, $localForage, MealSession) {
   $scope.clearDialog = function() {
     $scope.passphrase = "";
     $scope.passphraseDialogVisible = false;
-  }
-
-  $scope.start = function() {
-    MealSession.start($scope.beforeMidday, $scope.passphrase, function(res) {
-      if (res.status == "Invalid passphrase") {
-        //
-      } else {
-        $localForage.setItem('waitressSession', {
-          date: moment().format("YYYY-MM-DD"),
-          before: moment().format("a") === 'am' ? true : false
-        }).then(function() {
-          $scope.clearDialog();
-          $state.go('start');
-        });
-      }
-    });
-  };
-
-  $scope.showPassphraseDialog = function() {
-    $scope.passphraseDialogVisible = true;
   }
 
 };

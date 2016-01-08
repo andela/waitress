@@ -29,6 +29,8 @@
     "animate.css": "*",
     "angular-ui-router": "~0.2.15",
     "flxgrid": "~1.0.0",
-    "angular-localforage": "~1.2.5"
+    "angular-localforage": "~1.2.5",
+    "mdi": "~1.4.57",
+    "angular-toastr": "~1.6.0"
   }
 }

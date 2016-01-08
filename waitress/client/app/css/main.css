@@ -9,7 +9,7 @@ header {
   left: 0;
   position: fixed;
   background: #3054E3;
-  z-index: 99;
+  z-index: 9;
 }
 
 header .container {
@@ -40,6 +40,34 @@ main {
   font-weight: 300;
   margin-bottom: 20px;
   min-height: 125px;
+}
+
+.pos-rel {
+  position: relative
+}
+
+.pos-rel .tick {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  background: #40CC00;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  z-index: 8;
+}
+
+.tick.visible {
+  display: block;
+}
+
+.grid-box.dim {
+    opacity: 0.4;
 }
 
 .grid-box:hover, .grid-box.active {
@@ -176,7 +204,7 @@ h1.page-description {
   left: 0;
   right: 0;
   background: rgba(0,0,0,0.9);
-  z-index: 999;
+  z-index: 99;
 }
 
 .dialog-box {
@@ -200,4 +228,12 @@ h1.page-description {
 
 .dialog-box .actions {
   margin-top: 10px;
+}
+
+.app-nav {
+  display: none;
+}
+
+.app-nav.visible {
+  display: block;
 }

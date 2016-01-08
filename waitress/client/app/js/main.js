@@ -5,6 +5,7 @@
   require('angular');
   require('angular-ui-router');
   require('angular-animate');
+  require('angular-toastr');
   require('angular-localforage');
 
   var mainCtrl = require('./controllers/mainctrl');
@@ -15,7 +16,7 @@
   var userFactory = require('./services/user');
   var mealSessionFactory = require('./services/mealsession');
 
-  angular.module('WaitressApp', ['ui.router', 'ngAnimate', 'LocalForageModule'])
+  angular.module('WaitressApp', ['ui.router', 'ngAnimate', 'toastr', 'LocalForageModule'])
 
   .config([
     '$urlRouterProvider',
@@ -45,29 +46,31 @@
     }
   ])
 
-  .run(['$rootScope', '$localForage', '$state', function($rootScope, $localForage, $state) {
-    $rootScope.$on('$stateChangeSuccess', function(e, current, pre) {
-      var today = moment().format("YYYY-MM-DD");
-      var before = moment().format("a") === 'am' ? true : false;
-      $localForage.getItem('waitressSession').then(function(current) {
-        if (current) {
-          if (current.date === today && current.before === before) {
-            if ($state.current.name === 'session') {
-              $state.go('start');
+  .run(['$rootScope', '$localForage', '$state', 'MealSession', function($rootScope, $localForage, $state, MealSession) {
+    $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+      MealSession.which(function(res) {
+        $rootScope.beforeMidday = res.before_midday;
+        var today = moment().format("YYYY-MM-DD");
+        $localForage.getItem('waitressSession').then(function(current) {
+          if (current) {
+            if (current.date === today && current.before == $rootScope.beforeMidday) {
+              if (toState.name === 'session') {
+                $state.go('start');
+              }
+            } else {
+              $localForage.removeItem('waitressSession').then(function() {
+                // Stop session from backend
+                if (toState.name !== 'session') {
+                  $state.go('session');
+                }
+              });
             }
           } else {
-            $localForage.removeItem('waitressSession').then(function() {
-              // Stop session from backend
-              if ($state.current.name !== 'session') {
-                $state.go('session');
-              }
-            });
+            if (toState.name !== 'session') {
+              $state.go('session');
+            }
           }
-        } else {
-          if ($state.current.name !== 'session') {
-            $state.go('session');
-          }
-        }
+        });
       });
     });
   }])
@@ -78,8 +81,8 @@
 
   // Load Controllers
   .controller('MainController', ['$scope', mainCtrl])
-  .controller('ListController', ['$scope', '$stateParams', 'User', listCtrl])
-  .controller('HeaderCtrl', ['$scope', '$state', '$localForage', 'MealSession', headerCtrl])
-  .controller('SessionController', ['$scope', '$state', '$localForage', 'MealSession', sessionCtrl])
+  .controller('ListController', ['$scope', '$stateParams', 'toastr', 'User', listCtrl])
+  .controller('HeaderCtrl', ['$scope', '$state', '$localForage', 'toastr', 'MealSession', headerCtrl])
+  .controller('SessionController', ['$scope', '$state', '$localForage', 'toastr', 'MealSession', sessionCtrl])
 
 }());
