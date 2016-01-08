@@ -1,11 +1,15 @@
 /* css */
+html {
+  height: 100%;
+}
+
 header {
   top: 0;
   right: 0;
   left: 0;
   position: fixed;
   background: #3054E3;
-  z-index: 99;
+  z-index: 9;
 }
 
 header .container {
@@ -24,7 +28,7 @@ header .app-title h2 {
 
 main {
   margin-top: 150px;
-  margin-bottom: 100px;
+  margin-bottom: 200px;
 }
 
 .grid-box {
@@ -35,9 +39,38 @@ main {
   padding: 30px;
   font-weight: 300;
   margin-bottom: 20px;
+  min-height: 125px;
 }
 
-.grid-box:hover {
+.pos-rel {
+  position: relative
+}
+
+.pos-rel .tick {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  background: #40CC00;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  z-index: 8;
+}
+
+.tick.visible {
+  display: block;
+}
+
+.grid-box.dim {
+    opacity: 0.4;
+}
+
+.grid-box:hover, .grid-box.active {
   text-decoration: none;
   color: #fff;
   background: #3054E3
@@ -80,4 +113,127 @@ h1.page-description {
 .back-link:hover {
   text-decoration: none;
   color: #192A71;
+}
+
+.footer-panel {
+  border-top: solid 5px #3054E3;
+  background: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height:100px;
+}
+
+.buttons-panel {
+  text-align: right;
+}
+
+.message-panel p {
+  color: #3054E3;
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+
+.button {
+  display: inline-block;
+  font-size: 1.2em;
+  padding: 10px 25px;
+  border: solid 5px #3054E3;
+  cursor: pointer;
+
+}
+.sapphire {
+  background: #3054E3;
+  color: #fff;
+}
+
+.shadeless {
+  color: #3054E3;
+}
+
+.inverted {
+  color: #fff;
+  border-color: #fff;
+}
+
+.button:hover {
+  text-decoration: none;
+  border-color: #192A71;
+}
+
+.sapphire:hover {
+  color: #fff;
+  background: #192A71;
+}
+
+.shadeless:hover {
+  color: #192A71;
+}
+
+.inverted:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.clock, .session-start {
+  padding: 50px 0;
+}
+
+.main-screen {
+  position: fixed;
+  top: 100px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#live-clock {
+  font-size: 10.0em;
+  font-weight: 100;
+}
+
+.sessions-buttons-panel {
+  margin-top: 50px;
+}
+
+.passphrase-dialog {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 99;
+}
+
+.dialog-box {
+  background: #fff;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.dialog-box p {
+  font-size: 1.2em;
+}
+
+.dialog-box .form-fields {
+  width: 100%;
+  font-size: 1.5em;
+  padding: 10px 10px;
+  border: solid 3px #3054E3;
+  outline: none;
+}
+
+.dialog-box .actions {
+  margin-top: 10px;
+}
+
+.app-nav {
+  display: none;
+}
+
+.app-nav.visible {
+  display: block;
 }

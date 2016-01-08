@@ -13,16 +13,21 @@
     <link rel="stylesheet" href="{% static 'app/lib/flxgrid/dist/css/flexgrid.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'app/lib/font-awesome/css/font-awesome.css' %}"/>
     <link rel="stylesheet" href="{% static 'app/lib/animate.css/animate.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/lib/angular-toastr/dist/angular-toastr.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/lib/mdi/css/materialdesignicons.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'app/css/main.css' %}"/>
   </head>
   <body>
-    <header>
+    <header ng-controller="HeaderCtrl">
       <div class="container flex vertical align-center">
         <div class="logo">
           <img src="http://kaizen.andela.com/img/Andela-Logo-White-Landscape.png" class="img-responsive"/>
         </div>
-        <div class="app-title">
+        <div class="app-title fill">
           <h2>Waitress</h2>
+        </div>
+        <div class="app-nav" ng-class="{'visible': isVisible}">
+          <a class="button inverted" ng-click="stop()">Stop Session</a>
         </div>
       </div>
     </header>
@@ -32,6 +37,7 @@
     </main>
     <!-- scripts -->
     <script src="{% static 'app/lib/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'app/lib/moment/min/moment.min.js' %}"></script>
     <script src="{% static 'app/lib/bootstrap/dist/js/bootstrap.js' %}"></script>
     <script src="{% static 'dist/js/bundled.js' %}"></script>
   </body>
