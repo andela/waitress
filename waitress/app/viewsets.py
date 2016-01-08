@@ -9,6 +9,7 @@ from rest_framework.decorators import detail_route, list_route
 import json
 import pytz
 
+
 class UserViewSet(viewsets.ViewSet):
     """
     A simple ViewSet for listing or retrieving users.
@@ -80,6 +81,7 @@ class UserViewSet(viewsets.ViewSet):
         content = {}
         meal_in_progress = MealSession.in_progress()
         passphrase = request.POST.get('passphrase')
+        timenow = timezone.now()
         user = get_object_or_404(self.queryset, pk=pk)
         mealservice = MealService.objects.get(
                 user=user, date=meal_in_progress[0].date
@@ -93,7 +95,6 @@ class UserViewSet(viewsets.ViewSet):
                     mealservice.breakfast = False
                 else:
                     mealservice.lunch = False
-                timenow = timezone.now()
                 if not mealservice.untapped:
                     untapped = []
                 else:
@@ -134,18 +135,23 @@ class MealSessionViewSet(viewsets.ViewSet):
         A method that starts meal session.
         """
         before_midday = request.POST.get('before_midday')
-        meal_in_progress = MealSession.in_progress().count()
+        meal_in_progress = MealSession.in_progress()
         passphrase = request.POST.get('passphrase')
+        passphrase_exists = Passphrase.objects.filter(word=passphrase).count()
         if before_midday:
             content = {'status': 'Breakfast started'}
         else:
             content = {'lunch': 'Lunch started'}
-
-        if Passphrase.objects.filter(word=passphrase).count():
+        if passphrase_exists:
             timezone.activate(pytz.timezone('Africa/Lagos'))
             time = timezone.now()
-            if not meal_in_progress:
-                MealSession.objects.create(date=time.date(), status=True)
+            if not meal_in_progress.count():
+                meal_in_progress = MealSession.objects.create(
+                    date=time.date(), status=True
+                )
+            else:
+                meal_in_progress[0].status = True
+                meal_in_progress[0].save()
         else:
             content = {'status': 'Invalid passphrase'}
         return Response(content)
