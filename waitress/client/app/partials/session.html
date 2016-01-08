@@ -1,0 +1,19 @@
+<div class="passphrase-dialog flex vertical align-center horizontal align-center" ng-show="passphraseDialogVisible">
+  <div class="dialog-box">
+    <p>Enter Passphrase here</p>
+    <input type="password" class="form-fields" ng-model="passphrase" />
+    <div class="actions">
+      <a class="sapphire button" ng-click="processAction()">Submit</a>
+      <a class="shadeless button" ng-click="clearDialog()">Cancel</a>
+    </div>
+  </div>
+</div>
+<div class="main-screen flex column-layout">
+  <div class="session-control flex fill column-layout vertical align-center horizontal align-center">
+    <h1 id="live-clock"></h1>
+    <h3>It's time for {{ beforeMidday ? "Breakfast" : "Lunch" }}</h3>
+    <div class="sessions-buttons-panel">
+      <a class="sapphire button" ng-click="secureAction('start')">Click to start Session</a>
+    </div>
+  </div>
+</div>

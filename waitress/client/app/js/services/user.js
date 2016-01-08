@@ -16,13 +16,11 @@ module.exports = function($http) {
       filter: character
     };
 
-    $http.get('/users', { params: params })
+    $http.get('/users/', { params: params })
     .then(function(res) {
-      cb(res)
-      console.log("Done");
+      cb(res.data)
     }, function(res) {
       cb()
-      console.log("Done");
     });
   };
 
@@ -32,11 +30,11 @@ module.exports = function($http) {
    * @memberOf Factories.User
    */
   User.tap = function(userId, cb) {
-    var url = '/users/' + userId + '/tap'
+    var url = '/users/' + userId + '/tap/'
 
-    $http.get(url)
+    $http.post(url)
     .then(function(res) {
-      cb(res)
+      cb(res.data)
     }, function(res) {
       cb()
     });
@@ -48,15 +46,20 @@ module.exports = function($http) {
    * @memberOf Factories.User
    */
   User.untap = function(userId, passphrase, cb) {
-    var url = '/users/' + userId + '/untap';
+    var url = '/users/' + userId + '/untap/';
 
-    var data = {
+    var data = $.param({
       passphrase: passphrase
-    }
+    })
 
-    $http.post(url, { data: data })
+    $http.post({
+      method: 'POST',
+      url: url,
+      data: data,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }, url, { data: data })
     .then(function(res) {
-      cb(res)
+      cb(res.data)
     }, function() {
       cb()
     });

@@ -5,13 +5,17 @@
   require('angular');
   require('angular-ui-router');
   require('angular-animate');
+  require('angular-localforage');
 
   var mainCtrl = require('./controllers/mainctrl');
   var listCtrl = require('./controllers/listctrl');
+  var sessionCtrl = require('./controllers/sessionctrl');
+  var headerCtrl = require('./controllers/headerctrl');
 
   var userFactory = require('./services/user');
+  var mealSessionFactory = require('./services/mealsession');
 
-  angular.module('WaitressApp', ['ui.router', 'ngAnimate'])
+  angular.module('WaitressApp', ['ui.router', 'ngAnimate', 'LocalForageModule'])
 
   .config([
     '$urlRouterProvider',
@@ -23,8 +27,13 @@
       // routes
       $urlRouterProvider.otherwise("/")
       $stateProvider
-        .state('start', {
+        .state('session', {
           url: '/',
+          templateUrl: './client/dist/partials/session.html',
+          controller: 'SessionController'
+        })
+        .state('start', {
+          url: '/start',
           templateUrl: './client/dist/partials/start.html',
           controller: 'MainController'
         })
@@ -36,9 +45,41 @@
     }
   ])
 
-  //Load controller
+  .run(['$rootScope', '$localForage', '$state', function($rootScope, $localForage, $state) {
+    $rootScope.$on('$stateChangeSuccess', function(e, current, pre) {
+      var today = moment().format("YYYY-MM-DD");
+      var before = moment().format("a") === 'am' ? true : false;
+      $localForage.getItem('waitressSession').then(function(current) {
+        if (current) {
+          if (current.date === today && current.before === before) {
+            if ($state.current.name === 'session') {
+              $state.go('start');
+            }
+          } else {
+            $localForage.removeItem('waitressSession').then(function() {
+              // Stop session from backend
+              if ($state.current.name !== 'session') {
+                $state.go('session');
+              }
+            });
+          }
+        } else {
+          if ($state.current.name !== 'session') {
+            $state.go('session');
+          }
+        }
+      });
+    });
+  }])
+
+  //Load Factories
   .factory('User', ['$http', userFactory])
+  .factory('MealSession', ['$http', mealSessionFactory])
+
+  // Load Controllers
   .controller('MainController', ['$scope', mainCtrl])
-  .controller('ListController', ['$scope', '$stateParams', 'User', listCtrl]);
+  .controller('ListController', ['$scope', '$stateParams', 'User', listCtrl])
+  .controller('HeaderCtrl', ['$scope', '$state', '$localForage', 'MealSession', headerCtrl])
+  .controller('SessionController', ['$scope', '$state', '$localForage', 'MealSession', sessionCtrl])
 
 }());

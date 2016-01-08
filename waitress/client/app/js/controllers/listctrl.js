@@ -15,27 +15,14 @@ module.exports = function($scope, $stateParams, User) {
     $scope.footerIsVisible = false;
   }
 
-  $scope.click = function(userId) {
-    $scope.selectedUser = userId;
+  $scope.click = function(user) {
+    $scope.selectedUser = user;
     $scope.footerIsVisible = true;
   }
 
   User.filter($stateParams.character, function(users) {
     // Make users available to the scope
     $scope.users = users;
-
-    $scope.users = [
-      {
-        id: 9,
-        firstname: "Chidiebere",
-        lastname: "Nnadi"
-      },
-      {
-        id: 5,
-        firstname: "Femi",
-        lastname: "Sule"
-      },
-    ];
     // Hide loading component
     $scope.loading = false;
   });
@@ -44,7 +31,8 @@ module.exports = function($scope, $stateParams, User) {
     // Show loading component
     $scope.loading = true;
 
-    User.tap(userId, function() {
+    User.tap(userId, function(res) {
+      console.log(res);
       $scope.loading = false;
       $scope.cancel();
     })

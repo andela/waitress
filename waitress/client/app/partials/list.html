@@ -1,25 +1,32 @@
-<h1 class="page-description"><a class="back-link" href="/">Back</a> / Listing people starting with {{ character }}</h1>
+<h1 class="page-description"><a class="back-link" href="/start">Back</a> / Listing people starting with {{ character }}</h1>
 
 <div class="row">
   <div class="col-sm-4" ng-repeat="user in users">
-    <a class="name grid-box flex" ng-class="{'active': user.id == selectedUser}" ng-click="click(user.id)">
+    <a class="name grid-box flex" ng-class="{'active': user.id == selectedUser.id}" ng-click="click(user)">
       <div class="flex">
         <div class="column1">
-          <div class="thumb"></div>
+          <div class="thumb">
+            <img ng-src="{{ user.photo }}" class="img-responsive"/>
+          </div>
         </div>
         <div class="column2">
-          <h1>{{ user.lastname }}</h1>
           <h1>{{ user.firstname }}</h1>
+          <h1>{{ user.lastname }}</h1>
         </div>
       </div>
     </a>
   </div>
 </div>
 
-<div class="footer-panel" ng-show="footerIsVisible">
-  <div class="container">
-    <a class="sapphire button" ng-click="tap(selectedUser)">Tap</a>
-    <a class="sapphire button" ng-click="untap(selectedUser)">Untap</a>
-    <a class="shadeless button" ng-click="cancel()">Cancel</a>
+<div class="footer-panel flex" ng-show="footerIsVisible">
+  <div class="container flex vertical align-center">
+    <div class="message-panel fill">
+      <p>You have chosen <strong>{{selectedUser.firstname}} {{selectedUser.lastname}}</strong></p>
+    </div>
+    <div class="buttons-panel fill">
+      <a class="sapphire button" ng-show="!selectedUser.is_tapped" ng-click="tap(selectedUser.id)">Tap</a>
+      <a class="sapphire button" ng-show="selectedUser.is_tapped" ng-click="untap(selectedUser.id)">Untap</a>
+      <a class="shadeless button" ng-click="cancel()">Cancel</a>
+    </div>
   </div>
 </div>

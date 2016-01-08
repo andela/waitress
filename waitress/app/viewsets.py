@@ -3,7 +3,7 @@ from app.serializers import UserSerializer
 from app.models import SlackUser, MealSession, MealService, Passphrase
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 import json
@@ -46,7 +46,6 @@ class UserViewSet(viewsets.ViewSet):
         content = {}
         meal_in_progress = MealSession.in_progress()
         user = get_object_or_404(self.queryset, pk=pk)
-
         if not meal_in_progress:
             content['status'] = 'There is no meal in progress'
         else:
@@ -135,7 +134,6 @@ class MealSessionViewSet(viewsets.ViewSet):
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress().count()
         passphrase = request.POST.get('passphrase')
-
         if before_midday:
             content = {'status': 'Breakfast started'}
         else:
@@ -158,7 +156,6 @@ class MealSessionViewSet(viewsets.ViewSet):
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress()
         passphrase = request.POST.get('passphrase')
-
         if before_midday:
             content = {'status': 'Breakfast stopped'}
         else:
@@ -168,4 +165,6 @@ class MealSessionViewSet(viewsets.ViewSet):
             if meal_in_progress:
                 meal_in_progress[0].status = False
                 meal_in_progress[0].save()
+        else:
+            content = {'status': 'Invalid passphrase'}
         return Response(content)

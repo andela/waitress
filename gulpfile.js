@@ -101,7 +101,13 @@ gulp.task('build', function() {
     ['copy-html-files', 'copy-bower-components', 'minify-css', 'browserifyDist']
   );
 });
-
+// *** dev task *** //
+gulp.task('dev', function() {
+  gulp.watch(['./waitress/client/app/**/*.css', '!./waitress/client/app/lib/**'], ['minify-css']);
+  gulp.watch(['./waitress/client/app/**/*.js', '!./waitress/client/app/lib/**'], ['browserifyDist']);
+  gulp.watch('./waitress/client/app/**/*.html', ['copy-html-files']);
+});
+// *** build without lint task *** //
 gulp.task('simple-build', function() {
   runSequence(
     ['copy-html-files', 'copy-bower-components', 'minify-css', 'browserifyDist']
