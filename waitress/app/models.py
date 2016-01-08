@@ -88,20 +88,13 @@ class JSONField(models.Field):
         """
         return "TextField"
 
-    def value_to_string(self, obj):
-        """
-        A method that converts a python object to its string value
-        """
-        value = self._get_val_from_obj(obj)
-        return self.get_db_prep_value(value)
-
     def get_db_prep_value(self, value, connection, prepared=False):
         """
         A method that converts python object to its string value for db input
         """
-        if value is not None and isinstance(value, list):
-            value = json.dumps(self.get_default())
-        return value
+        if value is None:
+            return
+        return json.dumps(value)
 
     def get_default(self):
         """
