@@ -136,9 +136,28 @@ class MealService(models.Model):
     @classmethod
     def create(cls, service_dict):
         """
-        A method that creates a meal served data record
+        A method that creates a meal served data record.
         """
         return cls.objects.create(**service_dict)
+
+    def set_user_and_date(self, user, date_today):
+        """
+        A method that sets information about the meal service user and date.
+        """
+        self.user = user
+        self.date = date_today
+        self.date_modified = timezone.now()
+        return self
+
+    def set_meal(self, before_midday, reverse=False):
+        """
+        A method that sets the meal had.
+        """
+        if before_midday:
+            self.breakfast = not reverse
+        else:
+            self.lunch = not reverse
+        return self
 
     def __unicode__(self):
         """

@@ -24,7 +24,9 @@ class UserViewSet(viewsets.ViewSet):
         queryset = self.queryset
 
         if request.GET.get('filter'):
-            queryset = queryset.filter(firstname__startswith=filter)
+            queryset = queryset.filter(
+                firstname__startswith=filter
+            ).order_by('firstname')
         else:
             queryset = queryset.all()
         serializer = UserSerializer(queryset, many=True)
@@ -63,18 +65,49 @@ class UserViewSet(viewsets.ViewSet):
             else:
                 mealservice = mealservice[0]
 
-            if before_midday:
-                mealservice.breakfast = True
-            else:
-                mealservice.lunch = True
+            mealservice = mealservice.set_meal(before_midday)
 
-            mealservice.user = user
-            mealservice.date = date_today
-            mealservice.date_modified = timezone.now()
+            mealservice = mealservice.set_user_and_date(user, date_today)
             mealservice.save()
             content['status'] = 'Tap was successful'
 
-        return Response(content, status_code.HTTP_200_OK)
+        return Response(content, status=status_code.HTTP_200_OK)
+
+    @list_route(methods=['post'], url_path='nfctap')
+    def nfctap(self, request):
+        """
+        A method that taps a user via an NFC card.
+        """
+        slack_id = request.POST.get('slackUserId')
+
+        if not slack_id:
+            content = {'status': 'You\'re  unauthorized to make this request'}
+            return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
+
+        user = get_object_or_404(self.queryset, slack_id=slack_id)
+        meal_in_progress = MealSession.in_progress()
+        content = {'firstname': user.firstname, 'lastname': user.lastname}
+        if not meal_in_progress:
+            content['status'] = 'There is no meal in progress'
+        else:
+            before_midday = Time.is_before_midday()
+            date_today = meal_in_progress[0].date
+            mealservice = MealService.objects.filter(
+                user=user, date=date_today
+            )
+
+            if not mealservice.count():
+                mealservice = MealService()
+            else:
+                mealservice = mealservice[0]
+
+            mealservice = mealservice.set_meal(before_midday)
+            mealservice = mealservice.set_user_and_date(user, date_today)
+            mealservice.save()
+
+            content['status'] = 'Tap was successful'
+
+        return Response(content, status=status_code.HTTP_200_OK)
 
     @detail_route(methods=['post'], url_path='untap')
     def untap(self, request, pk):
@@ -97,10 +130,7 @@ class UserViewSet(viewsets.ViewSet):
         else:
             passphrase = Passphrase.objects.filter(word=passphrase)
             if passphrase.count():
-                if before_midday:
-                    mealservice.breakfast = False
-                else:
-                    mealservice.lunch = False
+                mealservice = mealservice.set_meal(before_midday, reverse=True)
                 if not mealservice.untapped:
                     untapped = []
                 else:
