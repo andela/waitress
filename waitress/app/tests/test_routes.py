@@ -102,6 +102,26 @@ class ServiceTestCase(TestCase):
 
         self.assertEquals(response.status_code, 200)
 
+    def test_can_nfc_tap_breakfast(self):
+        """
+        Tests that user can NFC tap for breakfast
+        """
+        self.data['before_midday'] = True
+        self.data['slackUserId'] = 'U24A2R2'
+        response = self.client.post("/meal-sessions/start/", self.data)
+        response = self.client.post("/users/nfctap/", self.data)
+        self.assertEquals(response.status_code, 200)
+
+    def test_can_nfc_tap_lunch(self):
+        """
+        Tests that user can NFC tap for lunch
+        """
+        self.data['before_midday'] = False
+        self.data['slackUserId'] = 'U24A2R2'
+        response = self.client.post("/meal-sessions/start/", self.data)
+        response = self.client.post("/users/nfctap/", self.data)
+        self.assertEquals(response.status_code, 200)
+
     @classmethod
     def tearDownClass(cls):
         super(ServiceTestCase, cls).tearDownClass()
