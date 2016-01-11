@@ -26,3 +26,7 @@ deploy:
   strategy: git
   app:
     develop: waitressandela
+  run:
+    - npm install --save gulp
+    - gulp clean
+    - gulp build
