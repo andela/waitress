@@ -25,7 +25,7 @@ deploy:
   skip_cleanup: true
   strategy: git
   app:
-    develop: waitressandela
+    master: waitressandela
   run:
     - npm install --save gulp
     - gulp clean
