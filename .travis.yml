@@ -30,3 +30,7 @@ deploy:
     - npm install --save gulp
     - gulp clean
     - gulp build
+    - python waitress/manage.py bower install -- -s
+    - python waitress/manage.py collectstatic --noinput
+    - python waitress/manage.py makemigrations
+    - python waitress/manage.py migrate
