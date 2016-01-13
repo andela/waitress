@@ -22,14 +22,8 @@ deploy:
   api_key:
     secure: CsvdIG1+Sm9HBW4gGW9i9ltc4uOFCBZuFoProf5daRG4Oe6UljAJ0nD+5uV1hi1rRtnvW6uePVlzFDjb0bEejXLAlhtaONHAJ/mV1V3oel4yLu+X3ovfBf1WqylRkG7UoXb8CrekLJDVmWDRHEVwlNXnyk93KhgUTTsn8tUlA/gF9TGgI3Y4CgyJBl1JG0mHPbBYkiO3akYAVw5G6SHYQu0Zj4+g1suhHSOw/CpOB/0gv691n1SuwBwfnQQiiugxY1afoYIFjisQJBB8m1OzBbfQdVKE3UJZ9gbiNhvJvMpmOeuy5bzL/KiBdiu+tGYvKXBDHbhXbYAvcx5+Vi8bPigCPjvA3qA6lIlvmBsNIirHFGqUigUMAV6JiQ5u50ncnpqrXIRVIf9HHwE9zpwYNcd3HVSzRrdsw3bN/Q6eh++uB70xB744FFwf5WgoqdogNve98i0CHAEj+aTWBUkQwa4GDvuUlKy+28MECUoe/YdUkOdEQnijJVR6/Juu0CVgwT9gBc1n6n0WbXHiXcyQ8Wi2l2kZqIgowbIuHM6EtiFKa3Xu7SYJO/yyEyBToTSGop/JTW8fMJHDhG7Kz1On06AuJtrwuVdB8tZn4yz+G+F+5tGSeXs87HetzFZ+//p8E/bwfo4WaptgPTzO3q19lZ+UfWYpGPsHJCTKHDJTWBE=
   skip_cleanup: true
-  strategy: git
-  app:
-    master: waitressandela
-  run:
-    - npm install --save gulp
-    - gulp clean
-    - gulp build
-    - python waitress/manage.py bower install -- -s
-    - python waitress/manage.py collectstatic --noinput
-    - python waitress/manage.py makemigrations
-    - python waitress/manage.py migrate
+  strategy: api
+  app: waitressandela
+  on:
+    repo: andela-osule/waitress
+  run: npm install -g --save gulp bower && ps:scale web=0 && gulp clean && gulp build && python waitress/manage.py bower install -- -s && python waitress/manage.py collectstatic --noinput && python waitress/manage.py makemigrations && python waitress/manage.py migrate
