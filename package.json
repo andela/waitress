@@ -7,7 +7,7 @@
   },
   "scripts": {
     "preinstall": "npm install --save bower",
-    "postinstall": "./node_modules/.bin/bower install",
+    "postinstall": "./node_modules/.bin/bower install && gulp clean && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
