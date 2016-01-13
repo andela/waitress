@@ -1,1 +1,1 @@
-web: python waitress/manage.py collectstatic --noinput --settings=settings.staging --verbosity 0; python waitress/manage.py makemigrations; python waitress/manage.py migrate auth; python waitress/manage.py migrate; python waitress/manage.py syncdb --noinput; gunicorn waitress.wsgi --pythonpath=waitress --log-file -
+web: gunicorn waitress.wsgi --pythonpath=waitress --log-file -
