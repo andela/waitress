@@ -26,4 +26,4 @@ deploy:
   app: waitressandela
   on:
     repo: andela-osule/waitress
-  run: npm install -g --save gulp bower && ps:scale web=0 && gulp clean && gulp build && python waitress/manage.py bower install -- -s && python waitress/manage.py collectstatic --noinput && python waitress/manage.py makemigrations && python waitress/manage.py migrate
+  run: ps:scale web=0 && python waitress/manage.py collectstatic --noinput && python waitress/manage.py makemigrations && python waitress/manage.py migrate
