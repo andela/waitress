@@ -1,6 +1,7 @@
 from app.models import SlackUser
 from django.conf import settings
 from django.utils import timezone
+from django.db import transaction
 from slacker import Slacker
 import pytz
 import re
@@ -102,9 +103,11 @@ class UserRepository(object):
                 return "Users list not changed"
             for user in difference:
                 if user in info:
-                    SlackUser.create(info[user])
+                    with transaction.atomic():
+                        SlackUser.create(info[user])
             return "Users updated successfully"
-        except Exception:
+        except Exception as e:
+            print e
             return "Users couldn't be updated successfully"
 
 
