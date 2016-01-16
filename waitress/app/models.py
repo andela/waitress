@@ -26,7 +26,7 @@ class SlackUser(AbstractBaseUser):
     """
     A class that represents a `SlackUser` account
     """
-    id = models.IntegerField(unique=True, primary_key=True)
+    id = models.AutoField(unique=True, primary_key=True)
     slack_id = models.CharField(unique=True, max_length=20)
     firstname = models.CharField(max_length=20,)
     lastname = models.CharField(max_length=20,)
