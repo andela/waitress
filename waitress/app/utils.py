@@ -107,7 +107,7 @@ class UserRepository(object):
                         SlackUser.create(info[user])
             return "Users updated successfully"
         except Exception as e:
-            return "Users couldn't be updated successfully -{}" % e
+            return "Users couldn't be updated successfully - %s" % e.message
 
 
 class Time:
