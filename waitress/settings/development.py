@@ -3,6 +3,8 @@ from django_envie.workroom import convertfiletovars
 
 convertfiletovars()
 
+import dj_database_url
+
 from .base import *
 
 DEBUG = True
@@ -16,12 +18,7 @@ NOSE_ARGS = [
 ]
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config()
 }
+
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
