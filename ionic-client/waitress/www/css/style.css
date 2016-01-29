@@ -1,1 +1,24 @@
-/* Empty. Add your own CSS if you like */
+.logo-sm {
+  height: 40px;
+}
+
+.content-wrapper {
+  width: 240px;
+  text-align: center;
+  margin: 50px auto !important;
+}
+.title-image{
+  top: 0px;
+  position: absolute;
+}
+h1.title{
+  left: 123px;
+  color: #3359DF;
+}
+.padding-top > div{
+  padding-top: 155px;
+}
+
+.passphraseDialog {
+  
+}
