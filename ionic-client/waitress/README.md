@@ -1,5 +1,5 @@
-Ionic App Base
-=====================
+Waitress Client for Android
+===========================
 
 A mobile front end for waitress that allows use of NFC tags to tap in for a meal session.
 
