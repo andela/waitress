@@ -1,25 +1,35 @@
 Ionic App Base
 =====================
 
-A starting project for Ionic that optionally supports using custom SCSS.
+A mobile front end for waitress that allows use of NFC tags to tap in for a meal session.
 
 ## Using this project
+Run the following commands to get started with using this project.
 
-We recommend using the [Ionic CLI](https://github.com/driftyco/ionic-cli) to create new Ionic projects that are based on this project but use a ready-made starter template.
-
-For example, to start a new Ionic project with the default tabs interface, make sure the `ionic` utility is installed:
-
+### First, clone this repository
 ```bash
-$ npm install -g ionic
+$ git clone https://github.com/andela-osule/waitress.git
 ```
 
-Then run:
-
+### Switch to the Ionic client directory.
 ```bash
-$ ionic start myProject tabs
+$ cd ./waitress/ionic-client/waitress
 ```
 
-More info on this can be found on the Ionic [Getting Started](http://ionicframework.com/getting-started) page and the [Ionic CLI](https://github.com/driftyco/ionic-cli) repo.
+### Install Ionic + Cordova.
+```bash
+$ npm install -g ionic cordova
+```
+
+### Add the Android platform.
+```bash
+$ npm install platform add android
+```
+
+### Build for android
+```bash
+$ cordova build --release android
+```
 
 ## Issues
-Issues have been disabled on this repo, if you do find an issue or have a question consider posting it on the [Ionic Forum](http://forum.ionicframework.com/).  Or else if there is truly an error, follow our guidelines for [submitting an issue](http://ionicframework.com/submit-issue/) to the main Ionic repository.
+Report issues on this project by submitting open a new issue [here](https://github.com/andela-osule/waitress/issues/new).
