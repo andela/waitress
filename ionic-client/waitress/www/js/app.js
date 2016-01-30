@@ -27,15 +27,16 @@ angular.module('waitress', [
   $logProvider.debugEnabled(true);
     $stateProvider
     .state('home', {
-    url: '/',
-    controller: 'MainController',
-    templateUrl: 'partials/session.html'
+      url: '/',
+      controller: 'MainController',
+      controllerAs: 'main',
+      templateUrl: 'partials/session.html'
   })
   .state('tap', {
     url: '/tap',
     controller: 'TapController',
     templateUrl: 'partials/tap.html'
-  })
+  });
 
 });
 

@@ -6,59 +6,51 @@ angular.module('waitress')
 .controller('MainController', mainCtrl);
 
 mainCtrl.$inject = ['$scope', '$http', '$ionicPopup', '$log',
-        '$httpParamSerializerJQLike', '$state'];
+        'MealSession', '$state'];
 
-function mainCtrl($scope, $http, $ionicPopup, $log, $httpParamSerializerJQLike, $state) {
+function mainCtrl($scope, $http, $ionicPopup, $log, MealSession, $state) {
   $http.get('http://waitressandela.herokuapp.com/meal-sessions/')
     .then(function (result) {
       $log.debug(result.data.before_midday);
       $scope.beforeMidday = result.data.before_midday;
-  });
-
-   $scope.show = function(){
+    });
+  $scope.showDialog = function () {
     $scope.data = {};
     $ionicPopup.show({
-    template: '<input type="password" ng-model="data.password">',
-    title: 'Enter Passphrase here',
-    cssClass: 'pass-phrase-dialog',
-    scope: $scope,
-    buttons: [
-      {
-        text: '<b>Submit</b>',
-        type: 'button-positive',
-        onTap: function(e) {
+      template: '<input type="password" ng-model="data.password">',
+      title: 'Enter Passphrase here',
+      cssClass: 'pass-phrase-dialog',
+      scope: $scope,
+      buttons: [
+        {
+          text: '<b>Submit</b>',
+          type: 'button-positive',
+          onTap: function (e) {
+            var data = { before_midday: $scope.beforeMidday,
+              passphrase: $scope.data.password
+              };
+            if (!$scope.data.password) {
+              $log.debug("fired");
+               e.preventDefault();
+            } else {
 
-          $log.debug($scope.data.password);
-          if (!$scope.data.password) {
-            $log.debug("not entered")
-             e.preventDefault();
-          } else {
-            var data = {'before_midday':$scope.beforeMidday, 'passphrase':$scope.data.password};
-            $log.debug(data);
-            $http({
-              method: 'POST',
-              url:'http://waitressandela.herokuapp.com/meal-sessions/start/',
-              data: $httpParamSerializerJQLike(data),
-              headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-              }
-            }).then(function(result){
-                  if(result.data.status){
+              $log.debug(data);
+              MealSession.start('http://waitressandela.herokuapp.com/meal-sessions/start/', data)
+              .then(function(){
+                $state.go('tap')
+              }).catch(function(){
+                $log.debug("error with authentication");
+              })
 
-                    $state.go('tap');
-                  }
-
-                }).catch(function(resp){
-                  $log.debug(resp);
-                })
+            }
           }
-        }
-      },
-      { text: 'Cancel' }
-    ]
-  }).then(function(result){
+        },
+        { text: 'Cancel' }
+      ]
+  }).then(function (result) {
+    $log.debug(result, "checking in");
 
   });
-};
+   };
 
 };
