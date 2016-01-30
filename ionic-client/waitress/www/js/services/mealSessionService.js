@@ -4,8 +4,20 @@ angular.module('waitress')
   .factory('MealSession', mealSessionService);
 
 mealSessionService.$inject = ['$q', '$http', '$httpParamSerializerJQLike'];
-
+/**
+* Dialog Directive controller
+@param {service} $q, handles the differed promise
+@param {serivice} $http, handles the call to http server
+@param {service} $httpParamSerializerJQLike, changes Params to serliazable objects
+@return {void}
+*/
 function mealSessionService($q, $http, $httpParamSerializerJQLike) {
+  /**
+  * Dialog Directive controller
+  @param {string} url, designated server url
+  @param {object} data, handles the call to http server
+  @return {void}
+  */
   function startService(url, data) {
     var deffered = $q.defer();
     $http({
@@ -16,18 +28,17 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
-    .then(function (result) {
+    .then(function(result) {
       if (result.data.status) {
-        deffered.resolve();
+        deffered.resolve(result);
       }
     })
-    .catch(function (resp) {
-      deffered.reject();
+    .catch(function(resp) {
+      deffered.reject(resp);
     });
     return deffered.promise;
   }
   return {
     start: startService
   };
-
 }

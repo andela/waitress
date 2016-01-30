@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb",
+  "extends": "google",
   "plugins": ["angular"],
   "env": {
     "es6": true,
