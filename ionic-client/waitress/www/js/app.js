@@ -1,12 +1,9 @@
-
 angular.module('waitress', [
-    'ionic'
-  ])
-
-
+  'ionic'
+])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
+    if (window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -25,11 +22,15 @@ angular.module('waitress', [
 .config(function($stateProvider, $urlRouterProvider, $logProvider) {
   $urlRouterProvider.otherwise('/');
   $logProvider.debugEnabled(true);
-    $stateProvider
+  $stateProvider
     .state('home', {
       url: '/',
+      resolve: {
+        midday: function($http) {
+          return $http({method: 'GET', url: 'http://waitressandela.herokuapp.com/meal-sessions/'});
+        }
+      },
       controller: 'MainController',
-      controllerAs: 'main',
       templateUrl: 'partials/session.html'
   })
   .state('tap', {
@@ -37,6 +38,5 @@ angular.module('waitress', [
     controller: 'TapController',
     templateUrl: 'partials/tap.html'
   });
-
 });
 
