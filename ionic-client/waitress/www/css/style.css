@@ -15,10 +15,10 @@ h1.title{
   left: 123px;
   color: #3359DF;
 }
-.padding-top > div{
-  padding-top: 155px;
+.add-margin-top{
+  padding-top: 100px;
 }
 
-.passphraseDialog {
-  
+.pass-phrase-dialog input{
+    border: solid blue;
 }

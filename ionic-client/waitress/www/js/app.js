@@ -22,14 +22,19 @@ angular.module('waitress', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $logProvider) {
   $urlRouterProvider.otherwise('/');
-
-  $stateProvider
-  .state('home', {
+  $logProvider.debugEnabled(true);
+    $stateProvider
+    .state('home', {
     url: '/',
     controller: 'MainController',
     templateUrl: 'partials/session.html'
+  })
+  .state('tap', {
+    url: '/tap',
+    controller: 'TapController',
+    templateUrl: 'partials/tap.html'
   })
 
 });
