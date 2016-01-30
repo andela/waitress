@@ -29,10 +29,12 @@ INSTALLED_APPS = (
     'djangobower',
     'rest_framework',
     'app',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -131,3 +133,7 @@ USE_TZ = True
 # Slack configuration parameters
 SLACK_API_TOKEN = os.getenv('SLACK_API_TOKEN')
 SLACK_GROUP = os.getenv('SLACK_GROUP')
+
+
+#  Allow CORS on all host
+CORS_ORIGIN_ALLOW_ALL = True
