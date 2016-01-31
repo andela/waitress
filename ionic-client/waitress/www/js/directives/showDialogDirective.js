@@ -14,9 +14,6 @@ showDialogDirective.$inject = ['$ionicPopup', 'MealSession',
   */
 function showDialogDirective($ionicPopup, MealSession, $state, $log) {
   return {
-    template: '<button class="button button-stable">' +
-              'Click To Start Session' +
-              '</button>',
     scope: {
       beforeMidday: '=midday'
     },
