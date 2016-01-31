@@ -26,9 +26,9 @@ angular.module('waitress', [
     .state('home', {
       url: '/',
       resolve: {
-        midday: function($http) {
+        midday:['$http', function($http) {
           return $http({method: 'GET', url: 'http://waitressandela.herokuapp.com/meal-sessions/'});
-        }
+        }]
       },
       controller: 'MainController',
       templateUrl: 'partials/session.html'

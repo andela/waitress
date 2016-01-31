@@ -19,6 +19,6 @@ h1.title{
   padding-top: 100px;
 }
 
-.pass-phrase-dialog input{
-    border: solid blue;
+.pass-phrase-dialog input, .pass-phrase-dialog button{
+    border: solid 2px #3054E3;
 }
