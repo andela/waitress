@@ -4,7 +4,7 @@
       <div class="session-control flex fill column-layout vertical align-center horizontal align-center">
         <h1 my-current-time id="live-clock"></h1>
         <h3>It's time for {{ beforeMidday ? "Breakfast" : "Lunch" }}</h3>
-            <button show-dialog class="button button-stable">
+            <button show-dialog midday="beforeMidday" class="button button-stable">
               Click To Start Session
               </button>
       </div>
