@@ -2,13 +2,22 @@
 parallel = True
 
 [report]
-omit =  
-    */python?.?/*
-    */site-packages/*
-    *__init__*
-    */photo_editor/settings/*.py
-    */migrations/*
-    */urls.py
+omit =
+  *tests*
+  *migrations*
+  *site-packages*
+  *rest_framework*
+  *__init__.py*
+  *settings*
+  *wsgi.py*
+  *admin.py*
+  *xml*
+  *http*
+  _LWPCookieJar*
+  _MozillaCookieJar*
+  cookielib*
+  encodings/latin_1*
+  urllib2*
 exclude_lines =
     pragma: no cover
     def
