@@ -239,9 +239,8 @@ class ReportViewSet(viewsets.ViewSet):
         else:
             if len(start_date.split('-')) < 3:
                 start_date = '{0}-{1}'.format(start_date, '01')
-                end_date = end_date if not end_date is None else date_today
+                end_date = end_date if end_date is not None else date_today
             queryset = self.queryset.filter(date__range=[start_date, end_date])
-        import ipdb; ipdb.set_trace()
         report = ReportSerializer.count(queryset)
 
         return Response(report, status_code.HTTP_200_OK)
