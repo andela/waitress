@@ -115,7 +115,9 @@ __AVAILABLE ENDPOINTS__
 - `GET "/reports?from=yyyy-mm-dd&to=yyyy-mm-dd"` get report.
   `GET "/reports?from=yyyy-mm&to=yyyy-mm-dd"` get reports from month in the year until set date.
   `GET "/reports?from=yyyy-mm-dd"` get reports from date until today.
+
   *If the to query parameter is missing, reports is crammed until the present date.*
+
   ```javascript
   [
     {
@@ -130,4 +132,4 @@ __AVAILABLE ENDPOINTS__
   ```
 
 __CHANGE LOG__
-* Added 2 new endpoints
+* Added 2 new endpoints [February 4, 2016]
