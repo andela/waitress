@@ -100,8 +100,19 @@ class UserViewSet(viewsets.ViewSet):
         content = {'firstname': user.firstname, 'lastname': user.lastname}
         if not meal_in_progress:
             content['status'] = 'There is no meal in progress'
+            return Response(
+                content, status=status_code.HTTP_406_NOT_ACCEPTABLE
+            )
+
         else:
             before_midday = Time.is_before_midday()
+            if user.is_tapped():
+                content['status'] = 'User has tapped in for {0}'.format(
+                    'breakfast' if before_midday else 'lunch'
+                )
+                return Response(
+                    content, status=status_code.HTTP_400_BAD_REQUEST
+                )
             date_today = meal_in_progress[0].date
             mealservice = MealService.objects.filter(
                 user=user, date=date_today
