@@ -178,6 +178,23 @@ class Passphrase(models.Model):
     word = models.CharField(max_length=100, unique=True)
     user = models.ForeignKey('SlackUser')
 
+    @classmethod
+    def exists(cls, passphrase):
+        """
+        A method that checks if a passphrase exists.
+        """
+        matched_passphrases = cls.objects.filter(word=passphrase)
+
+        def status():
+            return True if matched_passphrases else False
+
+        def matched_list():
+            return matched_passphrases
+
+        cls.status = status()
+        cls.matched_list = matched_list()
+        return cls
+
 
 class MealSession(models.Model):
     """

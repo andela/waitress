@@ -4,7 +4,7 @@ _A meals tracking app for keeping updated list of served persons._
 
 [Waitress](http://waitressandela.herokuapp.com/) tracks persons who have had meals.
 
-__Available Endpoints__
+__AVAILABLE ENDPOINTS__
 
 - `GET "/users"`
     ```javascript
@@ -40,13 +40,13 @@ __Available Endpoints__
     }
     ```
 
-- `POST "/users/{id}/tap"` 
+- `POST "/users/{id}/tap"`
     ```javascript
     {
         'status': 'You tapped successfully'
     }
     ```
- 
+
 - `POST "/users/nfctap" --slackUserId="ident"`
     ```javascript
     {
@@ -72,7 +72,7 @@ __Available Endpoints__
     }
     ```
 
-- `GET "/meal-sessions/"` 
+- `GET "/meal-sessions/"`
     ```javascript
     {
         "before_midday": false
@@ -92,3 +92,42 @@ __Available Endpoints__
         "status": "Breakfast session stopped"
     }
     ```
+- `POST "/users/{id}/retrieve-secure/" --passphrase="cdfd"`
+  ```javascript
+  {
+      "id": 5,
+      "firstname": "A...",
+      "lastname": "J...",
+      "photo": "https://avatars.slack-edge.com/...jpg",
+      "is_tapped": false,
+      "slack_id": "U-SLACK"
+  }
+  ```
+- `GET "/reports/"`
+  ```javascript
+  // Gets the meal record for the day.
+  {
+      breakfast: {num_served: X},
+      lunch: {num_served: Y},
+      date: date_today
+  }
+  ```
+- `GET "/reports?from=yyyy-mm-dd&to=yyyy-mm-dd"` get report.
+  `GET "/reports?from=yyyy-mm&to=yyyy-mm-dd"` get reports from month in the year until set date.
+  `GET "/reports?from=yyyy-mm-dd"` get reports from date until today.
+  *If the to query parameter is missing, reports is crammed until the present date.*
+  ```javascript
+  [
+    {
+      breakfast:
+      lunch:
+      date:
+    },
+    {
+      ...
+    }
+  ]
+  ```
+
+__CHANGE LOG__
+* Added 2 new endpoints
