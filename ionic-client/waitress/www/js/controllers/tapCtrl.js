@@ -3,8 +3,15 @@ no-param-reassign:0, no-var:0 */
 angular.module('waitress')
     .controller('TapController', tapCtrl);
 
-tapCtrl.$inject = ['$scope'];
+tapCtrl.$inject = ['$scope', 'nfcService'];
 
-function tapCtrl($scope) {
+/**
+* Dialog Directive controller
+@param {service} $scope, This controlls the scope
+@param {service} nfcService nfcService initialization
+@return {void}
+*/
+function tapCtrl($scope, nfcService) {
+  nfcService.init();
   $scope.test = 'blank page';
 }

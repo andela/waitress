@@ -42,9 +42,10 @@ function showDialogDirective($ionicPopup, MealSession, $state, $log) {
                   MealSession.start('http://waitressandela.herokuapp.com/meal-sessions/start/', data)
                   .then(function() {
                     dialog.close();
-                    $state.go('tap');
+                    $state.go('dashboard.tap');
                   }).catch(function(res) {
-                    scope.errorMessage = res.data.status;
+                    alert(res);
+                    scope.errorMessage = res.data.status || res.responseText;
                   });
                 } else {
                   scope.errorMessage = 'password can\'t be blank';

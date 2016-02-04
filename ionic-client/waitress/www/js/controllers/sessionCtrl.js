@@ -3,11 +3,11 @@
 angular.module('waitress')
 .controller('MainController', mainCtrl);
 
-mainCtrl.$inject = ['$scope', '$log', 'midday'];
+mainCtrl.$inject = ['$scope', '$log', 'midday', 'nfcService'];
 /**
 * Dialog Directive controller
 @param {service} $scope, This controlls the scope
-@param {serice} $log, for debugging purposes
+@param {service} $log, for debugging purposes
 @param {service} midday resolved service from ui-router
 @return {void}
 */
