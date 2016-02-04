@@ -1,5 +1,7 @@
 angular.module('waitress', [
-  'ionic'
+  'ionic',
+  'nfcFilters',
+  'ngCordova'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -19,24 +21,60 @@ angular.module('waitress', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $logProvider) {
+.config(function($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
   $urlRouterProvider.otherwise('/');
+  $ionicConfigProvider.tabs.position('bottom');
   $logProvider.debugEnabled(true);
   $stateProvider
     .state('home', {
       url: '/',
       resolve: {
-        midday:['$http', function($http) {
+        midday: ['$http', function($http) {
           return $http({method: 'GET', url: 'http://waitressandela.herokuapp.com/meal-sessions/'});
         }]
       },
       controller: 'MainController',
       templateUrl: 'partials/session.html'
-  })
-  .state('tap', {
-    url: '/tap',
-    controller: 'TapController',
-    templateUrl: 'partials/tap.html'
-  });
+    })
+    .state('dashboard', {
+      abstract: true,
+      url: '/dashboard',
+      controller: 'dashboardController',
+      templateUrl: 'partials/dashboard.html'
+    })
+    .state('dashboard.tap', {
+      url: '/dashboard/home',
+      views: {
+        'home-tab': {
+          templateUrl: 'partials/tap.html',
+          controller: 'TapController'
+        }
+      }
+    })
+    .state('dashboard.report', {
+      url: 'dashboard/report',
+      views: {
+        'report-tab': {
+          templateUrl: 'partials/report.html'
+        }
+      }
+    })
+    .state('dashboard.history', {
+      url: 'dashboard/history',
+      views: {
+        'history-tab': {
+          templateUrl: 'partials/history.html'
+        }
+      }
+    })
+    .state('dashboard.report-weekly', {
+      url: 'dashboard/report/weekly',
+      views: {
+        'report-tab': {
+          templateUrl: 'partials/weekly-report.html'
+        }
+      }
+
+    });
 });
 

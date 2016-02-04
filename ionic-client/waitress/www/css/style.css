@@ -18,7 +18,20 @@ h1.title{
 .add-margin-top{
   padding-top: 100px;
 }
-
+.add-small-margin-top{
+  padding-top: 50px;
+}
+.item-icon-right > i{
+  color: #A0A0A0;
+}
 .pass-phrase-dialog input, .pass-phrase-dialog button{
     border: solid 2px #3054E3;
+}
+.spinner svg {
+  position:absolute;
+  top:40%;
+  left:50%;
+  transform: translate(-50%, -40%);
+  width: 180px;
+  height: 180px;
 }
