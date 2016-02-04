@@ -208,4 +208,5 @@ class MealSession(models.Model):
         """
         A property that returns meal session for the current day
         """
-        return cls.objects.filter(date=timezone.now().date(), status=True)
+        date_today = timezone.now().date()
+        return cls.objects.filter(date=date_today, status=True)

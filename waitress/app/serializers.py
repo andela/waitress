@@ -37,9 +37,9 @@ class ReportSerializer(serializers.Serializer):
         """
         result_group = queryset.values('date')
         annotate_report = result_group.annotate(
-                    breakfast=Count('breakfast'),
-                    lunch=Count('lunch')
-                )
+            breakfast=Count('breakfast', breakfast=True),
+            lunch=Count('lunch', lunch=True)
+        )
 
         def serialize(queryset):
             return [
