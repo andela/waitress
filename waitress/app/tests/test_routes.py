@@ -1,6 +1,13 @@
 from django.test import TestCase, Client
 from app.models import Passphrase, SlackUser
 from django.utils import timezone
+from django.conf import settings
+
+
+def skipUnless(fn, *args, **kwargs):
+    engine = settings.DATABASES['default']['ENGINE']
+    if engine is 'django.db.backends.postgresql_psycopg2':
+        return fn(*args, **kwargs)
 
 
 class ServiceTestCase(TestCase):
@@ -130,6 +137,7 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/users/nfctap/", self.data)
         self.assertEquals(response.status_code, 200)
 
+    @skipUnless
     def test_can_view_reports(self):
         """
         Tests that user can view reports.

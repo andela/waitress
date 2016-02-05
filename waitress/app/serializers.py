@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.db.models import Count
+from app.models import CountTrue
 
 
 class UserSerializer(serializers.Serializer):
@@ -37,8 +37,8 @@ class ReportSerializer(serializers.Serializer):
         """
         result_group = queryset.values('date')
         annotate_report = result_group.annotate(
-            breakfast=Count('breakfast', breakfast=True),
-            lunch=Count('lunch', lunch=True)
+            breakfast=CountTrue('breakfast'),
+            lunch=CountTrue('lunch')
         )
 
         def serialize(queryset):
