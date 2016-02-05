@@ -44,8 +44,7 @@ function showDialogDirective($ionicPopup, MealSession, $state, $log) {
                     dialog.close();
                     $state.go('dashboard.tap');
                   }).catch(function(res) {
-                    alert(res);
-                    scope.errorMessage = res.data.status || res.responseText;
+                    scope.errorMessage = res.statusText;
                   });
                 } else {
                   scope.errorMessage = 'password can\'t be blank';
