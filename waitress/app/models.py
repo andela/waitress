@@ -122,11 +122,11 @@ class JSONField(models.Field):
         return value
 
 
-class CountTrue(models.Count):
+class CountTrue(models.Sum):
     """
     A custom count for when a field's value is True.
     """
-    template = 'COUNT(CASE WHEN %(field)s = TRUE THEN TRUE ELSE NULL END)'
+    template = 'SUM(CASE WHEN %(field)s = TRUE THEN 1 ELSE 0 END)'
 
 
 class MealService(models.Model):
