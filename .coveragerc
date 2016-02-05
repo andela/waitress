@@ -11,13 +11,7 @@ omit =
   *settings*
   *wsgi.py*
   *admin.py*
-  *xml*
-  *http*
-  _LWPCookieJar*
-  _MozillaCookieJar*
-  cookielib*
-  encodings/latin_1*
-  urllib2*
+  *lib*
 exclude_lines =
     pragma: no cover
     def

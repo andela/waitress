@@ -1,4 +1,4 @@
-from unittest import TestCase
+import unittest
 from app.models import Passphrase, SlackUser, MealSession, MealService
 from django.utils import timezone
 
@@ -21,7 +21,7 @@ def create_user():
 user = create_user()
 
 
-class PassphraseModelTestCase(TestCase):
+class PassphraseModelTestCase(unittest.TestCase):
     """
     A testcase for the Passphrase model.
     """
@@ -42,7 +42,7 @@ class PassphraseModelTestCase(TestCase):
             Passphrase.objects.get(word='changed_from_very_secret')
 
 
-class SlackUserModelTestCase(TestCase):
+class SlackUserModelTestCase(unittest.TestCase):
     """
     A testcase for the SlackUser model.
     """
@@ -61,7 +61,7 @@ class SlackUserModelTestCase(TestCase):
             SlackUser.objects.get(email='testuser@tran.tum')
 
 
-class MealSessionModel(TestCase):
+class MealSessionModel(unittest.TestCase):
     """
     A testcase for the MealSession model.
     """
@@ -87,7 +87,7 @@ class MealSessionModel(TestCase):
             MealSession.objects.get(date=date_today)
 
 
-class MealServiceModel(TestCase):
+class MealServiceModel(unittest.TestCase):
     """
     A testcase for the MealService model.
     """
