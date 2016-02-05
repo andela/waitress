@@ -16,7 +16,7 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
   * Dialog Directive controller
   @param {string} url, designated server url
   @param {object} data, handles the call to http server
-  @return {void}
+  @return {promise} promise object
   */
   function startService(url, data) {
     var deffered = $q.defer();
@@ -38,7 +38,30 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
     });
     return deffered.promise;
   }
+
+  function getData(url, report) {
+    var deffered = $q.defer();
+    $http({
+      url: url,
+      method: 'GET',
+      params: report
+    })
+    .then(function(resp) {
+      deffered.resolve(resp);
+    });
+
+    return deffered.promise;
+  }
+
+  var report = function(report) {
+    return getData('http://waitressandela.herokuapp.com/reports/', report);
+  };
+  var getMidday = function() {
+    return getData('http://waitressandela.herokuapp.com/meal-sessions/');
+  };
   return {
-    start: startService
+    start: startService,
+    report: report,
+    getMidday: getMidday
   };
 }

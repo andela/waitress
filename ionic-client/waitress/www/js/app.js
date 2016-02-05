@@ -1,7 +1,8 @@
 angular.module('waitress', [
   'ionic',
   'nfcFilters',
-  'ngCordova'
+  'ngCordova',
+  'ionic-datepicker'
 ])
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,7 +21,6 @@ angular.module('waitress', [
     }
   });
 })
-
 .config(function($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
   $urlRouterProvider.otherwise('/');
   $ionicConfigProvider.tabs.position('bottom');
@@ -29,17 +29,18 @@ angular.module('waitress', [
     .state('home', {
       url: '/',
       resolve: {
-        midday: ['$http', function($http) {
-          return $http({method: 'GET', url: 'http://waitressandela.herokuapp.com/meal-sessions/'});
+        midday: ['MealSession', function(MealSession) {
+          return MealSession.getMidday().then(function(result) {
+            return result;
+          });
         }]
       },
-      controller: 'MainController',
+      controller: 'sessionController',
       templateUrl: 'partials/session.html'
     })
     .state('dashboard', {
       abstract: true,
       url: '/dashboard',
-      controller: 'dashboardController',
       templateUrl: 'partials/dashboard.html'
     })
     .state('dashboard.tap', {
@@ -67,11 +68,29 @@ angular.module('waitress', [
         }
       }
     })
-    .state('dashboard.report-weekly', {
+    .state('dashboard.report-custom', {
       url: 'dashboard/report/weekly',
       views: {
         'report-tab': {
-          templateUrl: 'partials/weekly-report.html'
+          controller: 'CustomReportController',
+          templateUrl: 'partials/custom-report.html'
+        }
+      }
+
+    })
+    .state('dashboard.report-daily', {
+      url: 'dashboard/report/daily',
+      resolve: {
+        dailyReports: ['MealSession', function(MealSession) {
+          return MealSession.report().then(function(result) {
+            return result;
+          });
+        }]
+      },
+      views: {
+        'report-tab': {
+          templateUrl: 'partials/daily-report.html',
+          controller: 'dailyReportController'
         }
       }
 

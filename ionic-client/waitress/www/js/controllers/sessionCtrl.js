@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('waitress')
-.controller('MainController', mainCtrl);
+.controller('sessionController', mainCtrl);
 
-mainCtrl.$inject = ['$scope', '$log', 'midday', 'nfcService'];
+mainCtrl.$inject = ['$scope', '$log', 'midday'];
 /**
 * Dialog Directive controller
 @param {service} $scope, This controlls the scope
