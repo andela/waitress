@@ -113,6 +113,14 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT)
 
 BOWER_INSTALLED_APPS = (
+    'jquery',
+    'bootstrap',
+    'fontawesome',
+    'angular'
+    'angular-moment',
+    'angular-animate',
+    'ng-file-upload',
+    'slick-carousel',
 )
 
 # Custom class for messages
