@@ -47,17 +47,27 @@ h1.title {
 .report {
     height: 90%;
 }
-.custom-margin{
-  margin-top:20px;
+
+.custom-margin {
+    margin-top: 20px;
 }
+
 .report .card {
     margin: 0px;
     height: 50%;
-    box-shadow:0;
+    border-bottom: solid 1px rgb(56, 126, 245);
 }
+
+.report .card:last-child {
+    margin: 0px;
+    height: 50%;
+    box-shadow: none;
+    border-bottom: none
+}
+
 .daily .card a {
-  text-align: center !important;
-  padding: 0 30px;
+    text-align: center !important;
+    padding: 0 30px;
 }
 
 .report .card a {

@@ -3,12 +3,12 @@
         <div class="col">
             <p> From </p>
             <ionic-datepicker input-obj="fromDate">
-                <button class="button button-block button-positive"> {{fromDate.inputDate|date:dateFormat ||currentDate|date:dateFormat}}</button>
+                <button class="button button-block button-positive"> {{fromDate.inputDate|date:dateFormat ||Date.now()|date:dateFormat}}</button>
         </div>
         <div class="col">
             <p> To </p>
             <ionic-datepicker input-obj="toDate">
-                <button class="button button-block button-positive"> {{toDate.inputDate|date:dateFormat ||currentDate|date:dateFormat}}</button>
+                <button class="button button-block button-positive"> {{toDate.inputDate|date:dateFormat ||Date.now()|date:dateFormat}}</button>
         </div>
         <div class="col">
             <p> Search </p>

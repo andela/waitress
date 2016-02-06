@@ -56,13 +56,16 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, $
     }
     });
   };
-    var removeListener = function(){
-      nfc.removeNdefListener(function(nfcEvent){
+    var removeListener = function() {
+      alert("got here");
+      if(window.nfc) {
+        nfc.removeNdefListener(function(nfcEvent) {
         console.log('last event removed', nfcEvent)}, function(){
           console.log('success')},
-          function(){
+          function() {
             console.log('failed');
           });
+      }
     };
   return {
     remove: removeListener,
