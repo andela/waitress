@@ -39,7 +39,7 @@ class UserViewSet(viewsets.ViewSet):
         status = UserRepository.update()
         content = {"status": status}
 
-        return Response(content, status=status.HTTP_200_OK)
+        return Response(content, status=status_code.HTTP_200_OK)
 
     @detail_route(methods=['post'], url_path='tap')
     def tap(self, request, pk):
