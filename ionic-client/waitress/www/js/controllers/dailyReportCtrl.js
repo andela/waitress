@@ -7,6 +7,4 @@ dailyReportController.$inject = ['$scope', 'dailyReports'];
 
 function dailyReportController($scope, dailyReports) {
     $scope.reports = dailyReports.data[0];
-    console.log($scope.reports);
-  $scope.test = 'blank page';
 }

@@ -9,9 +9,9 @@ tapCtrl.$inject = ['$scope', 'nfcService'];
 * Dialog Directive controller
 @param {service} $scope, This controlls the scope
 @param {service} nfcService nfcService initialization
+@param {sevice} $ionicView ionicvview Service
 @return {void}
 */
 function tapCtrl($scope, nfcService) {
   nfcService.init();
-  $scope.test = 'blank page';
 }
