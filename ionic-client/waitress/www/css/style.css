@@ -1,24 +1,86 @@
 .logo-sm {
-  height: 40px;
+    height: 40px;
 }
 
 .content-wrapper {
-  width: 240px;
-  text-align: center;
-  margin: 50px auto !important;
-}
-.title-image{
-  top: 0px;
-  position: absolute;
-}
-h1.title{
-  left: 123px;
-  color: #3359DF;
-}
-.add-margin-top{
-  padding-top: 100px;
+    width: 240px;
+    text-align: center;
+    margin: 50px auto !important;
 }
 
-.pass-phrase-dialog input{
-    border: solid blue;
+.title-image {
+    top: 0px;
+    position: absolute;
+}
+
+h1.title {
+    left: 123px;
+    color: #3359DF;
+}
+
+.add-margin-top {
+    padding-top: 100px;
+}
+
+.add-small-margin-top {
+    padding-top: 50px;
+}
+
+.item-icon-right > i {
+    color: #A0A0A0;
+}
+
+.pass-phrase-dialog input,
+.pass-phrase-dialog button {
+    border: solid 2px #3054E3;
+}
+
+.spinner svg {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    width: 180px;
+    height: 180px;
+}
+
+.report {
+    height: 90%;
+}
+
+.custom-margin {
+    margin-top: 20px;
+}
+
+.report .card {
+    margin: 0px;
+    height: 50%;
+    border-bottom: solid 1px rgb(56, 126, 245);
+}
+
+.report .card:last-child {
+    margin: 0px;
+    height: 50%;
+    box-shadow: none;
+    border-bottom: none
+}
+
+.daily .card a {
+    text-align: center !important;
+    padding: 0 30px;
+}
+
+.report .card a {
+    text-align: left;
+    padding-left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.report .card a h2 {
+    font-size: 20px;
+}
+
+.report .card a p {
+    font-size: 18px;
 }
