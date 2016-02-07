@@ -37,7 +37,8 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, $
             angular.copy(nfcEvent.tag, tag);
             var slackId = $filter('decodePayload')(tag.ndefMessage[0]);
             slackService.tap(slackId).then(function(resp) {
-              $cordovaToast.show(resp.data.firstname + ' ' + resp.data.lastname + 'tapped successfully', 'long', 'bottom');
+              $cordovaToast.show(resp.data.firstname + ' ' + resp.data.lastname + ' tapped successfully',
+                'long', 'bottom');
             })
             .catch(function(err) {
               if (err.status === 400) {

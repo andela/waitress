@@ -1,16 +1,18 @@
-<ion-view view-title="Daily Reports" align="center" class="custom-margin">
+<ion-view view-title="Daily Reports" align="center">
+<ion-content class="has-header has-footer">
     <div class="list report daily">
         <div class="card">
-            <a class="item item-icon-right" href="#">
+            <div class="item item-icon-right">
                 <h2> BREAKFAST </h2>
                 <h1> {{reports.breakfast || 0}}</h1>
-            </a>
+            </div>
         </a>
         </div>
         <div class="card">
-            <a class="item item-icon-right" href="#">
+            <div class="item item-icon-right">
                 <h2> LUNCH </h2>
                 <h1> {{reports.lunch || 0}}</h1>
-            </a>
+            </div>
         </div>
+</div>
 </ion-view>

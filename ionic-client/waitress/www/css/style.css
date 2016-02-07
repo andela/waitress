@@ -45,7 +45,7 @@ h1.title {
 }
 
 .report {
-    height: 90%;
+    height: 100%;
 }
 
 .custom-margin {
@@ -53,34 +53,39 @@ h1.title {
 }
 
 .report .card {
+    cursor: pointer;
     margin: 0px;
     height: 50%;
+    box-shadow:none;
     border-bottom: solid 1px rgb(56, 126, 245);
 }
-
+.custom .col{
+    border: solid 1px #333;
+}
 .report .card:last-child {
-    margin: 0px;
-    height: 50%;
-    box-shadow: none;
+
     border-bottom: none
 }
 
-.daily .card a {
+.daily .card div {
     text-align: center !important;
     padding: 0 30px;
 }
+.report .card:active,.report .card:active div {
+    background-color: #eee;
+}
 
-.report .card a {
-    text-align: left;
+.report .card div {
+    text-align: center;
     padding-left: 30px;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.report .card a h2 {
+.report .card div h2 {
     font-size: 20px;
 }
 
-.report .card a p {
+.report .card div p {
     font-size: 18px;
 }
