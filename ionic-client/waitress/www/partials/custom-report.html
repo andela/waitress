@@ -1,21 +1,37 @@
-<ion-view view-title="Custom Reports" align="center" class="add-small-margin-top">
+<ion-view view-title="Custom Reports" align="center">
+<ion-content class="has-header has-footer">
     <div class="row">
         <div class="col">
             <p> From </p>
             <ionic-datepicker input-obj="fromDate">
                 <button class="button button-block button-positive"> {{fromDate.inputDate|date:dateFormat ||Date.now()|date:dateFormat}}</button>
+            </ionic-datepicker>
         </div>
         <div class="col">
             <p> To </p>
             <ionic-datepicker input-obj="toDate">
                 <button class="button button-block button-positive"> {{toDate.inputDate|date:dateFormat ||Date.now()|date:dateFormat}}</button>
+              </ionic-datepicker>
         </div>
         <div class="col">
             <p> Search </p>
             <button class="button button-block button-positive" ng-click="report()"> Search</button>
         </div>
     </div>
-    <div class="report">
+    <div class="custom report" ng-show="reportData.length > 0">
+    <div class="row">
+        <div class="col">
+            <h4> DATE </h4>
+        </div>
+        <div class="col">
+        <h4> BREAKFAST </h4>
+
+        </div>
+        <div class="col">
+        <h4> LUNCH </h4>
+
+        </div>
+    </div>
         <div class="row" ng-repeat="report in reportData">
             <div class="col">
                 <div class="card">
@@ -24,17 +40,17 @@
             </div>
             <div class="col">
                 <div class="card">
-                    <h1> {{report.breakfast || 0}} </h1>
-                    <p> Breakfast count</p>
+
+                    <h4> {{report.breakfast || 0}} </h4>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
-                    <h1> {{report.lunch || 0}} </h1>
-                    <p> Lunch Count</p>
+                    <h4> {{report.lunch || 0}} </h4>
                 </div>
             </div>
         </div>
     </div>
-    </ionic-datepicker>
+</ion-content>
+
 </ion-view>

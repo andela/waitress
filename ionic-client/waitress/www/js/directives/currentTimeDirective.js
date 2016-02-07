@@ -27,7 +27,6 @@ function myCurrentTimeDirective($interval, dateFilter) {
     function updateTime() {
       element.text(dateFilter(new Date(), 'h:mm:ss a'));
     }
-    element.addClass('add-margin-top');
     element.on('$destroy', function() {
       $interval.cancel(timeoutId);
     });
