@@ -116,8 +116,6 @@ BOWER_INSTALLED_APPS = (
     'jquery',
     'bootstrap',
     'fontawesome',
-    'angular',
-    'angular-animate',
 )
 
 # Custom class for messages
