@@ -32,5 +32,8 @@
     "angular-localforage": "~1.2.5",
     "mdi": "~1.4.57",
     "angular-toastr": "~1.6.0"
+  },
+  "resolutions": {
+    "angular": "~1.4.8",
   }
 }
