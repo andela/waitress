@@ -1,6 +1,5 @@
 angular.module('waitress', [
   'ionic',
-  'nfcFilters',
   'ngCordova',
   'ionic-datepicker'
 ])

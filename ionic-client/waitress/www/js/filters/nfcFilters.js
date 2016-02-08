@@ -1,4 +1,4 @@
-angular.module('nfcFilters', [])
+angular.module('waitress')
   .filter('decodePayload', function() {
     function decodePayload(record) {
       var payload,
