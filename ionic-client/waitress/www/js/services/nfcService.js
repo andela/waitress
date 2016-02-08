@@ -34,7 +34,7 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
               title: 'Waitress Says',
               template: msg,
               buttons: [{
-                text: 'Confirm',
+                text: 'Ok',
                 type: error ? 'button-assertive' : 'button-positive'
               }]
             });
