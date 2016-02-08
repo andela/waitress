@@ -1,10 +1,9 @@
 angular.module('waitress', [
   'ionic',
-  'nfcFilters',
   'ngCordova',
   'ionic-datepicker'
 ])
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, nfcService) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,6 +18,14 @@ angular.module('waitress', [
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    // Commented out because this doesn't seems to be working when the apk is rendered
+    // on a real divice.
+    // $rootScope.$on('$stateChangeStart', function(ev, to, toParam, from) {
+    //   if (from.name === 'dashboard.tap') {
+    //     alert(" we got here too");
+    //     nfcService.remove();
+    //   }
+    // });
   });
 })
 .config(function($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
@@ -26,7 +33,7 @@ angular.module('waitress', [
   $ionicConfigProvider.tabs.position('bottom');
   $logProvider.debugEnabled(true);
   $stateProvider
-    .state('home', {
+    .state('index', {
       url: '/',
       resolve: {
         midday: ['MealSession', function(MealSession) {
@@ -41,7 +48,8 @@ angular.module('waitress', [
     .state('dashboard', {
       abstract: true,
       url: '/dashboard',
-      templateUrl: 'partials/dashboard.html'
+      templateUrl: 'partials/dashboard.html',
+      controller: 'dashboardController'
     })
     .state('dashboard.tap', {
       url: '/dashboard/home',
