@@ -43,8 +43,8 @@ function showDialogDirective($ionicPopup, MealSession, $state, $log) {
                   .then(function() {
                     dialog.close();
                     $state.go('dashboard.tap');
-                  }).catch(function(res) {
-                    scope.errorMessage = res.statusText;
+                  }).catch(function() {
+                    scope.errorMessage = 'Error connecting to server, Please try again later';
                   });
                 } else {
                   scope.errorMessage = 'password can\'t be blank';
