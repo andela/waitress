@@ -1,3 +1,4 @@
+
 angular.module('waitress', [
   'ionic',
   'ngCordova',
@@ -5,15 +6,24 @@ angular.module('waitress', [
 ])
 .run(function($ionicPlatform, $rootScope, nfcService) {
   // Handles State change to trigger the nfcService
+
+  ionic.Platform.fullScreen();
+
+
   $rootScope.$on('$stateChangeSuccess', function(ev, to, toParam, from) {
-    if (from.name === 'dashboard.tap') {
+    ionic.Platform.showStatusBar(false);
+    if (from.name === 'dashboard.tap' || from.name === 'dashboard.nfc') {
       nfcService.remove();
     }
     if (to.name === 'dashboard.tap') {
       nfcService.init();
-     }
+    }
+    if (to.name === 'dashboard.nfc') {
+      nfcService.init(true);
+    }
   });
   $ionicPlatform.ready(function() {
+
     if (window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -29,7 +39,6 @@ angular.module('waitress', [
     }
     // Commented out because this doesn't seems to be working when the apk is rendered
     // on a real divice.
-
   });
 })
 .config(function($stateProvider, $urlRouterProvider, $logProvider, $ionicConfigProvider) {
@@ -60,6 +69,14 @@ angular.module('waitress', [
       views: {
         'home-tab': {
           templateUrl: 'partials/tap.html'
+        }
+      }
+    })
+    .state('dashboard.nfc', {
+      url: '/dashboard/nfc',
+      views: {
+        'nfc-write': {
+          templateUrl: 'partials/nfc-write.html'
         }
       }
     })

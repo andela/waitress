@@ -34,12 +34,19 @@ h1.title {
 .pass-phrase-dialog button {
     border: solid 2px #3054E3;
 }
+.center-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 90%;
+}
+.tap-head{
+    color: #3054E3;
+}
 
 .spinner svg {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -40%);
+
     width: 180px;
     height: 180px;
 }

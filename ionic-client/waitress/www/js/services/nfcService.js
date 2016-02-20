@@ -6,29 +6,65 @@ nfcService.$inject = ['$rootScope', '$ionicPlatform',
 
 function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast) {
   self.write = false;
+/**
+* Utility method to generate id of fellows
+*/
+  function * idMaker() {
+    var index = 1;
+    while (index < 200) {
+      yield index++;
+    }
+  }
+  var gen = idMaker();
   function listenToTag(nfcEvent) {
     if (self.write) {
-      slackService.getSlackId(105).then(function(resp) {
-      var record = ndef.textRecord(resp.data.slack_id);
-        nfc.write(
-        [record],
-        function() {
-          $rootScope.$apply(function() {
-            $ionicPopup.alert({
-              title: 'Successfully',
-              template: 'wrote to tag'
-            });
+      var id = gen.next().value;
+      slackService.getSlackId(id).then(function(resp) {
+      var record = [
+        ndef.textRecord(resp.data.slack_id)
+      ];
+      var failure = function(reason) {
+        $rootScope.$apply(function() {
+          $ionicPopup.alert({
+            title: 'Waitress Says',
+            template: 'There was an error writing for ' +
+            reason
           });
-        },
-        function(reason) {
-          $rootScope.$apply(function() {
-            $ionicPopup.alert({
-              title: 'failed',
-              template: 'there was an error ' + reason
-            });
-          });
-        }
-      );
+        });
+      };
+      var lockSuccess = function() {
+        $ionicPopup.alert({
+          title: 'Waitress Says',
+          template: 'This tag now belongs to ' +
+          resp.data.firstname + ' ' + resp.data.lastname
+        });
+      };
+      var lock = function() {
+        nfc.makeReadOnly(lockSuccess, failure);
+      };
+      nfc.write(record, lock, failure);
+      //   nfc.write(
+      //   [record],
+      //   function() {
+      //     nfc.makeReadOnly(function() {
+      //       $ionicPopup.alert({
+      //         title: 'Waitress Says',
+      //         template: 'This tag now belongs to ' +
+      //         resp.data.firstname + ' ' + resp.data.lastname
+      //       });
+      //     });
+      //     $rootScope.$apply();
+      //   },
+      //   function(reason) {
+      //     $rootScope.$apply(function() {
+      //       $ionicPopup.alert({
+      //         title: 'Waitress Says',
+      //         template: 'There was an error writing for ' +
+      //         reason
+      //       });
+      //     });
+      //   }
+      // );
       });
     } else {
       var showAlert = function(msg, error) {
@@ -40,8 +76,7 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
             type: error ? 'button-assertive' : 'button-positive'
           }]
         }).then(function(res) {
-          console.log('closed popup', res);
-        });
+      });
       };
       $rootScope.$apply(function() {
         var slackId = $filter('decodePayload')(nfcEvent.tag.ndefMessage[0]);
@@ -62,10 +97,11 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
       if ($window.nfc) {
         nfc.addNdefListener(listenToTag,
       function() {
-        $cordovaToast.show('listening to nfc', 'short', 'top');
+        $rootScope.msgToNfc = 'Listening to Nfc';
+        $rootScope.$apply();
       },
       function(reason) {
-        $cordovaToast.show('there was an error ' + reason, 'short', 'top');
+        $rootScope.msgToNfc = 'There was an error ' + reason;
       });
     }
     });
@@ -74,10 +110,10 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
     if (window.nfc) {
       nfc.removeNdefListener(listenToTag,
         function() {
-          $cordovaToast.show('Stopped Listening to nfc', 'short', 'top');
+
         },
         function() {
-          $cordovaToast.show('There was an error', 'short', 'top');
+
         });
     }
   };
