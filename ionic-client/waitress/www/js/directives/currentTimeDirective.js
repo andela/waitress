@@ -1,6 +1,5 @@
-
 angular.module('waitress')
-.directive('myCurrentTime', myCurrentTimeDirective);
+  .directive('myCurrentTime', myCurrentTimeDirective);
 
 myCurrentTimeDirective.$inject = ['$interval', 'dateFilter'];
 
@@ -22,8 +21,8 @@ function myCurrentTimeDirective($interval, dateFilter) {
   function link(scope, element) {
     var timeoutId;
     /**
-    * Updates Time
-    */
+     * Updates Time
+     */
     function updateTime() {
       element.text(dateFilter(new Date(), 'h:mm:ss a'));
     }
