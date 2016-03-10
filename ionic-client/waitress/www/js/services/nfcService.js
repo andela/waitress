@@ -6,17 +6,10 @@ nfcService.$inject = ['$rootScope', '$ionicPlatform',
 
 function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast) {
   self.write = false;
-
-  function * idMaker() {
-    var index = 1;
-    while (index < 200) {
-      yield index++;
-    }
-  }
-  var gen = idMaker();
+  var cardIndex = 1;
 
   function listenToTag(nfcEvent) {
-    var id = gen.next().value;
+
     var showAlert = function(msg, error) {
       $ionicPopup.alert({
         title: 'Waitress Says',
@@ -29,11 +22,13 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
       });
     };
     if (self.write) {
-      slackService.getSlackId(id).then(function(resp) {
+      slackService.getSlackId(cardIndex).then(function(resp) {
       var record = ndef.textRecord(resp.data.slack_id);
         nfc.write(
         [record],
         function() {
+          alert(cardIndex);
+          cardIndex++;
           $rootScope.$apply(function() {
             showAlert('This tag now belongs to ' +
               resp.data.firstname + ' ' + resp.data.lastname);
