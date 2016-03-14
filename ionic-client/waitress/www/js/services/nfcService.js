@@ -27,7 +27,6 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
         nfc.write(
         [record],
         function() {
-          alert(cardIndex);
           cardIndex++;
           $rootScope.$apply(function() {
             showAlert('This tag now belongs to ' +
