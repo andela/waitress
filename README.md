@@ -39,6 +39,13 @@ __AVAILABLE ENDPOINTS__
         "status": "Users list not changed"
     }
     ```
+- `GET "/users/remove-old-friends"`
+  ```javascript
+  {
+      "status": "Users deleted",
+      "users": ["Peter Parker", "Ben Bruce"]
+  }
+  ```
 
 - `POST "/users/{id}/tap"`
     ```javascript
