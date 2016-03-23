@@ -107,6 +107,7 @@ __AVAILABLE ENDPOINTS__
         "status": "Breakfast session stopped"
     }
     ```
+
 - `POST "/users/{id}/retrieve-secure/" --passphrase="cdfd"`
   ```javascript
   {
@@ -118,6 +119,7 @@ __AVAILABLE ENDPOINTS__
       "slack_id": "U-SLACK"
   }
   ```
+
 - `GET "/reports/"`
   ```javascript
   // Gets the meal record for the day.
@@ -127,6 +129,7 @@ __AVAILABLE ENDPOINTS__
       date: date_today
   }
   ```
+
 - `GET "/reports?from=yyyy-mm-dd&to=yyyy-mm-dd"` get report.
   `GET "/reports?from=yyyy-mm&to=yyyy-mm-dd"` get reports from month in the year until set date.
   `GET "/reports?from=yyyy-mm-dd"` get reports from date until today.
