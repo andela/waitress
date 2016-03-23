@@ -1,7 +1,11 @@
 from django.test import TestCase, Client
-from app.models import Passphrase, SlackUser
 from django.utils import timezone
 from django.conf import settings
+from rest_framework.test import APIRequestFactory
+from app.viewsets import UserViewSet
+from app.models import Passphrase, SlackUser
+from app.utils import UserRepository
+from mock import patch
 
 
 def skipUnless(fn, *args, **kwargs):
@@ -136,6 +140,17 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
         self.assertEquals(response.status_code, 200)
+
+    @patch('app.utils.UserRepository.update', return_value=[])
+    def test_can_trim_users(self, mock_user_repository_update):
+        """
+        Tests that old friends on Slack can be removed.
+        """
+        factory = APIRequestFactory()
+        request = factory.get("/users/remove-old-friends/")
+        UserViewSet.as_view({'get': 'trim_users'})(request)
+        assert mock_user_repository_update.called
+        assert mock_user_repository_update.called_once_with(trim=True)
 
     @skipUnless
     def test_can_view_reports(self):
