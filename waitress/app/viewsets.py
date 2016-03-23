@@ -55,6 +55,16 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @list_route(methods=['get'], url_path='remove-old-friends')
+    def trim_users(self, request):
+        """
+        A method that trims the list of users.
+        """
+        status = UserRepository.update(trim=True)
+        content = {"status": status}
+
+        return Response(content, status=status_code.HTTP_200_OK)
+
     @detail_route(methods=['post'], url_path='tap')
     def tap(self, request, pk):
         """

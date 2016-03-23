@@ -15,25 +15,28 @@ class UserRepository(object):
     """
 
     @classmethod
-    def update(cls):
+    def update(cls, trim=False):
         """
         A method that update the user records.
+
+        :param:
+        trim:= determines if old users should be removed from the database.
         """
         group_info = slack.groups.info(settings.SLACK_GROUP)
         user_info = slack.users.list()
         if group_info.successful:
             members = group_info.body['group']['members']
-            user_queryset = SlackUser.objects.all()
-            difference = cls.difference(members, user_queryset)
+            cls.user_queryset = SlackUser.objects.all()
+            difference = cls.difference(members, cls.user_queryset)
 
             if len(difference):
                 # get user info
                 if user_info.successful:
                     return cls.filter_add_user(
-                        user_info.body['members'], difference
+                        user_info.body['members'], difference, trim
                     )
             else:
-                return "Users list is remains unchanged"
+                return "Users list wasn't changed."
 
     @classmethod
     def difference(cls, repo_users, db_users):
@@ -54,7 +57,7 @@ class UserRepository(object):
         return unsaved_users
 
     @classmethod
-    def filter_add_user(cls, info, difference):
+    def filter_add_user(cls, info, difference, trim):
         """
         A method that retrieves users' info using the difference.
         """
@@ -94,13 +97,15 @@ class UserRepository(object):
 
         info, not_user = normalize(info)
 
+        difference = cls.get_real_users(difference[:], not_user)
+
+        if len(difference) == 0:
+            return "Users list not changed"
+
+        if trim:
+            return cls.trim_away(not_user)
+
         try:
-            difference_copy = difference[:]
-            for item in difference_copy:
-                if item in not_user:
-                    difference.remove(item)
-            if len(difference) == 0:
-                return "Users list not changed"
             for user in difference:
                 if user in info:
                     with transaction.atomic():
@@ -108,6 +113,23 @@ class UserRepository(object):
             return "Users updated successfully"
         except Exception as e:
             return "Users couldn't be updated successfully - %s" % e.message
+
+    @classmethod
+    def get_real_users(cls, difference, not_user):
+        """Get the users that are legit."""
+        return [item for item in difference if item not in not_user]
+
+    @classmethod
+    def trim_away(cls, not_user):
+        """Trims away users for the system that have been deleted off Slack."""
+        trim_user = []
+        for user in cls.user_queryset:
+            if user.slack_id in not_user:
+                trim_user.append("%s %s" % (user.firstname, user.lastname))
+                user.delete()
+        if len(trim_user):
+            return "Users deleted: %s" % (', '.join(trim_user))
+        return "Users list not changed"
 
 
 class Time:
