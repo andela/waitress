@@ -21,16 +21,23 @@ class SlackUserManager(models.Manager):
         """
         return SlackUser(**kwargs)
 
+# Enum fields for user type.
+EMPLOYEE = 'employee'
+GUEST = 'guest'
+
 
 class SlackUser(AbstractBaseUser):
     """
     A class that represents a `SlackUser` account
     """
     id = models.AutoField(unique=True, primary_key=True)
-    slack_id = models.CharField(unique=True, max_length=20)
+    slack_id = models.CharField(unique=True, max_length=20, blank=True)
     firstname = models.CharField(max_length=20,)
     lastname = models.CharField(max_length=20,)
-    email = models.CharField(max_length=60,)
+    email = models.CharField(max_length=60, blank=True)
+    user_type = models.CharField(
+        max_length=20, choices=((EMPLOYEE, 'employee'), (GUEST, 'guest')),
+        default='employee',)
     objects = SlackUserManager()
     photo = models.CharField(max_length=512, default="",)
     USERNAME_FIELD = 'id'

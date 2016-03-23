@@ -39,6 +39,13 @@ __AVAILABLE ENDPOINTS__
         "status": "Users list not changed"
     }
     ```
+- `POST "/users/update-users" --name="Guest 1"`
+    ```javascript
+    {
+      "status": "Guest user was created successfully.",
+      "id": 149
+    }
+    ```
 
 - `GET "/users/remove-old-friends"`
   ```javascript

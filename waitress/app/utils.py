@@ -14,6 +14,26 @@ class UserRepository(object):
     A wrapper class for methods that update the list of users.
     """
 
+    @staticmethod
+    def add(user_type, username):
+        guests = SlackUser.objects.filter(user_type=user_type).order_by('id')
+        last_guest = list(guests)[-1] if len(guests) else None
+        if not last_guest:
+            username = "Guest 1"
+        else:
+            last_num = last_guest.firstname[-1]
+            username = last_guest.firstname.replace(
+                            last_num,
+                            str(int(last_num) + 1))
+        new_guest = SlackUser()
+        new_guest.firstname = username
+        new_guest.user_type = user_type
+        try:
+            new_guest.save()
+            return "Guest user was created successfully.", new_guest.id
+        except Exception, e:
+            return "Guest user couldn't be created. Error: %" % (type(e)), None
+
     @classmethod
     def update(cls, trim=False):
         """
@@ -114,8 +134,8 @@ class UserRepository(object):
         except Exception as e:
             return "Users couldn't be updated successfully - %s" % e.message
 
-    @classmethod
-    def get_real_users(cls, difference, not_user):
+    @staticmethod
+    def get_real_users(difference, not_user):
         """Get the users that are legit."""
         return [item for item in difference if item not in not_user]
 
