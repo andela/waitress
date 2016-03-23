@@ -41,7 +41,7 @@ class ServiceTestCase(TestCase):
         Tests that priviledged user can start a session.
         """
         response = self.client.get("/meal-sessions/",)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_view_finish_session_page(self):
         """
@@ -51,7 +51,7 @@ class ServiceTestCase(TestCase):
 
         response = self.client.post("/meal-sessions/stop/", self.data)
 
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_view_alphabet_page(self):
         """
@@ -61,7 +61,7 @@ class ServiceTestCase(TestCase):
 
         response = self.client.get("/users/?filter=A")
 
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_view_user_page(self):
         """
@@ -69,7 +69,7 @@ class ServiceTestCase(TestCase):
         """
         response = self.client.get("/users/")
 
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_view_user_info(self):
         """
@@ -77,7 +77,7 @@ class ServiceTestCase(TestCase):
         """
         response = self.client.post(
             "/users/1/retrieve-secure/", self.passphrase)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
         self.assertIn("slack_id", response.content)
 
     def test_can_tap_breakfast(self):
@@ -87,7 +87,7 @@ class ServiceTestCase(TestCase):
         self.data['before_midday'] = True
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/1/tap/",)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_tap_lunch(self):
         """
@@ -96,9 +96,9 @@ class ServiceTestCase(TestCase):
         self.data['before_midday'] = False
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/1/tap/",)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_untap_breakfast(self):
         """
@@ -108,7 +108,7 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/1/tap/",)
         response = self.client.post("/users/1/untap/", self.passphrase)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_untap_lunch(self):
         """
@@ -118,8 +118,7 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/1/tap/",)
         response = self.client.post("/users/1/untap/", self.passphrase)
-
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_nfc_tap_breakfast(self):
         """
@@ -129,7 +128,7 @@ class ServiceTestCase(TestCase):
         self.data['slackUserId'] = 'U24A2R2'
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     def test_can_nfc_tap_lunch(self):
         """
@@ -139,7 +138,7 @@ class ServiceTestCase(TestCase):
         self.data['slackUserId'] = 'U24A2R2'
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
 
     @patch('app.utils.UserRepository.update', return_value=[])
     def test_can_trim_users(self, mock_user_repository_update):
@@ -151,6 +150,17 @@ class ServiceTestCase(TestCase):
         UserViewSet.as_view({'get': 'trim_users'})(request)
         assert mock_user_repository_update.called
         assert mock_user_repository_update.called_once_with(trim=True)
+
+    def test_can_add_guest(self):
+        """
+        Test that guest can be added.
+        """
+        self.data = {'name': "Guest 1", "type": "guest"}
+        response = self.client.post("/users/add-guest/", self.data)
+        assert response.status_code is 200
+        # import pdb; pdb.set_trace()c
+        #
+        assert response.data.get('user_id')
 
     @skipUnless
     def test_can_view_reports(self):
@@ -168,14 +178,14 @@ class ServiceTestCase(TestCase):
             response = self.client.post("/users/nfctap/", self.data)
         # Cram reports.
         response = self.client.get("/reports/")
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
         self.assertIn('breakfast', response.content)
         self.assertIn('lunch', response.content)
         self.assertIn(str(date), response.content)
         # Cram reports for a period.
         year_month = time_today.strftime("%Y-%m")
         response = self.client.get("/reports/?from={0}".format(year_month))
-        self.assertEquals(response.status_code, 200)
+        assert response.status_code is 200
         self.assertIn(year_month, response.content)
 
     @classmethod
