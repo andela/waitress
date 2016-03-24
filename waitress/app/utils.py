@@ -5,6 +5,9 @@ from django.db import transaction
 from slacker import Slacker
 import pytz
 import re
+import string
+import random
+
 
 slack = Slacker(settings.SLACK_API_TOKEN)
 
@@ -15,19 +18,51 @@ class UserRepository(object):
     """
 
     @staticmethod
-    def add(user_type, username):
+    def generate_unique(user_type, ids):
+        """Generates unique id for a user type.
+        """
+        dict_ids = {}
+        uc_first_letter = user_type[0].upper()
+        alphabet = string.uppercase + string.digits
+
+        for i in ids:
+            dict_ids[i] = True  # make a dictionary of ids for quick lookup.
+
+        def gen_id():  # generate 8-char id.
+            return "{0}{1}".format(
+                uc_first_letter,
+                ''.join([random.choice(alphabet) for _ in range(8)]))
+
+        new_id = gen_id()
+
+        while True:
+            new_id = gen_id()
+            if not dict_ids.get(new_id):
+                break
+            else:
+                continue
+
+        return new_id  # unique_id
+
+    @classmethod
+    def add(cls, user_type, username):
         guests = SlackUser.objects.filter(user_type=user_type).order_by('id')
         last_guest = list(guests)[-1] if len(guests) else None
+
         if not last_guest:
-            username = "Guest 1"
+            username = "Guest 1"  # If no guest additions exist, set default.
         else:
             last_num = last_guest.firstname[-1]
             username = last_guest.firstname.replace(
                             last_num,
                             str(int(last_num) + 1))
+
         new_guest = SlackUser()
         new_guest.firstname = username
+        new_guest.slack_id = cls.generate_unique(
+            user_type, [guest.slack_id for guest in guests])
         new_guest.user_type = user_type
+
         try:
             new_guest.save()
             return "Guest user was created successfully.", new_guest.id
@@ -94,7 +129,7 @@ class UserRepository(object):
                 if 'is_bot' in item and item['is_bot'] is True:
                     not_user_list.append(item['id'])
                     continue
-                if 'image_original' not in item['profile']:
+                if 'image_original' not in item['profile']:  # why you should do as ladisays. =)
                     not_user_list.append(item['id'])
                     continue
                 if 'email' not in item['profile']:

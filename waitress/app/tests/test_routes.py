@@ -155,7 +155,11 @@ class ServiceTestCase(TestCase):
         """
         Test that guest can be added.
         """
-        self.data = {'name': "Guest 1", "type": "guest"}
+        self.data = {
+            "name": "Guest 1",
+            "type": "guest",
+            "passphrase": "passphrase"
+        }
         response = self.client.post("/users/add-guest/", self.data)
         assert response.status_code is 200
         # import pdb; pdb.set_trace()c
