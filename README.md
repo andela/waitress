@@ -39,7 +39,7 @@ __AVAILABLE ENDPOINTS__
         "status": "Users list not changed"
     }
     ```
-- `POST "/users/update-users" --name="Guest 1"`
+- `POST "/users/add-guest/" --name="Guest 1"`
     ```javascript
     {
       "status": "Guest user was created successfully.",
@@ -151,3 +151,4 @@ __AVAILABLE ENDPOINTS__
 
 __CHANGE LOG__
 * Added 2 new endpoints [February 4, 2016]
+* Added 1 new endpoints [March 23, 2016]
