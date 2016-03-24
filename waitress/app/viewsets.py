@@ -65,6 +65,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @guard
     @list_route(methods=['post'], url_path='add-guest')
     def add_guest(self, request):
         """

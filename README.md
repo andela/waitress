@@ -39,7 +39,7 @@ __AVAILABLE ENDPOINTS__
         "status": "Users list not changed"
     }
     ```
-- `POST "/users/add-guest/" --name="Guest 1"`
+- `POST "/users/add-guest/" --name="Guest 1" --passphrase="njdgf"`
     ```javascript
     {
       "status": "Guest user was created successfully.",
