@@ -66,13 +66,12 @@ class UserViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
-    @list_route(methods=['post'], url_path='add-guest')
-    def add_guest(self, request):
+    @list_route(methods=['post'], url_path='add')
+    def add_user(self, request):
         """
         A method that adds a guest to the list of users.
         """
-        status, user_id = UserRepository.add(
-            "guest", request.POST.get('name', None))
+        status, user_id = UserRepository.add(**request.POST.dict())
         content = {"status": status}
         if user_id:
             content["user_id"] = user_id
