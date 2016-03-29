@@ -22,11 +22,11 @@ class SlackUserManager(models.Manager):
         return SlackUser(**kwargs)
 
 # Enum fields for user type.
-STAFF = 'staff'
+CHEF = 'chef'
+CLEANER = 'cleaner'
 GUEST = 'guest'
 SECURITY = 'security'
-CLEANER = 'cleaner'
-CHEF = 'chef'
+STAFF = 'staff'
 
 
 class SlackUser(AbstractBaseUser):
@@ -40,8 +40,8 @@ class SlackUser(AbstractBaseUser):
     email = models.CharField(max_length=60, blank=True)
     user_type = models.CharField(
         max_length=20, choices=(
-            (STAFF, 'staff'), (GUEST, 'guest'), (SECURITY, 'security'),
-            (CLEANER, 'cleaner'), (CHEF, 'chef'),
+            (CHEF, 'chef'), (CLEANER, 'cleaner'), (GUEST, 'guest'),
+            (SECURITY, 'security'), (STAFF, 'staff'),
         ),
         default='employee',)
     objects = SlackUserManager()
