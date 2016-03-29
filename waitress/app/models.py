@@ -26,6 +26,7 @@ STAFF = 'staff'
 GUEST = 'guest'
 SECURITY = 'security'
 CLEANER = 'cleaner'
+CHEF = 'chef'
 
 
 class SlackUser(AbstractBaseUser):
@@ -40,7 +41,7 @@ class SlackUser(AbstractBaseUser):
     user_type = models.CharField(
         max_length=20, choices=(
             (STAFF, 'staff'), (GUEST, 'guest'), (SECURITY, 'security'),
-            (CLEANER, 'cleaner'),
+            (CLEANER, 'cleaner'), (CHEF, 'chef'),
         ),
         default='employee',)
     objects = SlackUserManager()
