@@ -151,20 +151,46 @@ class ServiceTestCase(TestCase):
         assert mock_user_repository_update.called
         assert mock_user_repository_update.called_once_with(trim=True)
 
-    def test_can_add_guest(self):
+    def test_can_add_guest_user(self):
         """
         Test that guest can be added.
         """
         self.data = {
             "name": "Guest 1",
-            "type": "guest",
+            "utype": "guest",
             "passphrase": "passphrase"
         }
-        response = self.client.post("/users/add-guest/", self.data)
+        response = self.client.post("/users/add/", self.data)
         assert response.status_code is 200
-        # import pdb; pdb.set_trace()c
-        #
-        assert response.data.get('user_id')
+        assert response.data.get("user_id")
+
+    def test_can_add_security_officer(self):
+        """
+        Test that security officer can be added.
+        """
+        self.data = {
+            "firstname": "John",
+            "lastname": "Smith",
+            "utype": "security",
+            "passphrase": "passphrase",
+        }
+        response = self.client.post("/users/add/", self.data)
+        assert response.status_code is 200
+        assert response.data.get("user_id")
+
+    def test_can_add_cleaning_personnel(self):
+        """
+        Test that cleaning personnel can be added.
+        """
+        self.data = {
+            "firstname": "John",
+            "lastname": "Smith",
+            "utype": "cleaner",
+            "passphrase": "passphrase",
+        }
+        response = self.client.post("/users/add/", self.data)
+        assert response.status_code is 200
+        assert response.data.get("user_id")
 
     @skipUnless
     def test_can_view_reports(self):

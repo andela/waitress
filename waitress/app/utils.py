@@ -45,29 +45,37 @@ class UserRepository(object):
         return new_id  # unique_id
 
     @classmethod
-    def add(cls, user_type, username):
-        guests = SlackUser.objects.filter(user_type=user_type).order_by('id')
-        last_guest = list(guests)[-1] if len(guests) else None
-
-        if not last_guest:
-            username = "Guest 1"  # If no guest additions exist, set default.
+    def add(cls, **kwargs):
+        utype = kwargs.get('utype')
+        users = SlackUser.objects.filter(user_type=utype).order_by('id')
+        if kwargs.get("utype") != "guest":
+            user = SlackUser(
+                firstname=kwargs.get("firstname"),
+                lastname=kwargs.get("lastname"),)
         else:
-            last_num = last_guest.firstname[-1]
-            username = last_guest.firstname.replace(
-                            last_num,
-                            str(int(last_num) + 1))
+            last_guest = filter(lambda x: x.firstname.startswith("Guest"),
+                                list(users))[-1] if len(users) else None
 
-        new_guest = SlackUser()
-        new_guest.firstname = username
-        new_guest.slack_id = cls.generate_unique(
-            user_type, [guest.slack_id for guest in guests])
-        new_guest.user_type = user_type
+            if not last_guest:
+                username = kwargs.get("name", "Guest 1")
+            else:
+                last_num = last_guest.firstname[-1]
+                username = last_guest.firstname.replace(
+                                last_num,
+                                str(int(last_num) + 1))
+
+            user = SlackUser(firstname=username)
+        user.slack_id = cls.generate_unique(
+                utype, [individual.slack_id for individual in users])
+        user.user_type = utype
 
         try:
-            new_guest.save()
-            return "Guest user was created successfully.", new_guest.id
+            user.save()
+            return "{0} user was created successfully.".format(
+                utype.upper()), user.id
         except Exception, e:
-            return "Guest user couldn't be created. Error: %" % (type(e)), None
+            return "{0} user couldn't be created. Error: {1}".format(
+                utype.upper(), type(e)), None
 
     @classmethod
     def update(cls, trim=False):
