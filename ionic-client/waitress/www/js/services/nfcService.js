@@ -6,10 +6,9 @@ nfcService.$inject = ['$rootScope', '$ionicPlatform',
 
 function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast) {
   self.write = false;
-  var cardIndex = 1;
+  var cardIndex = 164;
 
   function listenToTag(nfcEvent) {
-
     var showAlert = function(msg, error) {
       $ionicPopup.alert({
         title: 'Waitress Says',
@@ -32,11 +31,11 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
             showAlert('This tag now belongs to ' +
               resp.data.firstname + ' ' + resp.data.lastname);
           });
-          nfc.makeReadOnly(function() {
-            alert('This tag is now read only please save the information displayed');
-          }, function(reason) {
-            alert('there was an error obviously with the readonly ' + reason);
-          });
+          // nfc.makeReadOnly(function() {
+          //   alert('This tag is now read only please save the information displayed');
+          // }, function(reason) {
+          //   alert('there was an error obviously with the readonly ' + reason);
+          // });
         },
         function(reason) {
           $rootScope.$apply(function() {
