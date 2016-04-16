@@ -2,7 +2,7 @@
 
 _A meals tracking app for keeping updated list of served persons._
 
-[Waitress](http://waitressandela.herokuapp.com/) tracks persons who have had meals.
+[Waitress](http://waitressandela.herokuapp.com/) track persons who have had meals.
 
 __AVAILABLE ENDPOINTS__
 
