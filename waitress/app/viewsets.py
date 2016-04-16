@@ -55,6 +55,17 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @list_route(methods=['get'], url_path='regularize-guest-names')
+    def regularize_guests(self, request):
+        """
+        A method that regularizes the names of guests.
+        """
+        status = UserRepository.regularize_guests()
+        content = {"status": status}
+
+        return Response(
+            content, status=status_code.HTTP_200_OK if status else 500)
+
     @list_route(methods=['get'], url_path='remove-old-friends')
     def trim_users(self, request):
         """

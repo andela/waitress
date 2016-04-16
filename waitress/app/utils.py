@@ -1,12 +1,12 @@
 from app.models import SlackUser
 from django.conf import settings
-from django.utils import timezone
-from django.db import transaction
-from slacker import Slacker
 import pytz
 import re
 import string
 import random
+from django.utils import timezone
+from django.db import transaction
+from slacker import Slacker
 
 
 slack = Slacker(settings.SLACK_API_TOKEN)
@@ -16,6 +16,25 @@ class UserRepository(object):
     """
     A wrapper class for methods that update the list of users.
     """
+
+    def manual_transaction(records):
+        transaction.set_autocommit(False)
+        for record in records:
+            record.save()
+        transaction.commit()
+        transaction.set_autocommit(True)
+
+    @staticmethod
+    def regularize_guests():
+        """ Regularize guest names"""
+        ordered_guests = SlackUser.objects.filter(
+            firstname__startswith='Guest').order_by('id')
+        regularized_guests = regularize_guest_names(list(ordered_guests))
+        try:
+            UserRepository.manual_transaction(regularized_guests)
+            return True
+        except AttributeError:
+            return False
 
     @staticmethod
     def generate_unique(user_type, ids):
@@ -210,3 +229,12 @@ class Time:
         if 0 < time < 12:
             return True
         return False
+
+
+def regularize_guest_names(guest_list):
+    """Regularizes the names of guest.
+    """
+    guest_list_cp = guest_list[:]
+    for i in xrange(len(guest_list_cp)):
+        guest_list_cp[i].firstname = "Guest {}".format(i+1)
+    return guest_list_cp

@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.test import APIRequestFactory
 from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
-from app.utils import UserRepository
+from app.utils import UserRepository, regularize_guest_names
 from mock import patch
 
 
@@ -201,6 +201,17 @@ class ServiceTestCase(TestCase):
         response = self.client.get("/reports/?from={0}".format(year_month))
         assert response.status_code is 200
         self.assertIn(year_month, response.content)
+
+    def test_can_regularize_guest_names(self):
+        guest_list = []
+        for i in xrange(10):
+            guest_list.append(
+                type('Guest', (object, ),
+                     dict(id=i, firstname='Guest {}'.format(i+2)))
+            )
+        regularized = regularize_guest_names(guest_list)
+        print regularized[-1].firstname
+        assert regularized[-1].firstname == 'Guest 10'
 
     @classmethod
     def tearDownClass(cls):
