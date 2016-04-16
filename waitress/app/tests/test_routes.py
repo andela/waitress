@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.test import APIRequestFactory
 from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
-from app.utils import UserRepository
+from app.utils import UserRepository, regularize_guest_names
 from mock import patch
 
 
@@ -27,10 +27,11 @@ class ServiceTestCase(TestCase):
         cls.passphrase = {
             'passphrase': 'passphrase'
         }
-        SlackUser.objects.create(
+        slack_user = SlackUser.objects.create(
             slack_id="U24A2R2", firstname="Test", lastname="User",
             email="testuser@mail.com", photo="http://...",
         )
+        cls.user_id = slack_user.id
         Passphrase.objects.create(word='passphrase', user_id=1)
         cls.client = Client()
 
@@ -82,46 +83,6 @@ class ServiceTestCase(TestCase):
 
     def test_can_tap_breakfast(self):
         """
-        Tests that user can tap for breakfast.
-        """
-        self.data['before_midday'] = True
-        response = self.client.post("/meal-sessions/start/", self.data)
-        response = self.client.post("/users/1/tap/",)
-        assert response.status_code is 200
-
-    def test_can_tap_lunch(self):
-        """
-        Tests that user can tap for lunch.
-        """
-        self.data['before_midday'] = False
-        response = self.client.post("/meal-sessions/start/", self.data)
-        response = self.client.post("/users/1/tap/",)
-        assert response.status_code is 200
-
-        assert response.status_code is 200
-
-    def test_can_untap_breakfast(self):
-        """
-        Tests that priviledged user can untap for breakfast.
-        """
-        self.data['before_midday'] = True
-        response = self.client.post("/meal-sessions/start/", self.data)
-        response = self.client.post("/users/1/tap/",)
-        response = self.client.post("/users/1/untap/", self.passphrase)
-        assert response.status_code is 200
-
-    def test_can_untap_lunch(self):
-        """
-        Tests that priviledged user can untap for lunch.
-        """
-        self.data['before_midday'] = False
-        response = self.client.post("/meal-sessions/start/", self.data)
-        response = self.client.post("/users/1/tap/",)
-        response = self.client.post("/users/1/untap/", self.passphrase)
-        assert response.status_code is 200
-
-    def test_can_nfc_tap_breakfast(self):
-        """
         Tests that user can NFC tap for breakfast.
         """
         self.data['before_midday'] = True
@@ -130,7 +91,7 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/users/nfctap/", self.data)
         assert response.status_code is 200
 
-    def test_can_nfc_tap_lunch(self):
+    def test_can_tap_lunch(self):
         """
         Tests that user can NFC tap for lunch.
         """
@@ -139,6 +100,29 @@ class ServiceTestCase(TestCase):
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
         assert response.status_code is 200
+
+    def test_can_untap_breakfast(self):
+        """
+        Tests that priviledged user can untap for breakfast.
+        """
+        self.data['before_midday'] = True
+        self.data['slackUserId'] = 'U24A2R2'
+        response = self.client.post("/meal-sessions/start/", self.data)
+        response = self.client.post("/users/nfctap/", self.data)
+        response = self.client.post("/users/{}/untap/".format(self.user_id), self.passphrase)
+        assert response.status_code is 200
+
+    def test_can_untap_lunch(self):
+        """
+        Tests that priviledged user can untap for lunch.
+        """
+        self.data['before_midday'] = False
+        self.data['slackUserId'] = 'U24A2R2'
+        response = self.client.post("/meal-sessions/start/", self.data)
+        response = self.client.post("/users/nfctap/", self.data)
+        response = self.client.post("/users/{}/untap/".format(self.user_id), self.passphrase)
+        assert response.status_code is 200
+
 
     @patch('app.utils.UserRepository.update', return_value=[])
     def test_can_trim_users(self, mock_user_repository_update):
@@ -217,6 +201,17 @@ class ServiceTestCase(TestCase):
         response = self.client.get("/reports/?from={0}".format(year_month))
         assert response.status_code is 200
         self.assertIn(year_month, response.content)
+
+    def test_can_regularize_guest_names(self):
+        guest_list = []
+        for i in xrange(10):
+            guest_list.append(
+                type('Guest', (object, ),
+                     dict(id=i, firstname='Guest {}'.format(i+2)))
+            )
+        regularized = regularize_guest_names(guest_list)
+        print regularized[-1].firstname
+        assert regularized[-1].firstname == 'Guest 10'
 
     @classmethod
     def tearDownClass(cls):

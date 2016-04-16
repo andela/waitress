@@ -30,7 +30,7 @@ class UserViewSet(viewsets.ViewSet):
                 firstname__startswith=filter
             ).order_by('firstname')
         else:
-            queryset = queryset.all()
+            queryset = queryset.all().order_by('id')
         serializer = UserSerializer(queryset, many=True)
 
         return Response(serializer.data, status_code.HTTP_200_OK)
@@ -55,6 +55,17 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @list_route(methods=['get'], url_path='regularize-guest-names')
+    def regularize_guests(self, request):
+        """
+        A method that regularizes the names of guests.
+        """
+        status = UserRepository.regularize_guests()
+        content = {"status": status}
+
+        return Response(
+            content, status=status_code.HTTP_200_OK if status else 500)
+
     @list_route(methods=['get'], url_path='remove-old-friends')
     def trim_users(self, request):
         """
@@ -77,36 +88,6 @@ class UserViewSet(viewsets.ViewSet):
             content["user_id"] = user_id
             return Response(content, status=status_code.HTTP_200_OK)
         return Response(content, status=304)
-
-    @detail_route(methods=['post'], url_path='tap')
-    def tap(self, request, pk):
-        """
-        A method that taps in a user.
-        """
-        content = {}
-        meal_in_progress = MealSession.in_progress()
-        user = get_object_or_404(self.queryset, pk=pk)
-        if not meal_in_progress:
-            content['status'] = 'There is no meal in progress'
-        else:
-            before_midday = Time.is_before_midday()
-            date_today = meal_in_progress[0].date
-            mealservice = MealService.objects.filter(
-                user=user, date=date_today
-            ).order_by('firstname')
-
-            if not mealservice.count():
-                mealservice = MealService()
-            else:
-                mealservice = mealservice[0]
-
-            mealservice = mealservice.set_meal(before_midday)
-
-            mealservice = mealservice.set_user_and_date(user, date_today)
-            mealservice.save()
-            content['status'] = 'Tap was successful'
-
-        return Response(content, status=status_code.HTTP_200_OK)
 
     @list_route(methods=['post'], url_path='nfctap')
     def nfctap(self, request):

@@ -55,22 +55,6 @@ __AVAILABLE ENDPOINTS__
   }
   ```
 
-- `POST "/users/{id}/tap"`
-    ```javascript
-    {
-        'status': 'You tapped successfully'
-    }
-    ```
-
-- `POST "/users/nfctap" --slackUserId="ident"`
-    ```javascript
-    {
-        'firstname': 'Test',
-        'lastname': 'User',
-        'status': 'You tapped successfully'
-    }
-    ```
-
 - `POST "/users/nfctap" --slackUserId="ident"`
     ```javascript
     {
