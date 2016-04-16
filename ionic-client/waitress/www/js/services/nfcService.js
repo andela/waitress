@@ -6,7 +6,7 @@ nfcService.$inject = ['$rootScope', '$ionicPlatform',
 
 function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast) {
   self.write = false;
-  var cardIndex = 164;
+  var cardIndex = 168;
 
   function listenToTag(nfcEvent) {
     var showAlert = function(msg, error) {
@@ -90,4 +90,3 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
     init: init
   };
 }
-

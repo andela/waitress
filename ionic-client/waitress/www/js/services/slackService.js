@@ -39,7 +39,7 @@ function slackService($http, $q, $httpParamSerializerJQLike) {
   }
   var getSlackId = function(id) {
     return getData('http://waitressandela.herokuapp.com/users/' + id + '/retrieve-secure/', {
-      passphrase: '12345'});
+      passphrase: 'andela2016'});
   };
   var tap = function(slackUserId) {
     return getData('http://waitressandela.herokuapp.com/users/nfctap/', {

@@ -8,7 +8,6 @@ angular.module('waitress', [
 
     ionic.Platform.fullScreen();
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParam, from) {
-      ionic.Platform.showStatusBar(false);
       if (from.name === 'dashboard.tap' || from.name === 'dashboard.nfc') {
         nfcService.remove();
       }
@@ -49,6 +48,7 @@ angular.module('waitress', [
           midday: ['MealSession', function(MealSession) {
             return MealSession.getMidday()
               .then(function(result) {
+                navigator.splashscreen.hide();
                 return result;
               });
           }]
