@@ -30,7 +30,7 @@ class UserViewSet(viewsets.ViewSet):
                 firstname__startswith=filter
             ).order_by('firstname')
         else:
-            queryset = queryset.all()
+            queryset = queryset.all().order_by('id')
         serializer = UserSerializer(queryset, many=True)
 
         return Response(serializer.data, status_code.HTTP_200_OK)
