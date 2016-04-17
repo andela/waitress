@@ -70,6 +70,10 @@ angular.module('waitress', [
           }
         }
       })
+      .state('error', {
+        url: '/error',
+        templateUrl: 'partials/error.html'
+      })
       .state('dashboard.nfc', {
         url: '/dashboard/nfc',
         views: {

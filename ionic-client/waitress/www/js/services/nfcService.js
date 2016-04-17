@@ -2,9 +2,9 @@ angular.module('waitress')
   .factory('nfcService', nfcService);
 
 nfcService.$inject = ['$rootScope', '$ionicPlatform',
-      '$ionicPopup', '$filter', '$window', 'slackService', '$cordovaToast'];
+      '$ionicPopup', '$filter', '$window', 'slackService', '$cordovaToast', '$state'];
 
-function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast) {
+function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast, $state) {
   self.write = false;
   var cardIndex = 168;
 
@@ -21,6 +21,7 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
       });
     };
     if (self.write) {
+
       slackService.getSlackId(cardIndex).then(function(resp) {
       var record = ndef.textRecord(resp.data.slack_id);
         nfc.write(
@@ -43,6 +44,7 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
           });
         }
       );
+      }, function(res){
       });
     } else {
       $rootScope.$apply(function() {
@@ -55,6 +57,9 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
           if (err.status === 400) {
             showAlert(err.data.firstname + ' ' +
               err.data.lastname + ' has already tapped', true);
+          }
+          else {
+            $state.go('error');
           }
         });
       });

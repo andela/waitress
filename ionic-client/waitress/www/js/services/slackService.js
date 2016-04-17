@@ -1,7 +1,7 @@
 angular.module('waitress')
   .factory('slackService', slackService);
 
-slackService.$inject = ['$http', '$q', '$httpParamSerializerJQLike'];
+slackService.$inject = ['$http', '$q', '$httpParamSerializerJQLike', '$state'];
 
 /**
 * Controller That takes care of the slackservice
@@ -30,8 +30,7 @@ function slackService($http, $q, $httpParamSerializerJQLike) {
     })
     .then(function(result) {
       deffered.resolve(result);
-    })
-    .catch(function(resp) {
+    }, function(resp) {
       deffered.reject(resp);
     });
 

@@ -34,7 +34,9 @@ h1.title {
 .pass-phrase-dialog button {
   border: solid 2px #3054E3;
 }
-
+.internet-error{
+  font-size: 200px;
+}
 .center-content {
   display: flex;
   align-items: center;

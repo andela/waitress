@@ -3,7 +3,7 @@ no-param-reassign:0, no-var:0 */
 angular.module('waitress')
   .factory('MealSession', mealSessionService);
 
-mealSessionService.$inject = ['$q', '$http', '$httpParamSerializerJQLike'];
+mealSessionService.$inject = ['$q', '$http', '$httpParamSerializerJQLike', '$state'];
 /**
 * Dialog Directive controller
 @param {service} $q, handles the differed promise
@@ -11,7 +11,7 @@ mealSessionService.$inject = ['$q', '$http', '$httpParamSerializerJQLike'];
 @param {service} $httpParamSerializerJQLike, changes Params to serliazable objects
 @return {void}
 */
-function mealSessionService($q, $http, $httpParamSerializerJQLike) {
+function mealSessionService($q, $http, $httpParamSerializerJQLike, $state) {
   /**
   * Dialog Directive controller
   @param {string} url, designated server url
@@ -38,7 +38,6 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
     });
     return deffered.promise;
   }
-
   function getData(url, report) {
     var deffered = $q.defer();
     $http({
@@ -48,6 +47,8 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
     })
     .then(function(resp) {
       deffered.resolve(resp);
+    }, function(err) {
+      if(err.status === 0) $state.go('error');
     });
 
     return deffered.promise;
@@ -57,6 +58,7 @@ function mealSessionService($q, $http, $httpParamSerializerJQLike) {
     return getData('http://waitressandela.herokuapp.com/reports/', report);
   };
   var getMidday = function() {
+    // offlineDetectorService();
     return getData('http://waitressandela.herokuapp.com/meal-sessions/');
   };
   return {

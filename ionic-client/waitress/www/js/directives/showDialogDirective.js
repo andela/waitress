@@ -44,8 +44,7 @@ function showDialogDirective($ionicPopup, MealSession, $state, $log) {
                   .then(function() {
                     dialog.close();
                     $state.go('dashboard.tap');
-                  })
-                  .catch(function(res) {
+                  }, function(res) {
                     scope.errorMessage = res.statusText;
                   });
               } else {
