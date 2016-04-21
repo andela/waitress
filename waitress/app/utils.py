@@ -16,7 +16,7 @@ class UserRepository(object):
     """
     A wrapper class for methods that update the list of users.
     """
-
+    @staticmethod
     def manual_transaction(records):
         transaction.set_autocommit(False)
         for record in records:
@@ -41,6 +41,7 @@ class UserRepository(object):
         """Generates unique id for a user type.
         """
         dict_ids = {}
+        print user_type
         uc_first_letter = user_type[0].upper()
         alphabet = string.uppercase + string.digits
 
@@ -78,20 +79,20 @@ class UserRepository(object):
             if not last_guest:
                 username = kwargs.get("name", "Guest 1")
             else:
-                last_num = last_guest.firstname[-1]
-                username = last_guest.firstname.replace(
-                                last_num,
-                                str(int(last_num) + 1))
+                last_num = int(re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[0])
+
+                username = 'Guest {}'.format(last_num+1)
 
             user = SlackUser(firstname=username)
+
         user.slack_id = cls.generate_unique(
-                utype, [individual.slack_id for individual in users])
+                utype, [individual.slack_id for individual in users] if len(users) else [])
         user.user_type = utype
 
         try:
             user.save()
-            return "{0} user was created successfully.".format(
-                utype.upper()), user.id
+            return "{} ({}) was created successfully.".format(user.firstname, utype,), user.id
+
         except Exception, e:
             return "{0} user couldn't be created. Error: {1}".format(
                 utype.upper(), type(e)), None
