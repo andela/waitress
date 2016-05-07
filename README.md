@@ -133,6 +133,18 @@ __AVAILABLE ENDPOINTS__
   ]
   ```
 
+### Raw SQL query
+Querying the DB for detailed tracking and for data analysis
+
+```sql
+select app_mealservice.breakfast, app_mealservice.lunch, app_mealservice.date, app_mealservice.date_modified, app_mealservice.user_id, app_slackuser.id, app_slackuser.firstname, app_slackuser.lastname, app_slackuser.user_type
+from app_mealservice 
+left join app_slackuser
+on app_mealservice.user_id=app_slackuser.id
+where date = '05/06/2016'
+order by app_slackuser.firstname;
+```
+
 __CHANGE LOG__
 * Added 2 new endpoints [February 4, 2016]
 * Added 1 new endpoints [March 23, 2016]
