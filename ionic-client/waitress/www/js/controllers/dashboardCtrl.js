@@ -7,4 +7,7 @@ function dashboardCtrl($scope, $state, $ionicHistory) {
     $state.go('index');
     $ionicHistory.clearHistory();
   };
+  $scope.reload = function() {
+      $state.go($state.current, {}, {reload: true});
+    };
 }

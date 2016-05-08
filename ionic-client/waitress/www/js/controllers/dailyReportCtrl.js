@@ -7,5 +7,4 @@ dailyReportController.$inject = ['$scope', 'dailyReports'];
 
 function dailyReportController($scope, dailyReports) {
     $scope.reports = dailyReports.data[0];
-
 }

@@ -6,7 +6,7 @@ nfcService.$inject = ['$rootScope', '$ionicPlatform',
 
 function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, slackService, $cordovaToast, $state) {
   self.write = false;
-  var cardIndex = 168;
+  var cardIndex = 206;
 
   function listenToTag(nfcEvent) {
     var showAlert = function(msg, error) {
@@ -27,7 +27,7 @@ function nfcService($rootScope, $ionicPlatform, $ionicPopup, $filter, $window, s
         nfc.write(
         [record],
         function() {
-          cardIndex++;
+           cardIndex++;
           $rootScope.$apply(function() {
             showAlert('This tag now belongs to ' +
               resp.data.firstname + ' ' + resp.data.lastname);
