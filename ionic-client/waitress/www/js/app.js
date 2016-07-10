@@ -48,7 +48,7 @@ angular.module('waitress', [
           midday: ['MealSession', function(MealSession) {
             return MealSession.getMidday()
               .then(function(result) {
-                navigator.splashscreen.hide();
+                navigator.splashscreen && navigator.splashscreen.hide();
                 return result;
               });
           }]
@@ -75,7 +75,7 @@ angular.module('waitress', [
         templateUrl: 'partials/error.html'
       })
       .state('dashboard.nfc', {
-        url: '/dashboard/nfc',
+        url: '/nfc',
         views: {
           'nfc-write': {
             templateUrl: 'partials/nfc-write.html'
@@ -83,7 +83,7 @@ angular.module('waitress', [
         }
       })
       .state('dashboard.report', {
-        url: 'dashboard/report',
+        url: '/report',
         views: {
           'report-tab': {
             templateUrl: 'partials/report.html'
@@ -91,7 +91,7 @@ angular.module('waitress', [
         }
       })
       .state('dashboard.history', {
-        url: 'dashboard/history',
+        url: '/history',
         views: {
           'history-tab': {
             templateUrl: 'partials/history.html'
@@ -99,7 +99,7 @@ angular.module('waitress', [
         }
       })
       .state('dashboard.report-custom', {
-        url: 'dashboard/report/weekly',
+        url: '/report/weekly',
         views: {
           'report-tab': {
             controller: 'CustomReportController',
@@ -108,8 +108,36 @@ angular.module('waitress', [
         }
 
       })
+      .state('dashboard.alphabets', {
+        url: '/list-names-by-alphabet',
+        views: {
+          'list-tab': {
+            controller: 'ListAlphabetsController',
+            templateUrl: 'partials/alphabets.html'
+          }
+        }
+
+      })
+      .state('dashboard.usernames', {
+        url: '/list/:character',
+        resolve: {
+          names: ['User', '$stateParams', function(User, $stateParams) {
+            return User.filter($stateParams.character)
+              .then(function(result) {
+                return result;
+              });
+          }]
+        },
+        views: {
+          'list-tab': {
+            controller: 'listController',
+            templateUrl: 'partials/list-names.html'
+          }
+        }
+
+      })
       .state('dashboard.report-daily', {
-        url: 'dashboard/report/daily',
+        url: '/report/daily',
         resolve: {
           dailyReports: ['MealSession', function(MealSession) {
             return MealSession.report()

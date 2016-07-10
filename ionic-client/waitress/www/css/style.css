@@ -129,3 +129,25 @@ h1.title {
 .report .card div p {
     font-size: 18px;
 }
+.alpha-view {
+    flex-wrap: wrap;
+}
+.list label {
+    position: absolute;
+    z-index: 4;
+    border: none;
+    right: 0;
+    width: 40px;
+    background-color: transparent;
+    padding-left: 16px;
+}
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+    border-color: transparent;
+    font-size: 16px;
+    text-align: center;
+}
+
+.platform-android .action-sheet-cancel {
+    display: block !important;
+}
+
