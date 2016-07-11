@@ -1,13 +1,20 @@
 <ion-view>
   <ion-content class="has-header">
-    <div class="main-screen flex column-layout">
-      <div class="session-control flex fill column-layout vertical align-center horizontal align-center">
+
+
+
+    <div class="main-screen flex column-layout center-content">
+      <div class="session-control flex fill column-layout vertical  horizontal align-center">
         <h1 my-current-time id="live-clock"></h1>
         <h3>It's time for {{ beforeMidday ? "Breakfast" : "Lunch" }}</h3>
             <button show-dialog midday="beforeMidday" class="button button-stable">
               Click To Start Session
               </button>
       </div>
+          <a class="home-reload" ng-click="reload()">
+        <i class="icon ion-ios-reload"></i>
+      </a>
     </div>
+
   </ion-content>
 </ion-view>

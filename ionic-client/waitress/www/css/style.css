@@ -26,6 +26,22 @@ h1.title {
     padding-top: 50px;
 }
 
+.reload-icon {
+    cursor: pointer;
+    color: white;
+    font-size: 30px;
+    margin: 3px;
+   -webkit-text-stroke: 0.7px white;
+}
+
+.home-reload {
+  cursor: pointer;
+    color: blue;
+    font-size: 50px;
+    margin-top: 20px;
+    -webkit-text-stroke: 0.7px blue;
+}
+
 .item-icon-right > i {
     color: #A0A0A0;
 }
@@ -35,11 +51,23 @@ h1.title {
     border: solid 2px #3054E3;
 }
 
+.internet-error {
+    font-size: 200px;
+}
+
+.center-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 90%;
+}
+
+.tap-head {
+    color: #3054E3;
+}
+
 .spinner svg {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -40%);
     width: 180px;
     height: 180px;
 }
@@ -56,22 +84,24 @@ h1.title {
     cursor: pointer;
     margin: 0px;
     height: 50%;
-    box-shadow:none;
+    box-shadow: none;
     border-bottom: solid 1px rgb(56, 126, 245);
 }
-.custom .col{
+
+.custom .col {
     border: solid 1px #333;
     position: relative;
 }
-.report-text{
+
+.report-text {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     margin-top: 0;
 }
-.report .card:last-child {
 
+.report .card:last-child {
     border-bottom: none
 }
 
@@ -79,7 +109,9 @@ h1.title {
     text-align: center !important;
     padding: 0 30px;
 }
-.report .card:active,.report .card:active div {
+
+.report .card:active,
+.report .card:active div {
     background-color: #eee;
 }
 
@@ -97,3 +129,25 @@ h1.title {
 .report .card div p {
     font-size: 18px;
 }
+.alpha-view {
+    flex-wrap: wrap;
+}
+.list label {
+    position: absolute;
+    z-index: 4;
+    border: none;
+    right: 0;
+    width: 40px;
+    background-color: transparent;
+    padding-left: 16px;
+}
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+    border-color: transparent;
+    font-size: 16px;
+    text-align: center;
+}
+
+.platform-android .action-sheet-cancel {
+    display: block !important;
+}
+
