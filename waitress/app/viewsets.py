@@ -21,6 +21,13 @@ class UserViewSet(viewsets.ViewSet):
     def list(self, request):
         """
         A method that gets the list of users.
+        ---
+        parameters:
+            - name: filter
+              description: query based on firstname
+              required: false
+              type: string
+              paramType: query
         """
         filter = request.GET.get('filter')
         queryset = self.queryset
@@ -39,7 +46,19 @@ class UserViewSet(viewsets.ViewSet):
     @detail_route(methods=['post'], url_path='retrieve-secure')
     def retrieve_securely(self, request, pk):
         """
-        A method that gets the detail of a user.
+        A method that gets the details of a user.
+        ---
+        parameters:
+            - name: pk
+              description: unique id of the user
+              required: true
+              type: string
+              paramType: path
+            - name: passphrase
+              description: passphrase to allow authentication
+              required: true
+              type: string
+              paramType: form
         """
         queryset = get_object_or_404(self.queryset, pk=pk)
         serializer = SecureUserSerializer(queryset)
@@ -81,6 +100,28 @@ class UserViewSet(viewsets.ViewSet):
     def add_user(self, request):
         """
         A method that adds a guest to the list of users.
+        ---
+        parameters:
+            - name: firstname
+              description: firstname of the user
+              required: true
+              type: string
+              paramType: form
+            - name: lastname
+              description: lastname of the user
+              required: true
+              type: string
+              paramType: form
+            - name: utype
+              description: type of the user (security|cleaner|chef|guest)
+              required: true
+              type: string
+              paramType: form
+            - name: passphrase
+              description: passphrase to allow authentication
+              required: true
+              type: string
+              paramType: form
         """
         status, user_id = UserRepository.add(**request.POST.dict())
         content = {"status": status}
@@ -93,6 +134,13 @@ class UserViewSet(viewsets.ViewSet):
     def nfctap(self, request):
         """
         A method that taps a user via an NFC card.
+        ---
+        parameters:
+            - name: slackUserId
+              description: slack ID
+              required: true
+              type: string
+              paramType: form
         """
         slack_id = request.POST.get('slackUserId')
 
@@ -141,6 +189,18 @@ class UserViewSet(viewsets.ViewSet):
     def untap(self, request, pk):
         """
         A method that untaps a user.
+        ---
+        parameters:
+            - name: pk
+              description: unique id of the user
+              required: true
+              type: string
+              paramType: path
+            - name: passphrase
+              description: passphrase to allow authentication
+              required: true
+              type: string
+              paramType: form
         """
         before_midday = Time.is_before_midday()
         content = {}
@@ -148,8 +208,8 @@ class UserViewSet(viewsets.ViewSet):
         timenow = timezone.now()
         user = get_object_or_404(self.queryset, pk=pk)
         mealservice = MealService.objects.get(
-                user=user, date=meal_in_progress[0].date
-            )
+            user=user, date=meal_in_progress[0].date
+        )
         status = status_code.HTTP_200_OK
 
         if not meal_in_progress:
@@ -161,9 +221,9 @@ class UserViewSet(viewsets.ViewSet):
             else:
                 untapped = json.loads(mealservice.untapped)
             log = {
-                    'date_untapped': str(timenow),
-                    'user': request.passphrase.user.id
-                }
+                'date_untapped': str(timenow),
+                'user': request.passphrase.user.id
+            }
             untapped.append(log)
             mealservice.untapped = untapped
             mealservice.date_modified = timenow
@@ -182,7 +242,7 @@ class MealSessionViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        A method that tells if time is before mid-day.
+        A method that tells if time is before mid-day or not.
         """
         before_midday = Time.is_before_midday()
         content = {'before_midday': before_midday}
@@ -194,6 +254,18 @@ class MealSessionViewSet(viewsets.ViewSet):
     def start(self, request):
         """
         A method that starts meal session.
+        ---
+        parameters:
+            - name: before_midday
+              description: is the time before or after 12 noon?
+              required: true
+              type: boolean
+              paramType: form
+            - name: passphrase
+              description: passphrase to allow authentication
+              required: true
+              type: string
+              paramType: form
         """
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress()
@@ -219,6 +291,18 @@ class MealSessionViewSet(viewsets.ViewSet):
     def stop(self, request):
         """
         A method that stops meal session.
+        ---
+        parameters:
+            - name: before_midday
+              description: is the time before or after 12 noon?
+              required: true
+              type: boolean
+              paramType: form
+            - name: passphrase
+              description: passphrase to allow authentication
+              required: true
+              type: string
+              paramType: form
         """
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress()
