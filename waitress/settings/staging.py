@@ -37,7 +37,6 @@ LOGGING = {
   },
 }
 
-STATIC_ROOT = os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'static')
 
 TEMPLATES[0]['APP_DIRS'] = False
 TEMPLATES[0]['OPTIONS']['loaders'] = [
@@ -48,4 +47,6 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
     ]),
 ]
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'static')
 STATICFILES_STORAGE = None
