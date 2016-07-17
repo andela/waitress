@@ -26,7 +26,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djangobower',
     'rest_framework',
     'app',
     'corsheaders',
@@ -94,30 +93,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/client/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'client'),
-)
+STATIC_URL = '/staticfiles/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'djangobower.finders.BowerFinder',
 )
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Bower components
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT)
-
-BOWER_INSTALLED_APPS = (
-    'jquery',
-    'bootstrap',
-    'fontawesome',
-)
 
 # Custom class for messages
 MESSAGE_TAGS = {
