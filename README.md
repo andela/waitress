@@ -1,4 +1,4 @@
-# Waitress [![Travis build badge](https://travis-ci.org/andela-osule/waitress.svg?branch=master)](https://travis-ci.org/andela-osule/waitress) [![Coverage Status](https://coveralls.io/repos/andela-osule/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/andela-osule/waitress?branch=master)
+# Waitress [![Travis build badge](https://travis-ci.org/waitress-andela/waitress.svg?branch=master)](https://travis-ci.org/waitress-andela/waitress) [![Coverage Status](https://coveralls.io/repos/waitress-andela/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/waitress-andela/waitress?branch=master)
 
 _A meals tracking app for keeping updated list of served persons._
 
@@ -138,7 +138,7 @@ Querying the DB for detailed tracking and for data analysis
 
 ```sql
 select app_mealservice.breakfast, app_mealservice.lunch, app_mealservice.date, app_mealservice.date_modified, app_mealservice.user_id, app_slackuser.id, app_slackuser.firstname, app_slackuser.lastname, app_slackuser.user_type
-from app_mealservice 
+from app_mealservice
 left join app_slackuser
 on app_mealservice.user_id=app_slackuser.id
 where date = '05/06/2016'
