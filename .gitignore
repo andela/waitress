@@ -2,13 +2,8 @@
 .env.yml
 .coveralls.yml
 
-# Libraries
-node_modules/
-waitress/client/app/lib/
-waitress/client/app/dist/
-npm-debug.log
-client/dist
-
+# local settings
+waitress/settings/development.py
 
 # Mac OS X
 .DS_Store

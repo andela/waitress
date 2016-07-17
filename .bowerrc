@@ -1,6 +1,0 @@
-{
-  "directory": "./waitress/client/app/lib",
-  "analytics": false,
-  "timeout": 120000,
-  "interactive": false
-}
