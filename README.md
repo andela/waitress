@@ -1,150 +1,89 @@
-# Waitress [![Travis build badge](https://travis-ci.org/waitress-andela/waitress.svg?branch=master)](https://travis-ci.org/waitress-andela/waitress) [![Coverage Status](https://coveralls.io/repos/waitress-andela/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/waitress-andela/waitress?branch=master)
+# Waitress[![Travis build badge](https://travis-ci.org/waitress-andela/waitress.svg?branch=master)](https://travis-ci.org/waitress-andela/waitress) [![Coverage Status](https://coveralls.io/repos/waitress-andela/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/waitress-andela/waitress?branch=master)
 
-_A meals tracking app for keeping updated list of served persons._
+_The meal tracking app of Andela Lagos_
 
-[Waitress](http://waitressandela.herokuapp.com/) track persons who have had meals.
+## Waitress API
+This repository houses the API endpoints for the waitress project
 
-__AVAILABLE ENDPOINTS__
+## Available Endpoints
+It can be found [here](http://waitressandela.herokuapp.com/docs/)
 
-- `GET "/users"`
-    ```javascript
-    [
-        {
-            "id": 1,
-            "firstname": "E",
-            "lastname": "",
-            "photo": "https://avatars.slack-edge.com/...jpg",
-            "is_tapped": false
-        },
-    ]
-    ```
+## Contribution
+Calling all developers ![call](markdown_imgs/call.png)
 
-- `GET "/users?filter=a"`
-    ```javascript
-    [
-        {
-            "id": 5,
-            "firstname": "A...",
-            "lastname": "J...",
-            "photo": "https://avatars.slack-edge.com/...jpg",
-            "is_tapped": false
-            ""
-        },
-    ]
-    ```
+All forms of contribution is welcome. Thank you for helping to make this project great!!!
 
-- `GET "/users/update-users"`
-    ```javascript
-    {
-        "status": "Users list not changed"
-    }
-    ```
-- `POST "/users/add/" --firstname="John" --lastname="Smith" --utype="security[cleaner|chef|guest]" --passphrase="njdgf"`
-    ```javascript
-    {
-      "status": "Guest user was created successfully.",
-      "id": 149
-    }
-    ```
+Please view this [documentation](https://docs.google.com/a/andela.co/document/d/1xiDfPL-JTebwav6jdW30SzwwnDNZmajJVZhpU6h4kxg/edit?usp=sharing) over here, prepared just for you
 
-- `GET "/users/remove-old-friends"`
-  ```javascript
-  {
-      "status": "Users deleted",
-      "users": ["Peter Parker", "Ben Bruce"]
-  }
-  ```
+## Setup
+1. Install Xcode command line tool `xcode-select --install`
+2. Install [homebrew](http://brew.sh/)
 
-- `POST "/users/nfctap" --slackUserId="ident"`
-    ```javascript
-    {
-        'firstname': 'Test',
-        'lastname': 'User',
-        'status': 'You tapped successfully'
-    }
-    ```
+## Installation
+Before you start please ensure you have Python and PostgreSQL installed 
 
-- `POST "/users/{id}/untap" --passphrase="njdgf"`
-    ```javascript
-    {
-        'status': 'You untapped successfully'
-    }
-    ```
+### Python Setup
 
-- `GET "/meal-sessions/"`
-    ```javascript
-    {
-        "before_midday": false
-    }
-    ```
+1. Install Python from [here](http://www.python.org/download/) or run the command `brew install python`
+2. Install VirtualEnv `pip install virtualenv`
+3. Install VirtualEnvWrapper `pip install virtualenvwrapper`
 
-- `POST "/meal-sessions/start/" --before_midday=bool --passphrase="cdfjfd"`
-    ```javascript
-    {
-        "status": "Breakfast session started"
-    }
-    ```
-
-- `POST "/meal-sessions/stop/" --before_midday=bool --passphrase="cdfjfd"`
-    ```javascript
-    {
-        "status": "Breakfast session stopped"
-    }
-    ```
-
-- `POST "/users/{id}/retrieve-secure/" --passphrase="cdfd"`
-  ```javascript
-  {
-      "id": 5,
-      "firstname": "A...",
-      "lastname": "J...",
-      "photo": "https://avatars.slack-edge.com/...jpg",
-      "is_tapped": false,
-      "slack_id": "U-SLACK"
-  }
-  ```
-
-- `GET "/reports/"`
-  ```javascript
-  // Gets the meal record for the day.
-  {
-      breakfast: {num_served: X},
-      lunch: {num_served: Y},
-      date: date_today
-  }
-  ```
-
-- `GET "/reports?from=yyyy-mm-dd&to=yyyy-mm-dd"` get report.
-  `GET "/reports?from=yyyy-mm&to=yyyy-mm-dd"` get reports from month in the year until set date.
-  `GET "/reports?from=yyyy-mm-dd"` get reports from date until today.
-
-  *If the to query parameter is missing, reports is crammed until the present date.*
-
-  ```javascript
-  [
-    {
-      breakfast:
-      lunch:
-      date:
-    },
-    {
-      ...
-    }
-  ]
-  ```
-
-### Raw SQL query
-Querying the DB for detailed tracking and for data analysis
-
-```sql
-select app_mealservice.breakfast, app_mealservice.lunch, app_mealservice.date, app_mealservice.date_modified, app_mealservice.user_id, app_slackuser.id, app_slackuser.firstname, app_slackuser.lastname, app_slackuser.user_type
-from app_mealservice
-left join app_slackuser
-on app_mealservice.user_id=app_slackuser.id
-where date = '05/06/2016'
-order by app_slackuser.firstname;
+Copy the following into your `~/.bash_profile` or `~/.zshrc` if you use zsh
+```
+export WORKON_HOME=~/Envs
+source /usr/local/bin/virtualenvwrapper.sh
 ```
 
-__CHANGE LOG__
-* Added 2 new endpoints [February 4, 2016]
-* Added 1 new endpoints [March 23, 2016]
+### Database Setup
+1. Install [postgresql](http://postgresapp.com/) (Mac OS X)
+
+Copy the following into your `~/.bash_profile` or `~/.zshrc` if you use zsh
+```
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+```
+
+### App setup
+* Clone the repository
+```
+git clone git@github.com:waitress-andela/waitress.git
+```
+* Create your virtual environment
+```
+mkvirtualenv waitress
+```
+* Pip install all requirements for the app
+
+_Before installing dependencies make sure your virtual env is activated, if not run `workon waitress` to activate_
+```
+pip install -r requirements.txt
+```
+* Create a .env.yml file in the same directory level where manage.py is located and setup your environments
+```
+Ask any of the contributors for the .env.yml configuration
+
+Sample format:
+************
+SECRET_KEY:
+  "sample_key"
+*************
+```
+* Navigate to the settings folder to create your development.py. Copy `development.py.template` into your newly created `development.py` and configure your database settings.
+* Migrate the models to your database
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+* Startup the server
+```
+python manage.py runserver
+```
+* Navigate to the api [doc](http://localhost:8000/docs/) built with swagger
+
+And you are all setup :)
+
+## Testing
+To test the application and see the coverage
+
+1. Run coverage `coverage run manage.py test` to know how much of the app is covered by automated testing.
+2. View the report of the coverage on your terminal `coverage report`.
+3. Produce the html of coverage result `coverage html`.

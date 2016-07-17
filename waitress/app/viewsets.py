@@ -328,7 +328,20 @@ class ReportViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        A method that returns the reports for a meal service.
+        A method that returns the reports for a meal service.\n
+        **If the to query parameter is missing, the report is crammed until the present date.
+        ---
+        parameters:
+            - name: from
+              description: format yyyy-mm-dd or yyyy-mm
+              required: false
+              type: string
+              paramType: query
+            - name: to
+              description: format yyyy-mm-dd
+              required: false
+              type: string
+              paramType: query
         """
         date_today = timezone.now().date().strftime('%Y-%m-%d')
         start_date = request.GET.get('from', None)

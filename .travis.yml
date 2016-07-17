@@ -5,7 +5,7 @@ env:
   global:
   - DJANGO_SETTINGS_MODULE='settings.testing'
 install:
-- pip install -q -r requirements/testing.txt
+- pip install -q -r requirements.txt
 - pip install -q python-coveralls
 - pip install -q coverage
 - npm install bower
