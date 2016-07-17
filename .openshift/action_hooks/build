@@ -1,7 +1,0 @@
-#!/bin/bash
-
-export DATABASE_URL="$OPENSHIFT_POSTGRESQL_DB_URL"
-pip install -q -r "$OPENSHIFT_REPO_DIR"requirements.txt
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py collectstatic --noinput
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py makemigrations
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py migrate
