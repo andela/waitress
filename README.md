@@ -1,4 +1,4 @@
-# Waitress[![Travis build badge](https://travis-ci.org/waitress-andela/waitress.svg?branch=master)](https://travis-ci.org/waitress-andela/waitress) [![Coverage Status](https://coveralls.io/repos/waitress-andela/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/waitress-andela/waitress?branch=master)
+# Waitress [![Travis build badge](https://travis-ci.org/waitress-andela/waitress.svg?branch=master)](https://travis-ci.org/waitress-andela/waitress) [![Coverage Status](https://coveralls.io/repos/waitress-andela/waitress/badge.svg?branch=master&service=github)](https://coveralls.io/github/waitress-andela/waitress?branch=master)
 
 _The meal tracking app of Andela Lagos_
 
