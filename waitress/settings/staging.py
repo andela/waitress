@@ -37,6 +37,8 @@ LOGGING = {
   },
 }
 
+STATIC_ROOT = PROJECT_ROOT + 'staticfiles'
+
 TEMPLATES[0]['APP_DIRS'] = False
 TEMPLATES[0]['OPTIONS']['loaders'] = [
     ('django.template.loaders.cached.Loader', [
