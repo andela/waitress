@@ -1,1 +1,5 @@
+#!/bin/bash
 
+python "$OPENSHIFT_REPO_DIR"waitress/manage.py collectstatic --noinput
+python "$OPENSHIFT_REPO_DIR"waitress/manage.py makemigrations
+python "$OPENSHIFT_REPO_DIR"waitress/manage.py migrate

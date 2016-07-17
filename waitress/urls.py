@@ -1,5 +1,4 @@
 from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
-from app import urls as app_urls
 from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
@@ -13,5 +12,4 @@ router.register(r'reports', ReportViewSet)
 urlpatterns = [
     url(r'^', include(router.urls, namespace='api')),
     url(r'^docs/?', include('rest_framework_swagger.urls')),
-    url(r'^', include(app_urls)),
 ]

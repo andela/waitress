@@ -1,4 +1,7 @@
-from setuptools import setup
+import os
+from setuptools import setup, find_packages
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 setup(
     name='Waitress',
@@ -7,5 +10,6 @@ setup(
     author='Waitress Andela',
     author_email='waitress-andela@mailserver.com',
     url='http://www.python.org/sigs/distutils-sig/',
-    install_requires=['Django==1.8'],
+    packages=find_packages(),
+    include_package_data=True,
 )
