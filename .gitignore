@@ -71,3 +71,7 @@ target/
 
 # SQLite
 db.sqlite3
+
+
+# IntelliJ
+.iml
