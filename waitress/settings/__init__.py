@@ -1,8 +1,8 @@
 import os
 
 if os.getenv('OPENSHIFT_REPO_DIR'):
-    from staging import *
+    from .staging import *
 elif os.getenv('TRAVIS_CI'):
-    from testing import *
+    from .testing import *
 else:
-    from development import *
+    from .development import *
