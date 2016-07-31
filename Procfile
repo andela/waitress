@@ -1,1 +1,1 @@
-web: gunicorn waitress.wsgi --pythonpath=waitress --log-file -
+web: gunicorn wsgi --pythonpath=waitress --log-file -
