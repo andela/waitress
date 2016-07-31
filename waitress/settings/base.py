@@ -121,3 +121,5 @@ SLACK_GROUP = os.getenv('SLACK_GROUP')
 
 #  Allow CORS on all host
 CORS_ORIGIN_ALLOW_ALL = True
+
+DOMAIN_LIST = ('andela.com', 'andela.co')
