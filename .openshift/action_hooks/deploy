@@ -1,6 +1,0 @@
-#!/bin/bash
-
-export DATABASE_URL="$OPENSHIFT_POSTGRESQL_DB_URL"
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py collectstatic --noinput --settings settings.staging
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py makemigrations --settings settings.staging
-python "$OPENSHIFT_REPO_DIR"waitress/manage.py migrate --settings settings.staging

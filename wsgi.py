@@ -1,23 +1,25 @@
-"""
-WSGI config for waitress project.
+#!/usr/bin/python
+import os, sys
 
-It exposes the WSGI callable as a module-level variable named ``application``.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
-"""
-
-import os
-import sys
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-
-try:
+if os.getenv('OPENSHIFT_REPO_DIR'):
+    sys.path.append(os.path.join(os.environ['OPENSHIFT_REPO_DIR']))
     virtenv = os.environ['OPENSHIFT_PYTHON_DIR'] + '/virtenv/'
+    os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.7/site-packages')
     virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
-    execfile(virtualenv, dict(__file__=virtualenv))
-    sys.path.append(os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'waitress'))
-except (IOError, KeyError):
-    pass
+    try:
+        execfile(virtualenv, dict(__file__=virtualenv))
+    except IOError:
+        pass
 
-from waitress.wsgi import application
+#
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'waitress.settings'
+
+# IMPORTANT: Put any additional includes below this line.  If placed above this
+# line, it's possible required libraries won't be in your searchable path
+#
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
