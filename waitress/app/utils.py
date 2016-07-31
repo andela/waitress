@@ -79,14 +79,15 @@ class UserRepository(object):
             if not last_guest:
                 username = kwargs.get("name", "Guest 1")
             else:
-                last_num = int(re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[0])
+                last_num = int(
+                    re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[0])
 
-                username = 'Guest {}'.format(last_num+1)
+                username = 'Guest {}'.format(last_num + 1)
 
             user = SlackUser(firstname=username)
 
         user.slack_id = cls.generate_unique(
-                utype, [individual.slack_id for individual in users] if len(users) else [])
+            utype, [individual.slack_id for individual in users] if len(users) else [])
         user.user_type = utype
 
         try:
@@ -137,6 +138,11 @@ class UserRepository(object):
             if user not in users:
                 unsaved_users.append(user)
 
+        # if user is in slack group and not in database
+        for user in db_users:
+            if user not in users:
+                unsaved_users.append(user)
+
         return unsaved_users
 
     @classmethod
@@ -150,6 +156,7 @@ class UserRepository(object):
             """
             user_dict = {}
             not_user_list = []
+
             for item in info:
                 if 'deleted' in item and item['deleted'] is True:
                     not_user_list.append(item['id'])
@@ -157,10 +164,11 @@ class UserRepository(object):
                 if 'is_bot' in item and item['is_bot'] is True:
                     not_user_list.append(item['id'])
                     continue
-                if 'image_original' not in item['profile']:  # why you should do as ladisays. =)
+                if 'email' not in item['profile'] or item['profile'].get('email') is None:
                     not_user_list.append(item['id'])
                     continue
-                if 'email' not in item['profile']:
+
+                if not item['profile']['email'].endswith(settings.DOMAIN_LIST):
                     not_user_list.append(item['id'])
                     continue
 
@@ -171,7 +179,8 @@ class UserRepository(object):
                 user_dict[item['id']] = {
                     'slack_id': item['id'],
                     'email': item['profile']['email'],
-                    'photo': item['profile']['image_original'],
+                    # use slack default image
+                    'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
                     'firstname': firstname.title(),
                     'lastname': lastname.title()
                 }
@@ -237,5 +246,5 @@ def regularize_guest_names(guest_list):
     """
     guest_list_cp = guest_list[:]
     for i in xrange(len(guest_list_cp)):
-        guest_list_cp[i].firstname = "Guest {}".format(i+1)
+        guest_list_cp[i].firstname = "Guest {}".format(i + 1)
     return guest_list_cp
