@@ -196,7 +196,6 @@ class Passphrase(models.Model):
     A model that represents a passphrase
     """
     word = models.CharField(max_length=100, unique=True)
-    user = models.ForeignKey('SlackUser')
 
     @classmethod
     def exists(cls, passphrase):

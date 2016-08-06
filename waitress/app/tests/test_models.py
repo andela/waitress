@@ -27,7 +27,7 @@ class PassphraseModelTestCase(unittest.TestCase):
     """
     def test_can_crud_passphrase(self):
         # Creating passphrase.
-        passphrase = Passphrase(word='very_secret', user=user)
+        passphrase = Passphrase(word='very_secret')
         passphrase.save()
         self.assertIsNotNone(passphrase.id)
         # Reading passphrase.

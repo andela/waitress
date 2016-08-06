@@ -32,7 +32,7 @@ class ServiceTestCase(TestCase):
             email="testuser@mail.com", photo="http://...",
         )
         cls.user_id = slack_user.id
-        Passphrase.objects.create(word='passphrase', user_id=1)
+        Passphrase.objects.create(word='passphrase')
         cls.client = Client()
 
         super(ServiceTestCase, cls).setUpClass()
@@ -103,7 +103,7 @@ class ServiceTestCase(TestCase):
 
     def test_can_untap_breakfast(self):
         """
-        Tests that priviledged user can untap for breakfast.
+        Tests that privileged user can untap for breakfast.
         """
         self.data['before_midday'] = True
         self.data['slackUserId'] = 'U24A2R2'
@@ -114,7 +114,7 @@ class ServiceTestCase(TestCase):
 
     def test_can_untap_lunch(self):
         """
-        Tests that priviledged user can untap for lunch.
+        Tests that privileged user can untap for lunch.
         """
         self.data['before_midday'] = False
         self.data['slackUserId'] = 'U24A2R2'
