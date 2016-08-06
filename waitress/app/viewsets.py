@@ -222,7 +222,6 @@ class UserViewSet(viewsets.ViewSet):
                 untapped = json.loads(mealservice.untapped)
             log = {
                 'date_untapped': str(timenow),
-                'user': request.passphrase.user.id
             }
             untapped.append(log)
             mealservice.untapped = untapped
