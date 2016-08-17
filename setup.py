@@ -11,7 +11,7 @@ setup(
         'coreapi==1.32.0',
         'decorator==4.0.6',
         'dj-database-url==0.3.0',
-        'Django==1.8.7',
+        'Django==1.9',
         'django-cors-headers==1.1.0',
         'django-envie==0.0.9',
         'django-nose==1.4.2',
