@@ -3,8 +3,6 @@ from django_envie.workroom import convertfiletovars
 
 convertfiletovars()
 
-import dj_database_url
-
 from .base import *
 
 DEBUG = True
