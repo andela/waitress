@@ -8,6 +8,7 @@ class SlackUserManager(models.Manager):
     """
     A class that manages `SlackUser` model
     """
+
     def __init__(self, *args):
         """
         A initialization method that setup methods and properties of this class
@@ -21,31 +22,34 @@ class SlackUserManager(models.Manager):
         """
         return SlackUser(**kwargs)
 
-# Enum fields for user type.
-CHEF = 'chef'
-CLEANER = 'cleaner'
-GUEST = 'guest'
-SECURITY = 'security'
-STAFF = 'staff'
-
 
 class SlackUser(AbstractBaseUser):
     """
     A class that represents a `SlackUser` account
     """
+    # Enum fields for user type.
+    CHEF = 'chef'
+    CLEANER = 'cleaner'
+    GUEST = 'guest'
+    SECURITY = 'security'
+    STAFF = 'staff'
+
+    USER_TYPE = (
+        (CHEF, 'chef'),
+        (CLEANER, 'cleaner'),
+        (GUEST, 'guest'),
+        (SECURITY, 'security'),
+        (STAFF, 'staff'),
+    )
     id = models.AutoField(unique=True, primary_key=True)
     slack_id = models.CharField(unique=True, max_length=20, blank=True)
-    firstname = models.CharField(max_length=20,)
-    lastname = models.CharField(max_length=20,)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
     email = models.CharField(max_length=60, blank=True)
     user_type = models.CharField(
-        max_length=20, choices=(
-            (CHEF, 'chef'), (CLEANER, 'cleaner'), (GUEST, 'guest'),
-            (SECURITY, 'security'), (STAFF, 'staff'),
-        ),
-        default='employee',)
+        max_length=20, choices=USER_TYPE, default=STAFF)
     objects = SlackUserManager()
-    photo = models.CharField(max_length=512, default="",)
+    photo = models.CharField(max_length=512, default="")
     USERNAME_FIELD = 'id'
 
     @classmethod
@@ -88,8 +92,6 @@ class JSONField(models.Field):
     """
     description = "A JSON field representing a untapped event"
 
-    __metaclass__ = models.SubfieldBase
-
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('null', True)
         kwargs.setdefault('editable', False)
@@ -120,9 +122,25 @@ class JSONField(models.Field):
         # If the field doesn't have a default, then we punt to models.Field.
         return super(JSONField, self).get_default()
 
+    def from_db_value(self, value, expression, connection, context):
+        """
+        A method which recontructs a JSON value/dict from its db entry
+        Called when data is loaded from the database
+        """
+        if value != "" or value is not None:
+            try:
+                value = json.loads(value)
+            except:
+                if isinstance(value, list):
+                    return value
+                if isinstance(value, unicode):
+                    return json.loads(value)
+        return value
+
     def to_python(self, value):
         """
         A method which recontructs a JSON value/dict from its db entry
+        Called during the clean method used from forms
         """
         if value != "" or value is not None:
             try:
