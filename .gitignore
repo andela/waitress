@@ -75,3 +75,6 @@ db.sqlite3
 
 # IntelliJ
 .iml
+
+# PyCharm
+.idea/
