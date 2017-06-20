@@ -172,10 +172,8 @@ class UserRepository(object):
                     not_user_list.append(item['id'])
                     continue
 
-                firstname, lastname = re.match(
-                    '^([\w-]+)[.]{0,1}([\w-]+){0,1}@',
-                    item['profile']['email']).groups()
-                lastname = '' if lastname is None else lastname
+                firstname = item.get('profile').get('first_name', '')
+                lastname = item.get('profile').get('last_name', '')
                 user_dict[item['id']] = {
                     'slack_id': item['id'],
                     'email': item['profile']['email'],
