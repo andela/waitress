@@ -50,6 +50,7 @@ class SlackUser(AbstractBaseUser):
         max_length=20, choices=USER_TYPE, default=STAFF)
     objects = SlackUserManager()
     photo = models.CharField(max_length=512, default="")
+    isActive = models.BooleanField(default=True)
     USERNAME_FIELD = 'id'
 
     @classmethod
@@ -59,11 +60,20 @@ class SlackUser(AbstractBaseUser):
         """
         return cls.objects.create(**user_data_dict)
 
-    def __unicode__(self):
+    def string_repr(self):
         """
         An instance method that return a string representation of this model
         """
-        return "{} {} {}".format(str(self.id), self.firstname, self.lastname)
+        return f"{self.id}: {self.firstname} - {self.slack_id}"
+
+    def __repr__(self):
+        return self.string_repr()
+
+    def __str__(self):
+        return self.string_repr()
+
+    def __unicode__(self):
+        return self.string_repr()
 
     def is_tapped(self):
         """
@@ -197,7 +207,7 @@ class MealService(models.Model):
             self.lunch = not reverse
         return self
 
-    def __unicode__(self):
+    def string_repr(self):
         """
         A method that returns a printable representation of the model
         """
@@ -207,6 +217,15 @@ class MealService(models.Model):
                 user=self.user_id, has_breakfast=self.breakfast,
                 has_lunch=self.lunch, has_untapped=has_untapped,
                 date=self.date)
+
+    def __repr__(self):
+        return self.string_repr()
+
+    def __str__(self):
+        return self.string_repr()
+
+    def __unicode__(self):
+        return self.string_repr()
 
 
 class Passphrase(models.Model):

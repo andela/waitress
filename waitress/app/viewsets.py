@@ -3,6 +3,7 @@ from app.models import SlackUser, MealSession, MealService
 from app.serializers import UserSerializer, SecureUserSerializer,\
     ReportSerializer
 from app.utils import UserRepository, Time
+
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status as status_code, viewsets
@@ -328,7 +329,7 @@ class ReportViewSet(viewsets.ViewSet):
     def list(self, request):
         """
         A method that returns the reports for a meal service.\n
-        **If the to query parameter is missing, the report is crammed until the present date.
+        * If the to query parameter is missing, the report is crammed until the present date.
         ---
         parameters:
             - name: from

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import SlackUser, MealService, Passphrase
+from app.models import SlackUser, MealService, Passphrase
 from django.contrib.auth.models import User
 
 
@@ -15,7 +15,7 @@ class UserAdminSite(admin.ModelAdmin):
 
 class SlackUserAdmin(admin.ModelAdmin):
     search_fields = ['firstname', 'lastname']
-    list_display = ('id', 'firstname', 'lastname')
+    list_display = ('id', 'firstname', 'lastname', 'email', 'slack_id', 'isActive')
     exclude = ('password', 'last_login')
     readonly_fields = ('slack_id',)
 
