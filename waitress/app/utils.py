@@ -202,16 +202,17 @@ The following users have been added to the DB:
             return f"Users couldn't be updated successfully - {e.args[0]}"
 
     @classmethod
-    def trim_away(cls, not_user):
+    def trim_away(cls, invalid_users):
         """Trims away users for the system that have been deleted off Slack."""
         trim_user = []
         for user in cls.user_queryset:
-            if user.slack_id in not_user:
-                trim_user.append("%s %s" % (user.firstname, user.lastname))
+            if user.slack_id in invalid_users:
+                user_details = f"{user.firstname} {user.lastname}"
+                trim_user.append(user_details)
                 user.delete()
         if len(trim_user):
-            return "Users deleted: %s" % (', '.join(trim_user))
-        return "Users list not changed"
+            return f"Users deleted: {(', '.join(trim_user))}"
+        return "There are no invalid users found on slack."
 
 
 class Time:
