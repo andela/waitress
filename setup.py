@@ -1,3 +1,3 @@
-# import setuptools
+import setuptools
 
-# setuptools.setup()
+setuptools.setup()
