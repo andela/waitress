@@ -150,8 +150,14 @@ class UserViewSet(viewsets.ViewSet):
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
         user = get_object_or_404(self.queryset, slack_id=slack_id)
+        print(user.isActive)
         meal_in_progress = MealSession.in_progress()
         content = {'firstname': user.firstname, 'lastname': user.lastname}
+
+        if not user.isActive:
+            content['status'] = 'User has been deactivated. Contact the Ops team.'
+            return Response(
+                content, status=status_code.HTTP_400_BAD_REQUEST)
         if not meal_in_progress:
             content['status'] = 'There is no meal in progress'
             return Response(
@@ -161,9 +167,8 @@ class UserViewSet(viewsets.ViewSet):
         else:
             before_midday = Time.is_before_midday()
             if user.is_tapped():
-                content['status'] = 'User has tapped in for {0}'.format(
-                    'breakfast' if before_midday else 'lunch'
-                )
+                meal_type = 'breakfast' if before_midday else 'lunch'
+                content['status'] = f"User has tapped in for {meal_type}"
                 return Response(
                     content, status=status_code.HTTP_400_BAD_REQUEST
                 )
