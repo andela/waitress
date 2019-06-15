@@ -41,7 +41,6 @@ class UserRepository(object):
         """Generates unique id for a user type.
         """
         dict_ids = {}
-        print user_type
         uc_first_letter = user_type[0].upper()
         alphabet = string.uppercase + string.digits
 
@@ -94,9 +93,10 @@ class UserRepository(object):
             user.save()
             return "{} ({}) was created successfully.".format(user.firstname, utype,), user.id
 
-        except Exception, e:
-            return "{0} user couldn't be created. Error: {1}".format(
-                utype.upper(), type(e)), None
+        except Exception as e:
+            user_type = utype.upper()
+            error_type = type(e)
+            return f"{user_type} user couldn't be created. Error: {error_type}"
 
     @classmethod
     def update(cls, trim=False):

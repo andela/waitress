@@ -166,7 +166,7 @@ class MealService(models.Model):
     """
     breakfast = models.BooleanField(default=False)
     lunch = models.BooleanField(default=False)
-    user = models.ForeignKey(SlackUser)
+    user = models.ForeignKey(SlackUser, on_delete=models.CASCADE)
     untapped = JSONField('Untapped', default=untapped_default, blank=True)
     date = models.DateField()
     date_modified = models.DateTimeField(null=True)

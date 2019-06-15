@@ -210,7 +210,6 @@ class ServiceTestCase(TestCase):
                      dict(id=i, firstname='Guest {}'.format(i+2)))
             )
         regularized = regularize_guest_names(guest_list)
-        print regularized[-1].firstname
         assert regularized[-1].firstname == 'Guest 10'
 
     @classmethod
