@@ -8,7 +8,7 @@ STAGING_DOMAIN = 'waitress-staging.herokuapp.com'
 DEBUG = True
 
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
 DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
