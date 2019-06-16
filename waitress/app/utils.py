@@ -178,7 +178,6 @@ class UserRepository(object):
         valid_users, invalid_users = normalize(info)
 
         valid_slack_users = [user for user in difference if user not in invalid_users]
-        # import pdb; pdb.set_trace()
 
         if len(valid_slack_users) == 0:
             return "No new user found on slack."
@@ -186,18 +185,12 @@ class UserRepository(object):
         if trim:
             return cls.trim_away(invalid_users)
 
-        users_to_update = ""
-
         try:
             for user_slack_id in valid_slack_users:
                 current_user = valid_users[user_slack_id]
-                string = f"{current_user['firstname']} {current_user['lastname']},"
-                users_to_update += string
                 with transaction.atomic():
                     SlackUser.create(current_user)
-            return f"""Users updated successfully.
-The following users have been added to the DB:
-{users_to_update}"""
+            return "Users updated successfully."
         except Exception as e:
             return f"Users couldn't be updated successfully - {e.args[0]}"
 

@@ -17,6 +17,5 @@ class SwaggerSchemaView(APIView):
     def get(self, request):
         generator = SchemaGenerator(title='Andela Waitress App')
         schema = generator.get_schema(request=request)
-        # import pdb; pdb.set_trace()
 
         return Response(schema)
