@@ -1,13 +1,14 @@
 language: python
 python:
-- '2.7'
+- '3.7'
 env:
   global:
   - TRAVIS_CI=1
 install:
-- pip install -q -r requirements.txt
-- pip install -q python-coveralls
-- pip install -q coverage
+- pip install -q pipenv
+- pipenv install
+- pipenv install python-coveralls
+- pipenv install coverage
 script:
 - python waitress/manage.py collectstatic --noinput
 - python waitress/manage.py makemigrations
