@@ -10,6 +10,7 @@ class WaitressAdminSite(admin.AdminSite):
 
 
 class UserAdminSite(admin.ModelAdmin):
+    search_fields = ['username', 'firstname']
     readonly_fields = ('password',)
 
 

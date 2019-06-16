@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status as status_code, viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 import json
 import pytz
 
@@ -44,7 +44,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.data, status_code.HTTP_200_OK)
 
     @guard
-    @detail_route(methods=['post'], url_path='retrieve-secure')
+    @action(methods=['post'], url_path='retrieve-secure', detail=True)
     def retrieve_securely(self, request, pk):
         """
         A method that gets the details of a user.
@@ -65,7 +65,26 @@ class UserViewSet(viewsets.ViewSet):
         serializer = SecureUserSerializer(queryset)
         return Response(serializer.data, status_code.HTTP_200_OK)
 
-    @list_route(methods=['get'], url_path='update-users')
+    @guard
+    @action(methods=['put'], detail=True, url_path='toggle-user-active')
+    def toggle_user_active_status(self, request, pk):
+        """
+        A method that is used to toggle a user's active status
+        ---
+        parameters:
+            - name: email
+              description: unique id of the user
+              required: true
+              type: string
+              paramType: path
+        """
+        user = get_object_or_404(self.queryset, pk=pk)
+        user.isActive = not user.isActive
+        serializer = SecureUserSerializer(user)
+        user.save()
+        return Response(serializer.data, status_code.HTTP_200_OK)
+
+    @action(methods=['get'], url_path='update-users', detail=False)
     def update_users(self, request):
         """
         A method that updates the list of users.
@@ -75,7 +94,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
-    @list_route(methods=['get'], url_path='regularize-guest-names')
+    @action(methods=['get'], url_path='regularize-guest-names', detail=False)
     def regularize_guests(self, request):
         """
         A method that regularizes the names of guests.
@@ -86,7 +105,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(
             content, status=status_code.HTTP_200_OK if status else 500)
 
-    @list_route(methods=['get'], url_path='remove-old-friends')
+    @action(methods=['get'], url_path='remove-old-friends', detail=False)
     def trim_users(self, request):
         """
         A method that trims the list of users.
@@ -97,7 +116,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
-    @list_route(methods=['post'], url_path='add')
+    @action(methods=['post'], url_path='add', detail=False)
     def add_user(self, request):
         """
         A method that adds a guest to the list of users.
@@ -131,7 +150,7 @@ class UserViewSet(viewsets.ViewSet):
             return Response(content, status=status_code.HTTP_200_OK)
         return Response(content, status=304)
 
-    @list_route(methods=['post'], url_path='nfctap')
+    @action(methods=['post'], url_path='nfctap', detail=False)
     def nfctap(self, request):
         """
         A method that taps a user via an NFC card.
@@ -191,7 +210,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
-    @detail_route(methods=['post'], url_path='untap')
+    @action(methods=['post'], url_path='untap', detail=True)
     def untap(self, request, pk):
         """
         A method that untaps a user.
@@ -255,7 +274,7 @@ class MealSessionViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
-    @list_route(methods=['post'], url_path='start')
+    @action(methods=['post'], url_path='start', detail=False)
     def start(self, request):
         """
         A method that starts meal session.
@@ -292,7 +311,7 @@ class MealSessionViewSet(viewsets.ViewSet):
         return Response(content, status=status)
 
     @guard
-    @list_route(methods=['post'], url_path='stop')
+    @action(methods=['post'], url_path='stop', detail=False)
     def stop(self, request):
         """
         A method that stops meal session.
