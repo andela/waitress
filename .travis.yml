@@ -1,6 +1,8 @@
 language: python
 python:
-- '3.7.3'
+- '3.7'
+dist: xenial
+sudo: true
 env:
   global:
   - TRAVIS_CI=1
