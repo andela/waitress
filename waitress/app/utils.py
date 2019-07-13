@@ -44,7 +44,7 @@ class UserRepository(object):
         """
         dict_ids = {}
         uc_first_letter = user_type[0].upper()
-        alphabet = string.uppercase + string.digits
+        alphabet = string.ascii_uppercase + string.digits
 
         for i in ids:
             dict_ids[i] = True  # make a dictionary of ids for quick lookup.
@@ -115,7 +115,7 @@ class UserRepository(object):
             cls.user_queryset = SlackUser.objects.all()
             difference = cls.difference(members, cls.user_queryset)
 
-            if len(difference) > 0:
+            if len(difference):
                 # get user info
                 if user_info.successful:
                     return cls.filter_add_user(
@@ -130,52 +130,54 @@ class UserRepository(object):
         A method that gets the difference between users in the system and
         users in slack group.
         """
-        unsaved_users = []
         users = [user.slack_id for user in db_users]
 
         # return all users from slack that don't exist in the db
         return [user for user in repo_users if user not in users]
 
     @classmethod
+    def is_user_invalid(user):
+        is_deleted = user.get('deleted')
+        is_bot = user.get('is_bot')
+        email = user.get('profile').get('email', '')
+        is_email_valid = email.endswith(settings.DOMAIN_LIST)
+
+        return (is_deleted or is_bot or (not is_email_valid))
+
+    @classmethod
+    def normalize(info):
+        """
+        A function that normalizes retrieved information from Slack.
+        """
+        valid_users = {}
+        invalid_users = []
+
+        for item in info:
+            user_slack_id = item['id']
+
+            if cls.is_user_invalid(item):
+                invalid_users.append(user_slack_id)
+            else:
+                firstname = item.get('profile').get('first_name', '')
+                lastname = item.get('profile').get('last_name', '')
+                valid_users[user_slack_id] = {
+                    'slack_id': user_slack_id,
+                    'email': item['profile']['email'],
+                    # use slack default image
+                    'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
+                    'firstname': firstname.title(),
+                    'lastname': lastname.title()
+                }
+
+        return valid_users, invalid_users
+
+    @classmethod
     def filter_add_user(cls, info, difference, trim):
         """
         A method that retrieves users' info using the difference.
         """
-        def is_user_invalid(user):
-            is_deleted = user.get('deleted')
-            is_bot = user.get('is_bot')
-            email = user.get('profile').get('email', '')
-            is_email_valid = email.endswith(settings.DOMAIN_LIST)
 
-            return (is_deleted or is_bot or (not is_email_valid))
-
-        def normalize(info):
-            """
-            A function that normalizes retrieved information from Slack.
-            """
-            valid_users = {}
-            invalid_users = []
-
-            for item in info:
-                user_slack_id = item['id']
-
-                if is_user_invalid(item):
-                    invalid_users.append(user_slack_id)
-                else:
-                    firstname = item.get('profile').get('first_name', '')
-                    lastname = item.get('profile').get('last_name', '')
-                    valid_users[user_slack_id] = {
-                        'slack_id': user_slack_id,
-                        'email': item['profile']['email'],
-                        # use slack default image
-                        'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
-                        'firstname': firstname.title(),
-                        'lastname': lastname.title()
-                    }
-
-            return valid_users, invalid_users
-
-        valid_users, invalid_users = normalize(info)
+        valid_users, invalid_users = cls.normalize(info)
 
         valid_slack_users = [user for user in difference if user not in invalid_users]
 
@@ -229,6 +231,7 @@ def regularize_guest_names(guest_list):
     """Regularizes the names of guest.
     """
     guest_list_cp = guest_list[:]
-    for i in xrange(len(guest_list_cp)):
+    number_of_guests = len(guest_list_cp)
+    for i in iter(range(number_of_guests)):
         guest_list_cp[i].firstname = "Guest {}".format(i + 1)
     return guest_list_cp

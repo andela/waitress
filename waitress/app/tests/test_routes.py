@@ -5,7 +5,7 @@ from rest_framework.test import APIRequestFactory
 from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
 from app.utils import UserRepository, regularize_guest_names
-from mock import patch
+from unittest.mock import patch
 
 
 def skipUnless(fn, *args, **kwargs):
@@ -79,7 +79,7 @@ class ServiceTestCase(TestCase):
         response = self.client.post(
             "/users/1/retrieve-secure/", self.passphrase)
         assert response.status_code is 200
-        self.assertIn("slack_id", response.content)
+        self.assertIn("slack_id", str(response.content))
 
     def test_can_tap_breakfast(self):
         """
@@ -204,7 +204,7 @@ class ServiceTestCase(TestCase):
 
     def test_can_regularize_guest_names(self):
         guest_list = []
-        for i in xrange(10):
+        for i in iter(range(10)):
             guest_list.append(
                 type('Guest', (object, ),
                      dict(id=i, firstname='Guest {}'.format(i+2)))
