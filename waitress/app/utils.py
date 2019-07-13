@@ -145,29 +145,27 @@ class UserRepository(object):
         return (is_deleted or is_bot or (not is_email_valid))
 
     @classmethod
+    def _construct_user_details(item):
+        firstname = item.get('profile').get('first_name', '')
+        lastname = item.get('profile').get('last_name', '')
+        return {
+            'slack_id': item['id'],
+            'email': item['profile']['email'],
+            'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
+            'firstname': firstname.title(),
+            'lastname': lastname.title()
+        }
+
+    @classmethod
     def normalize(info):
         """
         A function that normalizes retrieved information from Slack.
         """
-        valid_users = {}
-        invalid_users = []
-
-        for item in info:
-            user_slack_id = item['id']
-
-            if cls.is_user_invalid(item):
-                invalid_users.append(user_slack_id)
-            else:
-                firstname = item.get('profile').get('first_name', '')
-                lastname = item.get('profile').get('last_name', '')
-                valid_users[user_slack_id] = {
-                    'slack_id': user_slack_id,
-                    'email': item['profile']['email'],
-                    # use slack default image
-                    'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
-                    'firstname': firstname.title(),
-                    'lastname': lastname.title()
-                }
+        invalid_users = [item['id'] for item in info if cls.is_user_invalid(item)]
+        valid_users = {
+            item['id']: cls._construct_user_details(item)
+            for item in info if not cls.is_user_invalid(item)
+        }
 
         return valid_users, invalid_users
 
@@ -181,7 +179,7 @@ class UserRepository(object):
 
         valid_slack_users = [user for user in difference if user not in invalid_users]
 
-        if len(valid_slack_users) == 0:
+        if not len(valid_slack_users):
             return "No new user found on slack."
 
         if trim:
@@ -199,14 +197,15 @@ class UserRepository(object):
     @classmethod
     def trim_away(cls, invalid_users):
         """Trims away users for the system that have been deleted off Slack."""
-        trim_user = []
-        for user in cls.user_queryset:
-            if user.slack_id in invalid_users:
-                user_details = f"{user.firstname} {user.lastname}"
-                trim_user.append(user_details)
-                user.delete()
-        if len(trim_user):
-            return f"Users deleted: {(', '.join(trim_user))}"
+        deleted_users = [
+            user.delete()
+            for user in cls.user_queryset
+            if user.slack_id in invalid_users
+        ]
+
+        number_of_deleted_users = len(deleted_users)
+        if number_of_deleted_users:
+            return f"{number_of_deleted_users} Users deleted"
         return "There are no invalid users found on slack."
 
 

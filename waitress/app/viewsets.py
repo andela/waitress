@@ -177,35 +177,37 @@ class UserViewSet(viewsets.ViewSet):
             content['status'] = 'User has been deactivated. Contact the Ops team.'
             return Response(
                 content, status=status_code.HTTP_400_BAD_REQUEST)
+
         if not meal_in_progress:
             content['status'] = 'There is no meal in progress'
             return Response(
                 content, status=status_code.HTTP_406_NOT_ACCEPTABLE
             )
 
-        else:
-            before_midday = Time.is_before_midday()
-            if user.is_tapped():
-                meal_type = 'breakfast' if before_midday else 'lunch'
-                content['status'] = f"User has tapped in for {meal_type}"
-                return Response(
-                    content, status=status_code.HTTP_400_BAD_REQUEST
-                )
-            date_today = meal_in_progress[0].date
-            mealservice = MealService.objects.filter(
-                user=user, date=date_today
+        before_midday = Time.is_before_midday()
+
+        if user.is_tapped():
+            meal_type = 'breakfast' if before_midday else 'lunch'
+            content['status'] = f"User has tapped in for {meal_type}"
+            return Response(
+                content, status=status_code.HTTP_400_BAD_REQUEST
             )
 
-            if not mealservice.count():
-                mealservice = MealService()
-            else:
-                mealservice = mealservice[0]
+        date_today = meal_in_progress[0].date
+        mealservice = MealService.objects.filter(
+            user=user, date=date_today
+        )
 
-            mealservice = mealservice.set_meal(before_midday)
-            mealservice = mealservice.set_user_and_date(user, date_today)
-            mealservice.save()
+        if not mealservice.count():
+            mealservice = MealService()
+        else:
+            mealservice = mealservice[0]
 
-            content['status'] = 'Tap was successful'
+        mealservice = mealservice.set_meal(before_midday)
+        mealservice = mealservice.set_user_and_date(user, date_today)
+        mealservice.save()
+
+        content['status'] = 'Tap was successful'
 
         return Response(content, status=status_code.HTTP_200_OK)
 
