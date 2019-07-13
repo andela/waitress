@@ -11,7 +11,8 @@ class SwaggerSchemaView(APIView):
     exclude_from_schema = True
     renderer_classes = [
         renderers.OpenAPIRenderer,
-        renderers.SwaggerUIRenderer
+        renderers.SwaggerUIRenderer,
+        renderers.JSONRenderer
     ]
 
     def get(self, request):

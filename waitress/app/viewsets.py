@@ -291,6 +291,7 @@ class MealSessionViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
+        # https://buildmedia.readthedocs.org/media/pdf/django-rest-swagger/stable-0.3.x/django-rest-swagger.pdf
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress()
         status = status_code.HTTP_200_OK

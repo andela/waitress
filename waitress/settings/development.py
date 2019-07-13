@@ -19,6 +19,8 @@ NOSE_ARGS = [
     '--with-coverage',
 ]
 
+ALLOWED_HOSTS = ['*']
+
 # configure your database
 DATABASES = {
     'default': {
