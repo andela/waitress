@@ -1,8 +1,16 @@
+import coreapi
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
 from rest_framework_swagger import renderers
+from urllib.parse import urljoin
+import yaml
+
+
+class CustomSchemaGenerator(SchemaGenerator):
+    def get_link(self, path, method, view):
+        pass
 
 
 class SwaggerSchemaView(APIView):
@@ -16,7 +24,10 @@ class SwaggerSchemaView(APIView):
     ]
 
     def get(self, request):
-        generator = SchemaGenerator(title='Andela Waitress App')
+        generator = SchemaGenerator(
+            title='Andela Waitress App',
+            description='Swagger Documentation for the waitress app.'
+        )
         schema = generator.get_schema(request=request)
 
         return Response(schema)

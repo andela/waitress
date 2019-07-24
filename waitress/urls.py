@@ -8,11 +8,11 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework import routers
 
+
 router = routers.SimpleRouter()
 router.register(r'meal-sessions', MealSessionViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'reports', ReportViewSet)
-
 
 app_namespace = 'waitress'
 

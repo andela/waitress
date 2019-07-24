@@ -47,8 +47,3 @@ def normalize_users():
         return _manual_transaction(null_names)
     except Exception as e:
         print('Error ====>', e.args)
-
-
-
-if __name__ == '__main__':
-    normalize_users()

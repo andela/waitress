@@ -169,7 +169,6 @@ class UserViewSet(viewsets.ViewSet):
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
         user = get_object_or_404(self.queryset, slack_id=slack_id)
-        print(user.isActive)
         meal_in_progress = MealSession.in_progress()
         content = {'firstname': user.firstname, 'lastname': user.lastname}
 
@@ -198,11 +197,7 @@ class UserViewSet(viewsets.ViewSet):
             user=user, date=date_today
         )
 
-        if not mealservice.count():
-            mealservice = MealService()
-        else:
-            mealservice = mealservice[0]
-
+        mealservice = mealservice[0] if mealservice.count() else MealService()
         mealservice = mealservice.set_meal(before_midday)
         mealservice = mealservice.set_user_and_date(user, date_today)
         mealservice.save()
@@ -293,10 +288,12 @@ class MealSessionViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
+
         # https://buildmedia.readthedocs.org/media/pdf/django-rest-swagger/stable-0.3.x/django-rest-swagger.pdf
         before_midday = request.POST.get('before_midday')
         meal_in_progress = MealSession.in_progress()
         status = status_code.HTTP_200_OK
+
         if before_midday:
             content = {'status': 'Breakfast started'}
         else:

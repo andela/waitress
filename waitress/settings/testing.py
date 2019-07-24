@@ -3,15 +3,13 @@ from .base import *
 
 DEBUG = True
 
-INSTALLED_APPS += ('django_nose',)
+INSTALLED_APPS += ("django_nose",)
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
 
-NOSE_ARGS = [
-    '--with-coverage',
-]
+NOSE_ARGS = ["--with-coverage"]
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

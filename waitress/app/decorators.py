@@ -13,7 +13,7 @@ def guard(func):
         passphrase = request.POST.get('passphrase', None)
         exists = Passphrase.exists(passphrase)
         if exists.status:
-            request.passphrase = exists.matched_list[0] if exists.status else request.user.id
+            request.passphrase = exists.matched_list[0]
             if pk:
                 return func(viewset, request, pk, *args, **kwargs)
             return func(viewset, request, *args, **kwargs)
