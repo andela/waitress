@@ -10,7 +10,6 @@ def guard(func):
     """
     @wraps(func)
     def decorated_func(viewset, request, pk=None, *args, **kwargs):
-        import pdb; pdb.set_trace()
         passphrase = request.POST.get('passphrase', None)
         exists = Passphrase.exists(passphrase)
         if exists.status:
