@@ -130,4 +130,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 DOMAIN_LIST = ("andela.com", "andela.co")
 
-SWAGGER_SETTINGS = {"exclude_namespaces": ["docs"]}
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+    'SPEC_URL': None
+}

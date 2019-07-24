@@ -69,7 +69,7 @@ class UserRepository(object):
     def add(cls, **kwargs):
         utype = kwargs.get('utype')
         users = SlackUser.objects.filter(user_type=utype).order_by('id')
-        if kwargs.get("utype") != "guest":
+        if kwargs.get("utype").lower() != "guest":
             user = SlackUser(
                 firstname=kwargs.get("firstname"),
                 lastname=kwargs.get("lastname"),)

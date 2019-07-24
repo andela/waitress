@@ -1,6 +1,6 @@
 from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
 from app.admin import admin_site
-# from app.views import SwaggerSchemaView
+from app.views import schema_view
 
 from django.conf import settings
 from django.conf.urls import include
@@ -18,6 +18,6 @@ app_namespace = 'waitress'
 
 urlpatterns = [
     path('', include((router.urls, app_namespace), namespace='api',)),
-    # path('docs/', SwaggerSchemaView.as_view()),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin_site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

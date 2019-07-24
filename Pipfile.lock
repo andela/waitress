@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "96939e7eb18db72b1e18b2c87f9c983b40839372d9751faee1d2faf8354bb244"
+            "sha256": "80579ed1013cbfbae1dd79172490572a229e5dfe4f3e7687a95fe5c077d9e28e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -263,6 +263,14 @@
             "index": "pypi",
             "version": "==1.3.7"
         },
+        "packaging": {
+            "hashes": [
+                "sha256:0c98a5d0be38ed775798ece1b9727178c4469d9c3b4ada66e8e6b7849f8732af",
+                "sha256:9e1cbf8c12b1f1ce0bb5344b8d7ecf66a6f8a6e91bcb0c84593ed6d3ab5c4ab3"
+            ],
+            "index": "pypi",
+            "version": "==19.0"
+        },
         "psycopg2-binary": {
             "hashes": [
                 "sha256:080c72714784989474f97be9ab0ddf7b2ad2984527e77f2909fcd04d4df53809",
@@ -296,6 +304,13 @@
             ],
             "index": "pypi",
             "version": "==2.8.3"
+        },
+        "pyparsing": {
+            "hashes": [
+                "sha256:1873c03321fc118f4e9746baf201ff990ceb915f433f23b395f5580d1840cb2a",
+                "sha256:9b6323ef4ab914af344ba97510e966d64ba91055d6b9afa6b30799340e89cc03"
+            ],
+            "version": "==2.4.0"
         },
         "python-dateutil": {
             "hashes": [

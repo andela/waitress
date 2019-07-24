@@ -23,6 +23,21 @@ class SecureUserSerializer(UserSerializer):
     slack_id = serializers.CharField()
 
 
+class FilterSerializer(serializers.Serializer):
+    filter = serializers.CharField()
+
+
+# class PassPhraseSerializer(serializers.Serializer):
+#     passphrase = serializers.CharField()
+
+
+class AddUsererializer(serializers.Serializer):
+    firstname = serializers.CharField()
+    lastname = serializers.CharField()
+    utype = serializers.CharField()
+    passphrase = serializers.CharField()
+
+
 class ReportSerializer(serializers.Serializer):
 
     @classmethod

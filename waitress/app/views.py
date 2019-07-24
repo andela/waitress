@@ -1,25 +1,15 @@
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.schemas import SchemaGenerator
-from rest_framework.views import APIView
-from urllib.parse import urljoin
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 
-# class SwaggerSchemaView(APIView):
-#     _ignore_model_permissions = False
-#     permission_classes = [AllowAny]
-#     exclude_from_schema = True
-#     renderer_classes = [
-#         renderers.OpenAPIRenderer,
-#         renderers.SwaggerUIRenderer,
-#         renderers.JSONRenderer
-#     ]
-
-#     def get(self, request):
-#         generator = SchemaGenerator(
-#             title='Andela Waitress App',
-#             description='Swagger Documentation for the waitress app.'
-#         )
-#         schema = generator.get_schema(request=request)
-
-#         return Response(schema)
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Andela Waitress App",
+      default_version='v1',
+      description="Swagger Documentation for the waitress app.",
+      license=openapi.License(name="MIT License"),
+   ),
+   public=True,
+   permission_classes=(AllowAny,),
+)

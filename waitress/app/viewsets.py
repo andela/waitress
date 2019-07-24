@@ -1,9 +1,3 @@
-from app.decorators import guard
-from app.models import SlackUser, MealSession, MealService
-from app.serializers import UserSerializer, SecureUserSerializer,\
-    ReportSerializer
-from app.utils import UserRepository, Time
-
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status as status_code, viewsets
@@ -11,6 +5,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 import json
 import pytz
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
+from app.decorators import guard
+from app.models import SlackUser, MealSession, MealService
+from app.serializers import UserSerializer, SecureUserSerializer,\
+    ReportSerializer, FilterSerializer, AddUsererializer
+from app.utils import UserRepository, Time
 
 
 class UserViewSet(viewsets.ViewSet):
@@ -19,6 +21,9 @@ class UserViewSet(viewsets.ViewSet):
     """
     queryset = SlackUser.objects.all()
 
+    @swagger_auto_schema(
+        query_serializer=FilterSerializer
+    )
     def list(self, request):
         """
         A method that gets the list of users.
@@ -43,6 +48,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(serializer.data, status_code.HTTP_200_OK)
 
+    @swagger_auto_schema()
     @guard
     @action(methods=['post'], url_path='retrieve-secure', detail=True)
     def retrieve_securely(self, request, pk):
@@ -65,14 +71,14 @@ class UserViewSet(viewsets.ViewSet):
         serializer = SecureUserSerializer(queryset)
         return Response(serializer.data, status_code.HTTP_200_OK)
 
-    @guard
+    @swagger_auto_schema()
     @action(methods=['put'], detail=True, url_path='toggle-user-active')
     def toggle_user_active_status(self, request, pk):
         """
         A method that is used to toggle a user's active status
         ---
         parameters:
-            - name: email
+            - pk: user_id
               description: unique id of the user
               required: true
               type: string
@@ -115,6 +121,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @swagger_auto_schema()
     @guard
     @action(methods=['post'], url_path='add', detail=False)
     def add_user(self, request):
@@ -207,6 +214,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
+    @swagger_auto_schema()
     @action(methods=['post'], url_path='untap', detail=True)
     def untap(self, request, pk):
         """
@@ -271,6 +279,7 @@ class MealSessionViewSet(viewsets.ViewSet):
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
+    @swagger_auto_schema()
     @action(methods=['post'], url_path='start', detail=False)
     def start(self, request):
         """
@@ -311,6 +320,7 @@ class MealSessionViewSet(viewsets.ViewSet):
         return Response(content, status=status)
 
     @guard
+    @swagger_auto_schema()
     @action(methods=['post'], url_path='stop', detail=False)
     def stop(self, request):
         """
@@ -350,6 +360,7 @@ class ReportViewSet(viewsets.ViewSet):
     """
     queryset = MealService.objects.all()
 
+    @swagger_auto_schema()
     def list(self, request):
         """
         A method that returns the reports for a meal service.\n
