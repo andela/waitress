@@ -179,7 +179,7 @@ class UserRepository(object):
 
         valid_slack_users = [user for user in difference if user not in invalid_users]
 
-        if not len(valid_slack_users):
+        if not valid_slack_users:
             return "No new user found on slack."
 
         if trim:
