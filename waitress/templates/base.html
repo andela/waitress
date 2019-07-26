@@ -1,0 +1,14 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head>
+        <title>Waitress V2</title>
+        <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+        {% block header %}{% endblock header %}
+    </head>
+    <body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>

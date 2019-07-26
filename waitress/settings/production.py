@@ -14,3 +14,4 @@ DATABASES["default"]["ENGINE"] = "django.db.backends.postgresql_psycopg2"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = [PRODUCTION_DOMAIN, STAGING_DOMAIN]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

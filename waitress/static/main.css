@@ -1,0 +1,83 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Dosis';
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.login_container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.login_background {
+    width: 40%;
+    /* background: url('https://res.cloudinary.com/proton/image/upload/v1540802015/account-a-bank-account-34204_micvpj.jpg'); */
+    background: beige;
+}
+
+.login_main {
+    width: 100%;
+    background: #F8F8F8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login_header {
+    color: red;
+    font-weight: bold;
+    font-size: 4rem;
+}
+
+.login_description {
+    font-size: 2rem;
+}
+
+.login_form {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+input {
+    width: 300px;
+    padding: 0.5rem;
+    margin: 0.6rem 0;
+    font-size: 1rem;
+    border-style: none;
+    border: 1px solid grey;
+}
+
+label {
+    margin: 0.5rem 0;
+}
+
+.btn {
+    background: #58a1f4;
+    width: 300px;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.4rem;
+    font-weight: bold;
+}
+
+.error_text {
+    color: red;
+    display: block;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}

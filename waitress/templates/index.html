@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="login_container">
+    <aside class="login_background"></aside>
+    <section class="login_main">
+        <h2 class="login_header">Waitress V2</h2>
+        <h3 class="login_description">Welcome!</h3>
+        <span class="login_text">Sign in by entering the information below</span>
+
+        <form class="login_form" method="POST">
+            {% csrf_token %}
+            <!-- Username -->
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    {{ login_form.username }}
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    {{ login_form.password }}
+                </div>
+            </div>
+
+            <span class="error_text">{{ request.session.error_message }}</span>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </section>
+</main>
+{% endblock content %}
