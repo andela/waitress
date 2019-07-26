@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.db import transaction
 from slacker import Slacker
@@ -10,6 +12,9 @@ slack = Slacker(settings.SLACK_API_TOKEN)
 group_info = slack.groups.info(settings.SLACK_GROUP)
 user_info = slack.users.list()
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 def _manual_transaction(records):
     transaction.set_autocommit(False)
@@ -17,7 +22,7 @@ def _manual_transaction(records):
         record.save()
     transaction.commit()
     transaction.set_autocommit(True)
-    return False
+    return 'Update completed!'
 
 
 def _fetch_slack_users():
@@ -49,4 +54,4 @@ def normalize_users():
 
         return _manual_transaction(null_names)
     except Exception as e:
-        print("Error ====>", e.args)
+        logger.error(e.args)
