@@ -231,6 +231,6 @@ def regularize_guest_names(guest_list):
     """
     guest_list_cp = guest_list[:]
     number_of_guests = len(guest_list_cp)
-    for i in iter(range(number_of_guests)):
+    for i in range(number_of_guests):
         guest_list_cp[i].firstname = "Guest {}".format(i + 1)
     return guest_list_cp
