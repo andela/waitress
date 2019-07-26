@@ -31,7 +31,7 @@ class FilterSerializer(serializers.Serializer):
 #     passphrase = serializers.CharField()
 
 
-class AddUsererializer(serializers.Serializer):
+class AddUserSerializer(serializers.Serializer):
     firstname = serializers.CharField()
     lastname = serializers.CharField()
     utype = serializers.CharField()
