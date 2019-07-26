@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="dashboard_container">
+    <nav class="dashboard__nav">
+        <span>Waitress V2 Ops Dashboard</span>
+        <form method="POST" action="/v2/signout">
+            {% csrf_token %}
+            <button class="signout_btn">Sign Out</button>
+        </form>
+    </nav>
+</main>
+{% endblock content %}

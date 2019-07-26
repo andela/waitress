@@ -1,35 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-<main class="login_container">
-    <aside class="login_background"></aside>
-    <section class="login_main">
-        <h2 class="login_header">Waitress V2</h2>
-        <h3 class="login_description">Welcome!</h3>
-        <span class="login_text">Sign in by entering the information below</span>
+<section class="hero main-bg is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="column is-4 is-offset-4">
+                <h3 class="title has-text-grey">Login</h3>
+                <p class="subtitle has-text-grey">Please login to proceed.</p>
+                <div class="box">
+                    <figure class="avatar">
+                        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/66976c31894247.590b86ea74786.gif" class="avatar-img">
+                    </figure>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="field">
+                            <div class="control">
+                                {{ login_form.username }}
+                            </div>
+                        </div>
 
-        <form class="login_form" method="POST">
-            {% csrf_token %}
-            <!-- Username -->
-            <div class="field">
-                <label class="label">Username</label>
-                <div class="control">
-                    {{ login_form.username }}
+                        <div class="field">
+                            <div class="control">
+                                    {{ login_form.password }}
+                                <!-- <input class="input is-large" type="password" placeholder="Your Password"> -->
+                            </div>
+                        </div>
+                        <span class="error_text">{{ request.session.error_message }}</span>
+                        <button class="button btn is-block is-info is-fullwidth">Login</button>
+                    </form>
                 </div>
+                <p class="has-text-grey">
+                    Credit: <a href="https://bulmatemplates.github.io/bulma-templates/">Bulma Templates</a>
+                </p>
             </div>
-
-            <!-- Password -->
-            <div class="field">
-                <label class="label">Password</label>
-                <div class="control">
-                    {{ login_form.password }}
-                </div>
-            </div>
-
-            <span class="error_text">{{ request.session.error_message }}</span>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn">Login</button>
-        </form>
-    </section>
-</main>
+        </div>
+    </div>
+</section>
 {% endblock content %}

@@ -4,11 +4,14 @@
     <head>
         <title>Waitress V2</title>
         <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'bulma.css' %}" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
         {% block header %}{% endblock header %}
     </head>
     <body>
         {% block content %}
         {% endblock content %}
+        <script src="{% static 'main.js' %}"></script>
     </body>
 </html>
