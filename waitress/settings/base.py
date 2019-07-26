@@ -4,15 +4,14 @@ import os
 import sys
 
 from django.contrib import messages
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, "../"))
 
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
-dotenv_path = os.path.join(PROJECT_ROOT, ".env")
-load_dotenv(dotenv_path)
+load_dotenv(find_dotenv())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
