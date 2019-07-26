@@ -4,12 +4,12 @@ from drf_yasg import openapi
 
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Andela Waitress App",
-      default_version='v1',
-      description="Swagger Documentation for the waitress app.",
-      license=openapi.License(name="MIT License"),
-   ),
-   public=True,
-   permission_classes=(AllowAny,),
+    openapi.Info(
+        title="Andela Waitress App",
+        default_version="v1",
+        description="Swagger Documentation for the waitress app.",
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
 )

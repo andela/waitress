@@ -5,19 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0005_auto_20190616_0953'),
-    ]
+    dependencies = [("app", "0005_auto_20190616_0953")]
 
     operations = [
         migrations.AlterField(
-            model_name='slackuser',
-            name='firstname',
-            field=models.CharField(default='', max_length=50),
+            model_name="slackuser",
+            name="firstname",
+            field=models.CharField(default="", max_length=50),
         ),
         migrations.AlterField(
-            model_name='slackuser',
-            name='lastname',
-            field=models.CharField(default='', max_length=50),
+            model_name="slackuser",
+            name="lastname",
+            field=models.CharField(default="", max_length=50),
         ),
     ]

@@ -18,6 +18,7 @@ class UserRepository(object):
     """
     A wrapper class for methods that update the list of users.
     """
+
     @staticmethod
     def manual_transaction(records):
         transaction.set_autocommit(False)
@@ -30,7 +31,8 @@ class UserRepository(object):
     def regularize_guests():
         """ Regularize guest names"""
         ordered_guests = SlackUser.objects.filter(
-            firstname__startswith='Guest').order_by('id')
+            firstname__startswith="Guest"
+        ).order_by("id")
         regularized_guests = regularize_guest_names(list(ordered_guests))
         try:
             UserRepository.manual_transaction(regularized_guests)
@@ -51,8 +53,8 @@ class UserRepository(object):
 
         def gen_id():  # generate 8-char id.
             return "{0}{1}".format(
-                uc_first_letter,
-                ''.join([random.choice(alphabet) for _ in range(8)]))
+                uc_first_letter, "".join([random.choice(alphabet) for _ in range(8)])
+            )
 
         new_id = gen_id()
 
@@ -67,33 +69,43 @@ class UserRepository(object):
 
     @classmethod
     def add(cls, **kwargs):
-        utype = kwargs.get('utype')
-        users = SlackUser.objects.filter(user_type=utype).order_by('id')
+        utype = kwargs.get("utype")
+        users = SlackUser.objects.filter(user_type=utype).order_by("id")
         if kwargs.get("utype").lower() != "guest":
             user = SlackUser(
-                firstname=kwargs.get("firstname"),
-                lastname=kwargs.get("lastname"),)
+                firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname")
+            )
         else:
-            last_guest = filter(lambda x: x.firstname.startswith("Guest"),
-                                list(users))[-1] if len(users) else None
+            last_guest = (
+                filter(lambda x: x.firstname.startswith("Guest"), list(users))[-1]
+                if len(users)
+                else None
+            )
 
             if not last_guest:
                 username = kwargs.get("name", "Guest 1")
             else:
                 last_num = int(
-                    re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[0])
+                    re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[
+                        0
+                    ]
+                )
 
-                username = 'Guest {}'.format(last_num + 1)
+                username = "Guest {}".format(last_num + 1)
 
             user = SlackUser(firstname=username)
 
         user.slack_id = cls.generate_unique(
-            utype, [individual.slack_id for individual in users] if len(users) else [])
+            utype, [individual.slack_id for individual in users] if len(users) else []
+        )
         user.user_type = utype
 
         try:
             user.save()
-            return "{} ({}) was created successfully.".format(user.firstname, utype,), user.id
+            return (
+                "{} ({}) was created successfully.".format(user.firstname, utype),
+                user.id,
+            )
 
         except Exception as e:
             user_type = utype.upper()
@@ -111,7 +123,7 @@ class UserRepository(object):
         group_info = slack.groups.info(settings.SLACK_GROUP)
         user_info = slack.users.list()
         if group_info.successful:
-            members = group_info.body['group']['members']
+            members = group_info.body["group"]["members"]
             cls.user_queryset = SlackUser.objects.all()
             difference = cls.difference(members, cls.user_queryset)
 
@@ -119,7 +131,7 @@ class UserRepository(object):
                 # get user info
                 if user_info.successful:
                     return cls.filter_add_user(
-                        user_info.body['members'], difference, trim
+                        user_info.body["members"], difference, trim
                     )
             else:
                 return "Users list wasn't changed."
@@ -137,23 +149,25 @@ class UserRepository(object):
 
     @classmethod
     def is_user_invalid(user):
-        is_deleted = user.get('deleted')
-        is_bot = user.get('is_bot')
-        email = user.get('profile').get('email', '')
+        is_deleted = user.get("deleted")
+        is_bot = user.get("is_bot")
+        email = user.get("profile").get("email", "")
         is_email_valid = email.endswith(settings.DOMAIN_LIST)
 
-        return (is_deleted or is_bot or (not is_email_valid))
+        return is_deleted or is_bot or (not is_email_valid)
 
     @classmethod
     def _construct_user_details(item):
-        firstname = item.get('profile').get('first_name', '')
-        lastname = item.get('profile').get('last_name', '')
+        firstname = item.get("profile").get("first_name", "")
+        lastname = item.get("profile").get("last_name", "")
         return {
-            'slack_id': item['id'],
-            'email': item['profile']['email'],
-            'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
-            'firstname': firstname.title(),
-            'lastname': lastname.title()
+            "slack_id": item["id"],
+            "email": item["profile"]["email"],
+            "photo": item["profile"].get(
+                "image_original", item["profile"].get("image_192")
+            ),
+            "firstname": firstname.title(),
+            "lastname": lastname.title(),
         }
 
     @classmethod
@@ -161,10 +175,11 @@ class UserRepository(object):
         """
         A function that normalizes retrieved information from Slack.
         """
-        invalid_users = [item['id'] for item in info if cls.is_user_invalid(item)]
+        invalid_users = [item["id"] for item in info if cls.is_user_invalid(item)]
         valid_users = {
-            item['id']: cls._construct_user_details(item)
-            for item in info if not cls.is_user_invalid(item)
+            item["id"]: cls._construct_user_details(item)
+            for item in info
+            if not cls.is_user_invalid(item)
         }
 
         return valid_users, invalid_users
@@ -219,7 +234,7 @@ class Time:
         """
         A method that return True if the time is before midday.
         """
-        timezone.activate(pytz.timezone('Africa/Lagos'))
+        timezone.activate(pytz.timezone("Africa/Lagos"))
         time = timezone.now().hour
         if 0 < time < 12:
             return True

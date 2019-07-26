@@ -10,8 +10,13 @@ from drf_yasg.utils import swagger_auto_schema
 
 from app.decorators import guard
 from app.models import SlackUser, MealSession, MealService
-from app.serializers import UserSerializer, SecureUserSerializer,\
-    ReportSerializer, FilterSerializer, AddUsererializer
+from app.serializers import (
+    UserSerializer,
+    SecureUserSerializer,
+    ReportSerializer,
+    FilterSerializer,
+    AddUserSerializer,
+)
 from app.utils import UserRepository, Time
 
 
@@ -19,11 +24,10 @@ class UserViewSet(viewsets.ViewSet):
     """
     A simple ViewSet for listing or retrieving users.
     """
+
     queryset = SlackUser.objects.all()
 
-    @swagger_auto_schema(
-        query_serializer=FilterSerializer
-    )
+    @swagger_auto_schema(query_serializer=FilterSerializer)
     def list(self, request):
         """
         A method that gets the list of users.
@@ -35,22 +39,22 @@ class UserViewSet(viewsets.ViewSet):
               type: string
               paramType: query
         """
-        filter = request.GET.get('filter')
+        filter = request.GET.get("filter")
         queryset = self.queryset
 
-        if request.GET.get('filter'):
-            queryset = queryset.filter(
-                firstname__startswith=filter
-            ).order_by('firstname')
+        if request.GET.get("filter"):
+            queryset = queryset.filter(firstname__startswith=filter).order_by(
+                "firstname"
+            )
         else:
-            queryset = queryset.all().order_by('id')
+            queryset = queryset.all().order_by("id")
         serializer = UserSerializer(queryset, many=True)
 
         return Response(serializer.data, status_code.HTTP_200_OK)
 
     @swagger_auto_schema()
     @guard
-    @action(methods=['post'], url_path='retrieve-secure', detail=True)
+    @action(methods=["post"], url_path="retrieve-secure", detail=True)
     def retrieve_securely(self, request, pk):
         """
         A method that gets the details of a user.
@@ -72,7 +76,7 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.data, status_code.HTTP_200_OK)
 
     @swagger_auto_schema()
-    @action(methods=['put'], detail=True, url_path='toggle-user-active')
+    @action(methods=["put"], detail=True, url_path="toggle-user-active")
     def toggle_user_active_status(self, request, pk):
         """
         A method that is used to toggle a user's active status
@@ -90,7 +94,7 @@ class UserViewSet(viewsets.ViewSet):
         user.save()
         return Response(serializer.data, status_code.HTTP_200_OK)
 
-    @action(methods=['get'], url_path='update-users', detail=False)
+    @action(methods=["get"], url_path="update-users", detail=False)
     def update_users(self, request):
         """
         A method that updates the list of users.
@@ -100,7 +104,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
-    @action(methods=['get'], url_path='regularize-guest-names', detail=False)
+    @action(methods=["get"], url_path="regularize-guest-names", detail=False)
     def regularize_guests(self, request):
         """
         A method that regularizes the names of guests.
@@ -108,10 +112,9 @@ class UserViewSet(viewsets.ViewSet):
         status = UserRepository.regularize_guests()
         content = {"status": status}
 
-        return Response(
-            content, status=status_code.HTTP_200_OK if status else 500)
+        return Response(content, status=status_code.HTTP_200_OK if status else 500)
 
-    @action(methods=['get'], url_path='remove-old-friends', detail=False)
+    @action(methods=["get"], url_path="remove-old-friends", detail=False)
     def trim_users(self, request):
         """
         A method that trims the list of users.
@@ -123,7 +126,7 @@ class UserViewSet(viewsets.ViewSet):
 
     @swagger_auto_schema()
     @guard
-    @action(methods=['post'], url_path='add', detail=False)
+    @action(methods=["post"], url_path="add", detail=False)
     def add_user(self, request):
         """
         A method that adds a guest to the list of users.
@@ -157,7 +160,7 @@ class UserViewSet(viewsets.ViewSet):
             return Response(content, status=status_code.HTTP_200_OK)
         return Response(content, status=304)
 
-    @action(methods=['post'], url_path='nfctap', detail=False)
+    @action(methods=["post"], url_path="nfctap", detail=False)
     def nfctap(self, request):
         """
         A method that taps a user via an NFC card.
@@ -169,53 +172,46 @@ class UserViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
-        slack_id = request.POST.get('slackUserId')
+        slack_id = request.POST.get("slackUserId")
 
         if not slack_id:
-            content = {'status': 'You\'re  unauthorized to make this request'}
+            content = {"status": "You're  unauthorized to make this request"}
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
         user = get_object_or_404(self.queryset, slack_id=slack_id)
         meal_in_progress = MealSession.in_progress()
-        content = {'firstname': user.firstname, 'lastname': user.lastname}
+        content = {"firstname": user.firstname, "lastname": user.lastname}
 
         if not user.is_active:
-            content['status'] = 'User has been deactivated. Contact the Ops team.'
-            return Response(
-                content, status=status_code.HTTP_400_BAD_REQUEST)
+            content["status"] = "User has been deactivated. Contact the Ops team."
+            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
 
         if not meal_in_progress:
-            content['status'] = 'There is no meal in progress'
-            return Response(
-                content, status=status_code.HTTP_406_NOT_ACCEPTABLE
-            )
+            content["status"] = "There is no meal in progress"
+            return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
 
         before_midday = Time.is_before_midday()
 
         if user.is_tapped():
-            meal_type = 'breakfast' if before_midday else 'lunch'
-            content['status'] = f"User has tapped in for {meal_type}"
-            return Response(
-                content, status=status_code.HTTP_400_BAD_REQUEST
-            )
+            meal_type = "breakfast" if before_midday else "lunch"
+            content["status"] = f"User has tapped in for {meal_type}"
+            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
 
         date_today = meal_in_progress[0].date
-        mealservice = MealService.objects.filter(
-            user=user, date=date_today
-        )
+        mealservice = MealService.objects.filter(user=user, date=date_today)
 
         mealservice = mealservice[0] if mealservice.count() else MealService()
         mealservice = mealservice.set_meal(before_midday)
         mealservice = mealservice.set_user_and_date(user, date_today)
         mealservice.save()
 
-        content['status'] = 'Tap was successful'
+        content["status"] = "Tap was successful"
 
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
     @swagger_auto_schema()
-    @action(methods=['post'], url_path='untap', detail=True)
+    @action(methods=["post"], url_path="untap", detail=True)
     def untap(self, request, pk):
         """
         A method that untaps a user.
@@ -237,27 +233,23 @@ class UserViewSet(viewsets.ViewSet):
         meal_in_progress = MealSession.in_progress()
         timenow = timezone.now()
         user = get_object_or_404(self.queryset, pk=pk)
-        mealservice = MealService.objects.get(
-            user=user, date=meal_in_progress[0].date
-        )
+        mealservice = MealService.objects.get(user=user, date=meal_in_progress[0].date)
         status = status_code.HTTP_200_OK
 
         if not meal_in_progress:
-            content['status'] = 'There is no meal in progress'
+            content["status"] = "There is no meal in progress"
         else:
             mealservice = mealservice.set_meal(before_midday, reverse=True)
             if not mealservice.untapped:
                 untapped = []
             else:
                 untapped = json.loads(mealservice.untapped)
-            log = {
-                'date_untapped': str(timenow),
-            }
+            log = {"date_untapped": str(timenow)}
             untapped.append(log)
             mealservice.untapped = untapped
             mealservice.date_modified = timenow
             mealservice.save()
-            content['status'] = 'Untap was successful'
+            content["status"] = "Untap was successful"
 
         return Response(content, status=status)
 
@@ -274,13 +266,13 @@ class MealSessionViewSet(viewsets.ViewSet):
         A method that tells if time is before mid-day or not.
         """
         before_midday = Time.is_before_midday()
-        content = {'before_midday': before_midday}
+        content = {"before_midday": before_midday}
 
         return Response(content, status=status_code.HTTP_200_OK)
 
     @guard
     @swagger_auto_schema()
-    @action(methods=['post'], url_path='start', detail=False)
+    @action(methods=["post"], url_path="start", detail=False)
     def start(self, request):
         """
         A method that starts meal session.
@@ -299,21 +291,19 @@ class MealSessionViewSet(viewsets.ViewSet):
         """
 
         # https://buildmedia.readthedocs.org/media/pdf/django-rest-swagger/stable-0.3.x/django-rest-swagger.pdf
-        before_midday = request.POST.get('before_midday')
+        before_midday = request.POST.get("before_midday")
         meal_in_progress = MealSession.in_progress()
         status = status_code.HTTP_200_OK
 
         if before_midday:
-            content = {'status': 'Breakfast started'}
+            content = {"status": "Breakfast started"}
         else:
-            content = {'lunch': 'Lunch started'}
+            content = {"lunch": "Lunch started"}
 
-        timezone.activate(pytz.timezone('Africa/Lagos'))
+        timezone.activate(pytz.timezone("Africa/Lagos"))
         time = timezone.now()
         if not meal_in_progress.count():
-            meal_in_progress = MealSession.objects.create(
-                date=time.date(), status=True
-            )
+            meal_in_progress = MealSession.objects.create(date=time.date(), status=True)
         else:
             meal_in_progress[0].status = True
             meal_in_progress[0].save()
@@ -321,7 +311,7 @@ class MealSessionViewSet(viewsets.ViewSet):
 
     @guard
     @swagger_auto_schema()
-    @action(methods=['post'], url_path='stop', detail=False)
+    @action(methods=["post"], url_path="stop", detail=False)
     def stop(self, request):
         """
         A method that stops meal session.
@@ -338,14 +328,14 @@ class MealSessionViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
-        before_midday = request.POST.get('before_midday')
+        before_midday = request.POST.get("before_midday")
         meal_in_progress = MealSession.in_progress()
         status = status_code.HTTP_200_OK
 
         if before_midday:
-            content = {'status': 'Breakfast stopped'}
+            content = {"status": "Breakfast stopped"}
         else:
-            content = {'lunch': 'Lunch stopped'}
+            content = {"lunch": "Lunch stopped"}
 
         if meal_in_progress:
             meal_in_progress[0].status = False
@@ -358,6 +348,7 @@ class ReportViewSet(viewsets.ViewSet):
     """
     A simple ViewSet for viewing reports on meal sessions.
     """
+
     queryset = MealService.objects.all()
 
     @swagger_auto_schema()
@@ -378,15 +369,15 @@ class ReportViewSet(viewsets.ViewSet):
               type: string
               paramType: query
         """
-        date_today = timezone.now().date().strftime('%Y-%m-%d')
-        start_date = request.GET.get('from', None)
-        end_date = request.GET.get('to', None)
+        date_today = timezone.now().date().strftime("%Y-%m-%d")
+        start_date = request.GET.get("from", None)
+        end_date = request.GET.get("to", None)
         queryset = self.queryset
         if start_date is None:
             queryset = self.queryset.filter(date__startswith=date_today)
         else:
-            if len(start_date.split('-')) < 3:
-                start_date = '{0}-{1}'.format(start_date, '01')
+            if len(start_date.split("-")) < 3:
+                start_date = "{0}-{1}".format(start_date, "01")
                 end_date = end_date if end_date is not None else date_today
             queryset = self.queryset.filter(date__range=[start_date, end_date])
         report = ReportSerializer.count(queryset)

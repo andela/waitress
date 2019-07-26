@@ -5,29 +5,37 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0004_auto_20190616_0943'),
-    ]
+    dependencies = [("app", "0004_auto_20190616_0943")]
 
     operations = [
         migrations.AlterField(
-            model_name='slackuser',
-            name='email',
+            model_name="slackuser",
+            name="email",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='slackuser',
-            name='firstname',
+            model_name="slackuser",
+            name="firstname",
             field=models.CharField(max_length=50),
         ),
         migrations.AlterField(
-            model_name='slackuser',
-            name='lastname',
+            model_name="slackuser",
+            name="lastname",
             field=models.CharField(max_length=50),
         ),
         migrations.AlterField(
-            model_name='slackuser',
-            name='user_type',
-            field=models.CharField(choices=[('chef', 'chef'), ('cleaner', 'cleaner'), ('guest', 'guest'), ('security', 'security'), ('staff', 'staff')], default='staff', max_length=30),
+            model_name="slackuser",
+            name="user_type",
+            field=models.CharField(
+                choices=[
+                    ("chef", "chef"),
+                    ("cleaner", "cleaner"),
+                    ("guest", "guest"),
+                    ("security", "security"),
+                    ("staff", "staff"),
+                ],
+                default="staff",
+                max_length=30,
+            ),
         ),
     ]
