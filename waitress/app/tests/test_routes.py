@@ -201,7 +201,7 @@ class ServiceTestCase(TestCase):
 
     def test_can_regularize_guest_names(self):
         guest_list = []
-        for i in iter(range(10)):
+        for i in range(10):
             guest_list.append(
                 type("Guest", (object,), dict(id=i, firstname="Guest {}".format(i + 2)))
             )
