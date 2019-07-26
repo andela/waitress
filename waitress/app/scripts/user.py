@@ -37,7 +37,7 @@ def normalize_users():
 
         for user in db_users:
             print(user.email)
-            if (len(user.firstname) < 1) or (len(user.lastname) < 1):
+             if not(user.firstname  and user.lastname):
                 current_user = _get_user_on_slack(user.slack_id, slack_members)
                 user.firstname = current_user.get('profile').get('first_name', '')
                 user.lastname = current_user.get('profile').get('last_name', '')
