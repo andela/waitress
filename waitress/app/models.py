@@ -50,7 +50,7 @@ class SlackUser(AbstractBaseUser):
         max_length=30, choices=USER_TYPE, default=STAFF)
     objects = SlackUserManager()
     photo = models.CharField(max_length=512, default="")
-    isActive = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     USERNAME_FIELD = 'id'
 
     @classmethod

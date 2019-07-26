@@ -10,7 +10,7 @@ class UserSerializer(serializers.Serializer):
     firstname = serializers.CharField()
     lastname = serializers.CharField()
     photo = serializers.CharField()
-    isActive = serializers.BooleanField()
+    is_active = serializers.BooleanField()
     is_tapped = serializers.BooleanField()
 
 

@@ -85,7 +85,7 @@ class UserViewSet(viewsets.ViewSet):
               paramType: path
         """
         user = get_object_or_404(self.queryset, pk=pk)
-        user.isActive = not user.isActive
+        user.is_active = not user.is_active
         serializer = SecureUserSerializer(user)
         user.save()
         return Response(serializer.data, status_code.HTTP_200_OK)
@@ -179,7 +179,7 @@ class UserViewSet(viewsets.ViewSet):
         meal_in_progress = MealSession.in_progress()
         content = {'firstname': user.firstname, 'lastname': user.lastname}
 
-        if not user.isActive:
+        if not user.is_active:
             content['status'] = 'User has been deactivated. Contact the Ops team.'
             return Response(
                 content, status=status_code.HTTP_400_BAD_REQUEST)

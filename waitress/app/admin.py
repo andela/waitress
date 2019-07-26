@@ -16,7 +16,7 @@ class UserAdminSite(admin.ModelAdmin):
 
 class SlackUserAdmin(admin.ModelAdmin):
     search_fields = ['firstname', 'lastname']
-    list_display = ('id', 'firstname', 'lastname', 'email', 'slack_id', 'isActive')
+    list_display = ('id', 'firstname', 'lastname', 'email', 'slack_id', 'is_active')
     exclude = ('password', 'last_login')
     readonly_fields = ('slack_id',)
 
