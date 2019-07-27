@@ -10,5 +10,5 @@ urlpatterns = [
     path("", login_handler, name="login"),
     path("dashboard", dashboard, name="dashboard"),
     path("admin", admin_site.urls),
-    path("signout", signout, name="signout")
+    path("signout", signout, name="signout"),
 ]

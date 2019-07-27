@@ -13,6 +13,6 @@ def guard(func):
         if request.user.is_authenticated:
             return func(viewset, request, *args, **kwargs)
         else:
-            return JsonResponse({ 'message': 'Unauthorized Request' }, status=401)
+            return JsonResponse({"message": "Unauthorized Request"}, status=401)
 
     return decorated_func
