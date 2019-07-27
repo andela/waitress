@@ -5,17 +5,9 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app_v2', '0001_initial'),
-    ]
+    dependencies = [("app_v2", "0001_initial")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='slackuser',
-            name='last_login',
-        ),
-        migrations.RemoveField(
-            model_name='slackuser',
-            name='password',
-        ),
+        migrations.RemoveField(model_name="slackuser", name="last_login"),
+        migrations.RemoveField(model_name="slackuser", name="password"),
     ]

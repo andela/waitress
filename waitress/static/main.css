@@ -102,8 +102,18 @@ body {
 
 .waitress__display {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     min-height: 92vh;
+}
+
+.full__width {
+    width: 100%;
+}
+
+.user__row:hover {
+    background-color: #00d1b2;
+    color: #fff;
+    cursor: pointer;
 }

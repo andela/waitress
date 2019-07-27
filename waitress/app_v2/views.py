@@ -1,7 +1,15 @@
-from django.shortcuts import render, redirect
+from django.conf import settings
 from django.contrib.auth import login, authenticate, logout
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from slacker import Slacker
 
+from app_v2.decorators import guard
 from app_v2.forms import LoginForm
+from app_v2.models import SlackUser
+
+
+slack = Slacker(settings.SLACK_API_TOKEN)
 
 
 # Create your views here.
@@ -34,8 +42,16 @@ def dashboard(request):
     return render(request, "dashboard.html")
 
 
+# @guard
 def fetch_users(request):
-    return []
+    all_users = list(SlackUser.objects.values())
+    return JsonResponse(all_users, status=200, safe=False)
+
+
+# @guard
+def refresh_slack_users(request):
+    # all_users = SlackUser.objects.all()
+    return JsonResponse({"data": "users"}, status=200)
 
 
 def signout(request):

@@ -7,26 +7,49 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='SlackUser',
+            name="SlackUser",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('slack_id', models.CharField(blank=True, max_length=20, unique=True)),
-                ('firstname', models.CharField(default='', max_length=50)),
-                ('lastname', models.CharField(default='', max_length=50)),
-                ('email', models.CharField(blank=True, max_length=100)),
-                ('user_type', models.CharField(choices=[('chef', 'chef'), ('cleaner', 'cleaner'), ('guest', 'guest'), ('security', 'security'), ('staff', 'staff')], default='staff', max_length=30)),
-                ('photo', models.CharField(default=None, max_length=512, null=True)),
-                ('is_active', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                ("slack_id", models.CharField(blank=True, max_length=20, unique=True)),
+                ("firstname", models.CharField(default="", max_length=50)),
+                ("lastname", models.CharField(default="", max_length=50)),
+                ("email", models.CharField(blank=True, max_length=100)),
+                (
+                    "user_type",
+                    models.CharField(
+                        choices=[
+                            ("chef", "chef"),
+                            ("cleaner", "cleaner"),
+                            ("guest", "guest"),
+                            ("security", "security"),
+                            ("staff", "staff"),
+                        ],
+                        default="staff",
+                        max_length=30,
+                    ),
+                ),
+                ("photo", models.CharField(default=None, max_length=512, null=True)),
+                ("is_active", models.BooleanField(default=True)),
             ],
-            options={
-                'abstract': False,
-            },
-        ),
+            options={"abstract": False},
+        )
     ]

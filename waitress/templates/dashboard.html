@@ -10,7 +10,7 @@
 
 <section class="dashboard__container">
     <section id="dashboard__notify__container">
-        <div class="notification is-link">
+        <div class="notification is-link" id="notify__main">
             <button class="delete" id="btn-delete"></button>
             <span id="notification__message">Sorry!</span>
         </div>
@@ -20,13 +20,12 @@
         <aside class="column is-one-third is-2 sidebar">
             <button class="action__link" id="fetch__users">Fetch All Users</button>
             <button class="action__link" id="add__user">Add New User</button>
-            <button class="action__link" id="deactivate__user">Deactivate User</button>
             <button class="action__link" id="generate__report">Generate Report</button>
             <button class="action__link" id="refresh__users">Refresh Slack Users</button>
-            <button class="action__link" id="fetch__user">Fetch User</button>
+            <button class="action__link" id="fetch__user">Retrieve User Info</button>
         </aside>
 
-        <section class="column waitress__display">
+        <section class="column waitress__display" id="main__view">
             Ready for Ops! Legbegbe!
         </section>
     </section>
