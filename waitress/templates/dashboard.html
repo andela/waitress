@@ -1,12 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
-<main class="dashboard_container">
-    <nav class="dashboard__nav">
-        <span>Waitress V2 Ops Dashboard</span>
-        <form method="POST" action="/v2/signout">
-            {% csrf_token %}
-            <button class="signout_btn">Sign Out</button>
-        </form>
-    </nav>
-</main>
+<nav class="dashboard__nav">
+    <span class="nav__text">Waitress V2 Ops Dashboard</span>
+    <form method="POST" action="/v2/signout">
+        {% csrf_token %}
+        <button class="signout_btn">Sign Out</button>
+    </form>
+</nav>
+
+<section class="dashboard__container">
+    <section id="dashboard__notify__container">
+        <div class="notification is-link">
+            <button class="delete" id="btn-delete"></button>
+            <span id="notification__message">Sorry!</span>
+        </div>
+    </section>
+
+    <section class="columns">
+        <aside class="column is-one-third is-2 sidebar">
+            <button class="action__link" id="fetch__users">Fetch All Users</button>
+            <button class="action__link" id="add__user">Add New User</button>
+            <button class="action__link" id="deactivate__user">Deactivate User</button>
+            <button class="action__link" id="generate__report">Generate Report</button>
+            <button class="action__link" id="refresh__users">Refresh Slack Users</button>
+            <button class="action__link" id="fetch__user">Fetch User</button>
+        </aside>
+
+        <section class="column waitress__display">
+            Ready for Ops! Legbegbe!
+        </section>
+    </section>
+</section>
 {% endblock content %}

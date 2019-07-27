@@ -34,6 +34,10 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 
 
+def fetch_users(request):
+    return []
+
+
 def signout(request):
     logout(request)
     return redirect('login')

@@ -1,6 +1,5 @@
 * {
     box-sizing: border-box;
-    font-family: 'Dosis';
 }
 
 body {
@@ -8,14 +7,14 @@ body {
     padding: 0;
     width: 100vw;
     height: 100vh;
+    background: #f8f8f8;
 }
 
 .main-bg {
-    background: #f8f8f8;
     color: black;
 }
 
-.avatar-img, .avatar {
+.avatar-img {
     border-radius: 50%;
     margin: 1rem 0;
     background: black;
@@ -24,7 +23,7 @@ body {
 .box {
     padding: 3.25rem;
     width: 400px;
-    box-shadow: 0 5px 5px rgba(10,10,10,.1), 0 0 14px 1px rgba(10,10,10,.1)
+    box-shadow: 0 5px 5px rgba(10,10,10,.1), 0 0 14px 1px rgba(10,10,10,.1);
 }
 
 .btn {
@@ -35,4 +34,76 @@ body {
     margin: 1rem 0;
     color: red;
     display: block;
+}
+
+.dashboard__nav {
+    background: burlywood;
+    width: 100%;
+    display: flex;
+    padding: 1rem 0.5rem;
+    justify-content: space-between;
+    z-index: 100;
+}
+
+.signout_btn {
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+}
+
+.signout_btn, .nav__text  {
+    font-size: 1.2rem;
+}
+
+.dashboard__container {
+    position: relative;
+    background: #f8f8f8;
+    margin: 1rem 0;
+}
+
+#dashboard__notify__container {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 5px;
+    display: none;
+}
+
+.notification {
+    width: 400px;
+}
+
+.column, .columns {
+    height: 100%;
+}
+
+.sidebar {
+    border-right: 3px solid grey;
+    min-height: 92vh;
+}
+
+.action__link {
+    border: 0;
+    background: transparent;
+    width: 100%;
+    height: 3rem;
+    cursor: pointer;
+    margin: 1rem 0;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.action__link:hover {
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 5px 5px rgba(10,10,10,.1), 0 0 14px 1px rgba(10,10,10,.1);
+}
+
+.waitress__display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 92vh;
 }
