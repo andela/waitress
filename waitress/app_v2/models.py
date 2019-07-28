@@ -1,18 +1,17 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.utils import timezone
 
 from app_v2.constants import STAFF
 from app_v2.enums import USER_ENUM
 
 
-class SlackUser(models.Model):
+class SlackUser(AbstractBaseUser):
     """
     A class that represents a `SlackUser` account
     """
 
-    slack_id = models.CharField(
-        unique=True, max_length=20, blank=True, primary_key=True
-    )
+    slack_id = models.CharField(unique=True, max_length=20)
     firstname = models.CharField(max_length=50, default="")
     lastname = models.CharField(max_length=50, default="")
     email = models.CharField(max_length=100, blank=True)

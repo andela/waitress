@@ -117,3 +117,60 @@ body {
     color: #fff;
     cursor: pointer;
 }
+
+.add_user_form {
+    width: 50%;
+    margin: 2rem 0;
+}
+
+.user_type_select {
+    width: 20rem;
+}
+
+.center_flex {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+}
+
+#add_user_cta {
+    margin: 3rem 0;
+}
+
+
+.user__card_container {
+    border: 3px solid burlywood;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user__card_container > img {
+    border-radius: 50%;
+    margin: 1rem 0;
+    width: 50%;
+    align-self: center;
+}
+
+.sort_all_users {
+    display: flex;
+}
+
+#sort_all_users {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 2rem;
+    margin-right: 1rem;
+}
+
+#retrieve_input {
+    width: 25rem;
+    margin-right: 1rem;
+}
+
+.retrieve_user_container {
+    display: flex;
+    margin-bottom: 3rem;
+}

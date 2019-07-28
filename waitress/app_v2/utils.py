@@ -1,3 +1,5 @@
+import time
+
 from django.conf import settings
 from slacker import Slacker
 
@@ -17,3 +19,7 @@ def get_all_slack_users():
 
 def get_new_members(all_users):
     pass
+
+
+def generate_guest_id():
+    return f"G{time.time()}"
