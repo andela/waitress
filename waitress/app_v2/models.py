@@ -72,5 +72,6 @@ class MealSession(models.Model):
         """
         A property that returns meal session for the current day
         """
+        timezone.activate(pytz.timezone("Africa/Lagos"))
         date_today = timezone.now().date()
         return cls.objects.filter(date=date_today, status=True).first()

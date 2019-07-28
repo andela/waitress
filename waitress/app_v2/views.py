@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from slacker import Slacker
 
-from app_v2.decorators import guard
+from app_v2.decorators import guard, validateHttpMethod
 from app_v2.forms import LoginForm
 from app_v2.models import SlackUser, MealSession, MealService
 from app_v2.utils import generate_guest_id, manual_user_serializer, is_before_midday
@@ -125,6 +125,7 @@ def deactivate_user(request, user_id):
 
 
 @csrf_exempt
+# @validateHttpMethod('POST')
 def nfctap(request):
     slack_id = request.POST.get("slackUserId")
 
@@ -163,4 +164,37 @@ def nfctap(request):
 
     content["status"] = "Tap was successful"
 
+    return JsonResponse(content, status=200, safe=False)
+
+
+def start_meal_session(request):
+    before_midday = is_before_midday()
+    meal_session = MealSession.get_meal_session()
+
+    meal_type = "Breakfast" if before_midday else "Lunch"
+    content = dict(status=f"{meal_type} started")
+
+    if not meal_session:
+        timezone.activate(pytz.timezone("Africa/Lagos"))
+        date_today = timezone.now().date()
+        meal_session = MealSession(date=date_today)
+    else:
+        meal_session.status = True
+    meal_session.save()
+    return JsonResponse(content, status=200, safe=False)
+
+
+def stop_meal_session(request):
+    before_midday = is_before_midday()
+    meal_session = MealSession.get_meal_session()
+
+    meal_type = "Breakfast" if before_midday else "Lunch"
+    content = dict(status=f"{meal_type} started")
+
+    if not meal_session:
+        content = dict(status="Meal Session hasn't started yet. DPMO!")
+        return JsonResponse(content, status=400, safe=False)
+
+    meal_session.status = False
+    meal_session.save()
     return JsonResponse(content, status=200, safe=False)

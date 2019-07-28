@@ -13,6 +13,8 @@ from app_v2.views import (
     retrieve_user,
     deactivate_user,
     nfctap,
+    start_meal_session,
+    stop_meal_session,
 )
 
 
@@ -27,4 +29,6 @@ urlpatterns = [
     path("retrieve_user/<str:firstname>", retrieve_user),
     path("deactivate_user/<int:user_id>", deactivate_user),
     path("users/nfctap", nfctap),
+    path("meal_session/start", start_meal_session),
+    path("meal_session/stop", stop_meal_session),
 ]
