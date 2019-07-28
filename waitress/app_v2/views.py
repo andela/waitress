@@ -100,3 +100,25 @@ def retrieve_user(request, firstname):
     response = manual_user_serializer(users)
     status=200
     return JsonResponse(response, status=status, safe=False)
+
+
+def deactivate_user(request, user_id):
+    user = SlackUser.objects.filter(id=user_id).first()
+
+    if not user:
+        response = 'User not found'
+        status = 404
+    else:
+        user.is_active = not user.is_active
+        user.save()
+        status=200
+        response = dict(
+            firstname=user.firstname,
+            email=user.email,
+            slack_id=user.slack_id,
+            id=user.id,
+            lastname=user.lastname,
+            is_active=user.is_active,
+            photo=user.photo,
+        )
+    return JsonResponse(response, status=status, safe=False)

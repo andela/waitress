@@ -180,3 +180,14 @@ body {
     flex-wrap: wrap;
     width: 100%;
 }
+
+.red {
+    background: red;
+    color: white;
+    margin: 1rem;
+}
+.blue {
+    background: #3273dc;
+    color: white;
+    margin: 1rem;
+}

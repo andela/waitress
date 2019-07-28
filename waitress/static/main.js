@@ -2,6 +2,7 @@ const FETCH_ALL_USERS = '/v2/fetch_users';
 const REFRESH_SLACK_USERS = '/v2/refresh_users';
 const ADD_USER = '/v2/add_guest';
 const RETRIEVE_SINGLE_USER = '/v2/retrieve_user';
+const DEACTIVATE_USER = '/v2/deactivate_user';
 
 // html elements
 const deleteBtn = document.getElementById('btn-delete');
@@ -189,7 +190,6 @@ const handleAddUser = async (e) => {
         email: addUserForm.email.value,
         user_type: addUserForm.user_type.value,
     }
-    console.log(payload)
     mainView.insertBefore(spinnerNode, mainView.firstChild);
     const addUserCta = document.getElementById('add_user_cta');
     addUserCta.setAttribute('disabled', true);
@@ -236,7 +236,7 @@ const convertStringToNode = (str) => {
 
 const spinnerNode = convertStringToNode(spinnerText);
 
-const createUserCard = ({ firstname, email, slack_id, id, is_active, lastname, photo }) => (`
+const createUserCard = ({ firstname, email, slack_id, id, is_active, lastname, photo }, extras='') => (`
 <section class="user__card_container">
     <img src='${photo}' />
     <p><strong>User ID:</strong> ${id}</p>
@@ -245,11 +245,11 @@ const createUserCard = ({ firstname, email, slack_id, id, is_active, lastname, p
     <p><strong>Last Name:</strong> ${lastname}</p>
     <p><strong>Email Address:</strong> ${email}</p>
     <p><strong>isUserActive:</strong> ${is_active}</p>
+    ${extras}
 </section>
 `);
 
 const retrieveUserHandler = () => {
-    console.log('retrieving')
     const retrieveUserForm = `<div class="retrieve_user_container">
         <div class="field">
             <div class="control">
@@ -280,8 +280,35 @@ const retrieveUser = async () => {
     const response = await res.json();
 
     const resultContainer = document.getElementById('retrieve_response_container');
-    const userCards = response.map(user => createUserCard(user));
+    const userCards = response.map(constructUserCard);
     resultContainer.innerHTML = userCards;
+}
+
+const deactivateUser = async (id) => {
+    const url = `${DEACTIVATE_USER}/${id}`;
+    const res = await fetch(url);
+    const response = await res.json();
+
+    if (res.status === 200) {
+        const action = response.is_active ? 'activated' : 'deactivated';
+        showNotification(`User successfully ${action}.`);
+        const userCardText = constructUserCard(response);
+        retrieve_response_container.innerHTML = userCardText;
+    } else {
+        showNotification(response, 'failure');
+    }
+};
+
+const constructUserCard = (user) => {
+    const btnClass = user.is_active ? 'button red' : 'button blue';
+    const btnText = user.is_active ? 'Deactivate' : 'Activate';
+    const deactivateBtn = `<button class="deactivate__user ${btnClass}" onclick="deactivateUser(${user.id})">${btnText}</button>`;
+    const userCardText = createUserCard(user, deactivateBtn);
+    return userCardText;
+}
+
+const createReportPage = () => {
+    mountView()
 }
 
 // event listeners
@@ -290,3 +317,4 @@ refreshUsersBtn.addEventListener('click', refreshSlackUsers);
 fetchUsersBtn.addEventListener('click', fetchUsers);
 addUserBtn.addEventListener('click', constructAddUserForm);
 fetchUserBtn.addEventListener('click', retrieveUserHandler);
+generateReportBtn.addEventListener('click', createReportPage);
