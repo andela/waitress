@@ -11,7 +11,7 @@ from app_v2.views import (
     refresh_slack_users,
     add_guest,
     retrieve_user,
-    deactivate_user
+    deactivate_user,
 )
 
 
