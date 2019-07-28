@@ -143,19 +143,19 @@ const ADD_USER_FORM = (`
 <form method='POST' class="add_user_form" id="add_user_form">
     <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="first name" name="firstname" id="firstname">
+            <input disabled class="input" type="text" placeholder="first name" name="firstname" id="firstname">
         </div>
     </div>
 
     <div class="field">
         <div class="control">
-            <input class="input" type="text" placeholder="last name" name="lastname" id="lastname">
+            <input disabled class="input" type="text" placeholder="last name" name="lastname" id="lastname">
         </div>
     </div>
 
     <div class="field">
         <div class="control">
-            <input class="input" type="email" placeholder="email address" name="email" id="email">
+            <input disabled class="input" type="email" placeholder="email address" name="email" id="email">
         </div>
     </div>
 
@@ -211,7 +211,7 @@ const handleAddUser = async (e) => {
     }
 
     if (fetchStatus === 200) {
-        showNotification('User successfully added.');
+        showNotification('Guest successfully created.');
         const userCardText = createUserCard(response);
 
         const existingUserCards = document.getElementsByClassName('user__card_container');
@@ -250,7 +250,8 @@ const createUserCard = ({ firstname, email, slack_id, id, is_active, lastname, p
 `);
 
 const retrieveUserHandler = () => {
-    const retrieveUserForm = `<div class="retrieve_user_container">
+    const retrieveUserForm = `<h2 class="title">Retrieve User Information</h2>
+    <div class="retrieve_user_container">
         <div class="field">
             <div class="control">
                 <input class="input" type="text" placeholder="Search by first name" name="firstname" id="retrieve_input">
