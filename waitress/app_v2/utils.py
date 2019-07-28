@@ -23,3 +23,19 @@ def get_new_members(all_users):
 
 def generate_guest_id():
     return f"G{time.time()}"
+
+
+def manual_user_serializer(queryset):
+    result = []
+    for user in queryset:
+        user_data = dict(
+            firstname=user.firstname,
+            email=user.email,
+            slack_id=user.slack_id,
+            id=user.id,
+            lastname=user.lastname,
+            is_active=user.is_active,
+            photo=user.photo,
+        )
+        result.append(user_data)
+    return result

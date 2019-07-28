@@ -1,7 +1,7 @@
 const FETCH_ALL_USERS = '/v2/fetch_users';
 const REFRESH_SLACK_USERS = '/v2/refresh_users';
 const ADD_USER = '/v2/add_guest';
-CONST RETRIEVE_SINGLE_USER = '/v2/fetch_user';
+const RETRIEVE_SINGLE_USER = '/v2/retrieve_user';
 
 // html elements
 const deleteBtn = document.getElementById('btn-delete');
@@ -263,19 +263,25 @@ const retrieveUserHandler = () => {
             </div>
         </div>
     </div>
+    <section id="retrieve_response_container">
+    </section>
 `;
     mountView(retrieveUserForm);
     const retrieveUserBtn = document.getElementById('retrieve_user_btn');
     retrieveUserBtn.addEventListener('click', retrieveUser);
 }
 
-const retrieveUser = () => {
+const retrieveUser = async () => {
     const retrieveUserInput = document.getElementById('retrieve_input');
     firstname = retrieveUserInput.value;
 
     const url = `${RETRIEVE_SINGLE_USER}/${firstname}`;
     const res = await fetch(url);
-    const response = res.json();
+    const response = await res.json();
+
+    const resultContainer = document.getElementById('retrieve_response_container');
+    const userCards = response.map(user => createUserCard(user));
+    resultContainer.innerHTML = userCards;
 }
 
 // event listeners

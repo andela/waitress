@@ -10,6 +10,7 @@ from app_v2.views import (
     fetch_users,
     refresh_slack_users,
     add_guest,
+    retrieve_user
 )
 
 
@@ -21,4 +22,5 @@ urlpatterns = [
     path("fetch_users", fetch_users),
     path("refresh_users", refresh_slack_users),
     path("add_guest", add_guest),
+    path("retrieve_user/<str:firstname>", retrieve_user)
 ]

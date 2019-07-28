@@ -10,7 +10,7 @@ from slacker import Slacker
 from app_v2.decorators import guard
 from app_v2.forms import LoginForm
 from app_v2.models import SlackUser
-from app_v2.utils import generate_guest_id
+from app_v2.utils import generate_guest_id, manual_user_serializer
 
 
 slack = Slacker(settings.SLACK_API_TOKEN)
@@ -63,7 +63,6 @@ def add_guest(request):
     try:
         payload = json.loads(request.body)
         user_type = payload.get("user_type")
-        print(payload)
         if user_type == "guest":
             slack_id = generate_guest_id()
             total_guests = SlackUser.objects.filter(user_type="guest").count()
@@ -97,6 +96,7 @@ def signout(request):
 
 
 def retrieve_user(request, firstname):
-    users = SlackUser.objects.filter(firstname__icontains=firstname)
-    response = list(users)
+    users = SlackUser.objects.filter(firstname__icontains=firstname).all()
+    response = manual_user_serializer(users)
+    status=200
     return JsonResponse(response, status=status, safe=False)

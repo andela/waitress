@@ -174,3 +174,9 @@ body {
     display: flex;
     margin-bottom: 3rem;
 }
+
+#retrieve_response_container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
