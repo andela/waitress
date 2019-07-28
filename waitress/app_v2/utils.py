@@ -1,6 +1,8 @@
+import pytz
 import time
 
 from django.conf import settings
+from django.utils import timezone
 from slacker import Slacker
 
 
@@ -39,3 +41,9 @@ def manual_user_serializer(queryset):
         )
         result.append(user_data)
     return result
+
+
+def is_before_midday():
+    timezone.activate(pytz.timezone("Africa/Lagos"))
+    time = timezone.now().hour
+    return 0 < time < 12

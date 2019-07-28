@@ -2,15 +2,15 @@ import json
 
 from django.conf import settings
 from django.contrib.auth import login, authenticate, logout
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from slacker import Slacker
 
 from app_v2.decorators import guard
 from app_v2.forms import LoginForm
-from app_v2.models import SlackUser
-from app_v2.utils import generate_guest_id, manual_user_serializer
+from app_v2.models import SlackUser, MealSession, MealService
+from app_v2.utils import generate_guest_id, manual_user_serializer, is_before_midday
 
 
 slack = Slacker(settings.SLACK_API_TOKEN)
@@ -122,3 +122,45 @@ def deactivate_user(request, user_id):
             photo=user.photo,
         )
     return JsonResponse(response, status=status, safe=False)
+
+
+@csrf_exempt
+def nfctap(request):
+    slack_id = request.POST.get("slackUserId")
+
+    if not slack_id:
+        content = {"status": "You're  unauthorized to make this request"}
+        return JsonResponse(content, status=401, safe=False)
+
+    user = SlackUser.objects.filter(slack_id=slack_id).first()
+    current_meal_session = MealSession.get_meal_session()
+    content = {"firstname": user.firstname, "lastname": user.lastname}
+
+    if not (user and user.is_active):
+        content["status"] = "User has been deactivated. Contact the Ops team."
+        return JsonResponse(content, status=400, safe=False)
+
+    if not current_meal_session:
+        content["status"] = "There is no meal in progress"
+        return JsonResponse(content, status=406, safe=False)
+
+    before_midday = is_before_midday()
+    meal_type = "breakfast" if before_midday else "lunch"
+
+    if user.is_tapped():
+        content["status"] = f"User has tapped in for {meal_type}"
+        return JsonResponse(content, status=400, safe=False)
+
+    date_today = current_meal_session.date
+    meal_service = MealService.objects.filter(user=user, date=date_today).first()
+    meal_data = dict(breakfast=(meal_type == "breakfast"), lunch=(meal_type == "lunch"))
+
+    if not meal_service:
+        meal_service = MealService(user=user, date=date_today, **meal_data)
+    else:
+        meal_service.set_meal(**meal_data)
+    meal_service.save()
+
+    content["status"] = "Tap was successful"
+
+    return JsonResponse(content, status=200, safe=False)

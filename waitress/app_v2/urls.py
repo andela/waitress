@@ -12,6 +12,7 @@ from app_v2.views import (
     add_guest,
     retrieve_user,
     deactivate_user,
+    nfctap,
 )
 
 
@@ -25,4 +26,5 @@ urlpatterns = [
     path("add_guest", add_guest),
     path("retrieve_user/<str:firstname>", retrieve_user),
     path("deactivate_user/<int:user_id>", deactivate_user),
+    path("users/nfctap", nfctap),
 ]
