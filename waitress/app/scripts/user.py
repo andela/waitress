@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import transaction
 from slacker import Slacker
 
-from app.models import SlackUser
+from waitress.app.models import SlackUser
 
 
 slack = Slacker(settings.SLACK_API_TOKEN)

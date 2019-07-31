@@ -18,7 +18,7 @@ app_namespace = "waitress"
 
 urlpatterns = [
     path("", include((router.urls, app_namespace), namespace="api")),
-    path("/", include((router.urls, app_namespace), namespace="api")), # hack because the mobile app makes use of //
+    path("/", include((router.urls, app_namespace), namespace="api2")), # hack because the mobile app makes use of //
     path(
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),
