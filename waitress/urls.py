@@ -1,19 +1,27 @@
-from django.conf import settings
-from django.conf.urls.static import static
-
 from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
-from django.conf.urls import include, url
 from app.admin import admin_site
+from app.views import schema_view
+
+from django.conf import settings
+from django.conf.urls import include
+from django.conf.urls.static import static
+from django.urls import path
 from rest_framework import routers
 
 
 router = routers.SimpleRouter()
-router.register(r'meal-sessions', MealSessionViewSet)
-router.register(r'users', UserViewSet)
-router.register(r'reports', ReportViewSet)
+router.register(r"meal-sessions", MealSessionViewSet)
+router.register(r"users", UserViewSet)
+router.register(r"reports", ReportViewSet)
+
+app_namespace = "waitress"
 
 urlpatterns = [
-    url(r'^', include(router.urls, namespace='api')),
-    url(r'^docs/?', include('rest_framework_swagger.urls')),
-    url(r'^admin/', include(admin_site.urls)),
+    path("", include((router.urls, app_namespace), namespace="api")),
+    path(
+        "docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("admin/", admin_site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

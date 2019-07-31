@@ -2,9 +2,6 @@
 .env.yml
 .coveralls.yml
 
-# local settings
-waitress/settings/development.py
-
 # Mac OS X
 .DS_Store
 
@@ -78,3 +75,13 @@ db.sqlite3
 
 # PyCharm
 .idea/
+
+# vscode
+.vscode
+
+# env
+.env
+
+staticfiles
+latest.dump
+error.log

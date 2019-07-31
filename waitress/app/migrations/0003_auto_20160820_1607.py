@@ -7,14 +7,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0002_remove_passphrase_user'),
-    ]
+    dependencies = [("app", "0002_remove_passphrase_user")]
 
     operations = [
         migrations.AlterField(
-            model_name='slackuser',
-            name='user_type',
-            field=models.CharField(choices=[(b'chef', b'chef'), (b'cleaner', b'cleaner'), (b'guest', b'guest'), (b'security', b'security'), (b'staff', b'staff')], default=b'staff', max_length=20),
-        ),
+            model_name="slackuser",
+            name="user_type",
+            field=models.CharField(
+                choices=[
+                    (b"chef", b"chef"),
+                    (b"cleaner", b"cleaner"),
+                    (b"guest", b"guest"),
+                    (b"security", b"security"),
+                    (b"staff", b"staff"),
+                ],
+                default=b"staff",
+                max_length=20,
+            ),
+        )
     ]

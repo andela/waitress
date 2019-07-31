@@ -6,10 +6,12 @@ class UserSerializer(serializers.Serializer):
     """
     A serializer class for serializing the SlackUsers
     """
+
     id = serializers.IntegerField()
     firstname = serializers.CharField()
     lastname = serializers.CharField()
     photo = serializers.CharField()
+    is_active = serializers.BooleanField()
     is_tapped = serializers.BooleanField()
 
 
@@ -19,11 +21,26 @@ class SecureUserSerializer(UserSerializer):
 
     This is used only under authorized access.
     """
+
     slack_id = serializers.CharField()
 
 
-class ReportSerializer(serializers.Serializer):
+class FilterSerializer(serializers.Serializer):
+    filter = serializers.CharField()
 
+
+# class PassPhraseSerializer(serializers.Serializer):
+#     passphrase = serializers.CharField()
+
+
+class AddUserSerializer(serializers.Serializer):
+    firstname = serializers.CharField()
+    lastname = serializers.CharField()
+    utype = serializers.CharField()
+    passphrase = serializers.CharField()
+
+
+class ReportSerializer(serializers.Serializer):
     @classmethod
     def count(cls, queryset):
         """
@@ -35,16 +52,20 @@ class ReportSerializer(serializers.Serializer):
                 ..
             ]
         """
-        result_group = queryset.values('date')
+        result_group = queryset.values("date")
         annotate_report = result_group.annotate(
-            breakfast=CountTrue('breakfast'),
-            lunch=CountTrue('lunch')
+            breakfast=CountTrue("breakfast"), lunch=CountTrue("lunch")
         )
 
         def serialize(queryset):
             return [
-                {"breakfast": res["breakfast"], "lunch": res["lunch"],
-                 "date": res["date"]} for res in queryset
+                {
+                    "breakfast": res["breakfast"],
+                    "lunch": res["lunch"],
+                    "date": res["date"],
+                }
+                for res in queryset
             ]
+
         return serialize(annotate_report)
         # lunch = queryset.filter(lunch=1).values('date').count()

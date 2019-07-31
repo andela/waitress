@@ -10,13 +10,14 @@ def create_user():
     :Returns: SlackUser object
     """
     user_dummy_data = {
-        'slack_id': 'UX03131',
-        'firstname': 'Test',
-        'lastname': 'User',
-        'email': 'testuser@tran.tum',
-        'photo': 'inexistent_photo.jpg'
+        "slack_id": "UX03131",
+        "firstname": "Test",
+        "lastname": "User",
+        "email": "testuser@tran.tum",
+        "photo": "inexistent_photo.jpg",
     }
     return SlackUser.create(user_dummy_data)
+
 
 user = create_user()
 
@@ -25,53 +26,53 @@ class PassphraseModelTestCase(unittest.TestCase):
     """
     A testcase for the Passphrase model.
     """
+
     def test_can_crud_passphrase(self):
         # Creating passphrase.
-        passphrase = Passphrase(word='very_secret')
+        passphrase = Passphrase(word="very_secret")
         passphrase.save()
         self.assertIsNotNone(passphrase.id)
         # Reading passphrase.
         all_passphrase = Passphrase.objects.all()
         self.assertIn(passphrase, all_passphrase)
         # Updating passphrase.
-        passphrase.word = 'changed_from_very_secret'
+        passphrase.word = "changed_from_very_secret"
         passphrase.save()
         # Deleting passphrase.
         passphrase.delete()
         with self.assertRaises(Passphrase.DoesNotExist):
-            Passphrase.objects.get(word='changed_from_very_secret')
+            Passphrase.objects.get(word="changed_from_very_secret")
 
 
 class SlackUserModelTestCase(unittest.TestCase):
     """
     A testcase for the SlackUser model.
     """
+
     def test_can_crud_slackuser(self):
         # Reading slack user.
         all_slack_user = SlackUser.objects.all()
         self.assertIn(user, all_slack_user)
         # Updating slack user.
-        user.lastname = 'Admin'
+        user.lastname = "Admin"
         user.save()
-        self.assertIsInstance(
-            SlackUser.objects.get(lastname='Admin'), SlackUser)
+        self.assertIsInstance(SlackUser.objects.get(lastname="Admin"), SlackUser)
         # Deleting slack user.
         user.delete()
         with self.assertRaises(SlackUser.DoesNotExist):
-            SlackUser.objects.get(email='testuser@tran.tum')
+            SlackUser.objects.get(email="testuser@tran.tum")
 
 
 class MealSessionModel(unittest.TestCase):
     """
     A testcase for the MealSession model.
     """
+
     def test_can_crud_mealsession(self):
         # Creating meal session.
         user.save()
         date_today = timezone.now()
-        mealsession = MealSession.objects.create(
-            status=True, date=date_today
-        )
+        mealsession = MealSession.objects.create(status=True, date=date_today)
         self.assertIsNotNone(mealsession.id)
         # Reading meal session.
         all_mealsessions = MealSession.objects.all()
@@ -79,8 +80,7 @@ class MealSessionModel(unittest.TestCase):
         # Updating meal session.
         mealsession.status = False
         mealsession.save()
-        self.assertIsInstance(
-            MealSession.objects.get(date=date_today), MealSession)
+        self.assertIsInstance(MealSession.objects.get(date=date_today), MealSession)
         # Deleting meal session.
         mealsession.delete()
         with self.assertRaises(MealSession.DoesNotExist):
@@ -91,6 +91,7 @@ class MealServiceModel(unittest.TestCase):
     """
     A testcase for the MealService model.
     """
+
     def test_can_crud_mealservice(self):
         # Creating meal service.
         user.save()
@@ -105,8 +106,9 @@ class MealServiceModel(unittest.TestCase):
         # Updating meal service.
         mealservice.lunch = 1
         mealservice.save()
-        self.assertIsInstance(MealService.objects.get(
-            breakfast=1, lunch=1, user=user), MealService)
+        self.assertIsInstance(
+            MealService.objects.get(breakfast=1, lunch=1, user=user), MealService
+        )
         # Deleting meal service.
         mealservice.delete()
         self.assertRaises

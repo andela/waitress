@@ -5,12 +5,12 @@ from rest_framework.test import APIRequestFactory
 from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
 from app.utils import UserRepository, regularize_guest_names
-from mock import patch
+from unittest.mock import patch
 
 
 def skipUnless(fn, *args, **kwargs):
-    engine = settings.DATABASES['default']['ENGINE']
-    if engine is 'django.db.backends.postgresql_psycopg2':
+    engine = settings.DATABASES["default"]["ENGINE"]
+    if engine is "django.db.backends.postgresql_psycopg2":
         return fn(*args, **kwargs)
 
 
@@ -18,21 +18,20 @@ class ServiceTestCase(TestCase):
     """
     Tests service functionality.
     """
+
     @classmethod
     def setUpClass(cls):
-        cls.data = {
-            "passphrase": "passphrase",
-            "before_midday": True,
-        }
-        cls.passphrase = {
-            'passphrase': 'passphrase'
-        }
+        cls.data = {"passphrase": "passphrase", "before_midday": True}
+        cls.passphrase = {"passphrase": "passphrase"}
         slack_user = SlackUser.objects.create(
-            slack_id="U24A2R2", firstname="Test", lastname="User",
-            email="testuser@mail.com", photo="http://...",
+            slack_id="U24A2R2",
+            firstname="Test",
+            lastname="User",
+            email="testuser@mail.com",
+            photo="http://...",
         )
         cls.user_id = slack_user.id
-        Passphrase.objects.create(word='passphrase')
+        Passphrase.objects.create(word="passphrase")
         cls.client = Client()
 
         super(ServiceTestCase, cls).setUpClass()
@@ -41,7 +40,7 @@ class ServiceTestCase(TestCase):
         """
         Tests that priviledged user can start a session.
         """
-        response = self.client.get("/meal-sessions/",)
+        response = self.client.get("/meal-sessions/")
         assert response.status_code is 200
 
     def test_can_view_finish_session_page(self):
@@ -76,17 +75,16 @@ class ServiceTestCase(TestCase):
         """
         Tests that priviledged user can retrieve user info securedly.
         """
-        response = self.client.post(
-            "/users/1/retrieve-secure/", self.passphrase)
+        response = self.client.post("/users/1/retrieve-secure/", self.passphrase)
         assert response.status_code is 200
-        self.assertIn("slack_id", response.content)
+        self.assertIn("slack_id", str(response.content))
 
     def test_can_tap_breakfast(self):
         """
         Tests that user can NFC tap for breakfast.
         """
-        self.data['before_midday'] = True
-        self.data['slackUserId'] = 'U24A2R2'
+        self.data["before_midday"] = True
+        self.data["slackUserId"] = "U24A2R2"
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
         assert response.status_code is 200
@@ -95,8 +93,8 @@ class ServiceTestCase(TestCase):
         """
         Tests that user can NFC tap for lunch.
         """
-        self.data['before_midday'] = False
-        self.data['slackUserId'] = 'U24A2R2'
+        self.data["before_midday"] = False
+        self.data["slackUserId"] = "U24A2R2"
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
         assert response.status_code is 200
@@ -105,33 +103,36 @@ class ServiceTestCase(TestCase):
         """
         Tests that privileged user can untap for breakfast.
         """
-        self.data['before_midday'] = True
-        self.data['slackUserId'] = 'U24A2R2'
+        self.data["before_midday"] = True
+        self.data["slackUserId"] = "U24A2R2"
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
-        response = self.client.post("/users/{}/untap/".format(self.user_id), self.passphrase)
+        response = self.client.post(
+            "/users/{}/untap/".format(self.user_id), self.passphrase
+        )
         assert response.status_code is 200
 
     def test_can_untap_lunch(self):
         """
         Tests that privileged user can untap for lunch.
         """
-        self.data['before_midday'] = False
-        self.data['slackUserId'] = 'U24A2R2'
+        self.data["before_midday"] = False
+        self.data["slackUserId"] = "U24A2R2"
         response = self.client.post("/meal-sessions/start/", self.data)
         response = self.client.post("/users/nfctap/", self.data)
-        response = self.client.post("/users/{}/untap/".format(self.user_id), self.passphrase)
+        response = self.client.post(
+            "/users/{}/untap/".format(self.user_id), self.passphrase
+        )
         assert response.status_code is 200
 
-
-    @patch('app.utils.UserRepository.update', return_value=[])
+    @patch("app.utils.UserRepository.update", return_value=[])
     def test_can_trim_users(self, mock_user_repository_update):
         """
         Tests that old friends on Slack can be removed.
         """
         factory = APIRequestFactory()
         request = factory.get("/users/remove-old-friends/")
-        UserViewSet.as_view({'get': 'trim_users'})(request)
+        UserViewSet.as_view({"get": "trim_users"})(request)
         assert mock_user_repository_update.called
         assert mock_user_repository_update.called_once_with(trim=True)
 
@@ -139,11 +140,7 @@ class ServiceTestCase(TestCase):
         """
         Test that guest can be added.
         """
-        self.data = {
-            "name": "Guest 1",
-            "utype": "guest",
-            "passphrase": "passphrase"
-        }
+        self.data = {"name": "Guest 1", "utype": "guest", "passphrase": "passphrase"}
         response = self.client.post("/users/add/", self.data)
         assert response.status_code is 200
         assert response.data.get("user_id")
@@ -184,17 +181,17 @@ class ServiceTestCase(TestCase):
         time_today = timezone.now()
         date = time_today.date()
         # Do tap.
-        self.data['before_midday'] = True
+        self.data["before_midday"] = True
         response = self.client.post("/meal-sessions/start/", self.data)
-        identities = ['U24A2R1', 'U24A2R2', 'U24A2R3', 'U24A2R4']
+        identities = ["U24A2R1", "U24A2R2", "U24A2R3", "U24A2R4"]
         for identity in identities:
-            self.data['slackUserId'] = identity
+            self.data["slackUserId"] = identity
             response = self.client.post("/users/nfctap/", self.data)
         # Cram reports.
         response = self.client.get("/reports/")
         assert response.status_code is 200
-        self.assertIn('breakfast', response.content)
-        self.assertIn('lunch', response.content)
+        self.assertIn("breakfast", response.content)
+        self.assertIn("lunch", response.content)
         self.assertIn(str(date), response.content)
         # Cram reports for a period.
         year_month = time_today.strftime("%Y-%m")
@@ -204,14 +201,12 @@ class ServiceTestCase(TestCase):
 
     def test_can_regularize_guest_names(self):
         guest_list = []
-        for i in xrange(10):
+        for i in range(10):
             guest_list.append(
-                type('Guest', (object, ),
-                     dict(id=i, firstname='Guest {}'.format(i+2)))
+                type("Guest", (object,), dict(id=i, firstname="Guest {}".format(i + 2)))
             )
         regularized = regularize_guest_names(guest_list)
-        print regularized[-1].firstname
-        assert regularized[-1].firstname == 'Guest 10'
+        assert regularized[-1].firstname == "Guest 10"
 
     @classmethod
     def tearDownClass(cls):

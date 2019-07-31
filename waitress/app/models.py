@@ -27,30 +27,31 @@ class SlackUser(AbstractBaseUser):
     """
     A class that represents a `SlackUser` account
     """
+
     # Enum fields for user type.
-    CHEF = 'chef'
-    CLEANER = 'cleaner'
-    GUEST = 'guest'
-    SECURITY = 'security'
-    STAFF = 'staff'
+    CHEF = "chef"
+    CLEANER = "cleaner"
+    GUEST = "guest"
+    SECURITY = "security"
+    STAFF = "staff"
 
     USER_TYPE = (
-        (CHEF, 'chef'),
-        (CLEANER, 'cleaner'),
-        (GUEST, 'guest'),
-        (SECURITY, 'security'),
-        (STAFF, 'staff'),
+        (CHEF, "chef"),
+        (CLEANER, "cleaner"),
+        (GUEST, "guest"),
+        (SECURITY, "security"),
+        (STAFF, "staff"),
     )
     id = models.AutoField(unique=True, primary_key=True)
     slack_id = models.CharField(unique=True, max_length=20, blank=True)
-    firstname = models.CharField(max_length=20)
-    lastname = models.CharField(max_length=20)
-    email = models.CharField(max_length=60, blank=True)
-    user_type = models.CharField(
-        max_length=20, choices=USER_TYPE, default=STAFF)
+    firstname = models.CharField(max_length=50, default="")
+    lastname = models.CharField(max_length=50, default="")
+    email = models.CharField(max_length=100, blank=True)
+    user_type = models.CharField(max_length=30, choices=USER_TYPE, default=STAFF)
     objects = SlackUserManager()
     photo = models.CharField(max_length=512, default="")
-    USERNAME_FIELD = 'id'
+    is_active = models.BooleanField(default=True)
+    USERNAME_FIELD = "id"
 
     @classmethod
     def create(cls, user_data_dict):
@@ -59,11 +60,20 @@ class SlackUser(AbstractBaseUser):
         """
         return cls.objects.create(**user_data_dict)
 
-    def __unicode__(self):
+    def string_repr(self):
         """
         An instance method that return a string representation of this model
         """
-        return "{} {} {}".format(str(self.id), self.firstname, self.lastname)
+        return f"{self.id}: {self.firstname} - {self.slack_id}"
+
+    def __repr__(self):
+        return self.string_repr()
+
+    def __str__(self):
+        return self.string_repr()
+
+    def __unicode__(self):
+        return self.string_repr()
 
     def is_tapped(self):
         """
@@ -90,11 +100,12 @@ class JSONField(models.Field):
     """
     A custom JSON field
     """
+
     description = "A JSON field representing a untapped event"
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('null', True)
-        kwargs.setdefault('editable', False)
+        kwargs.setdefault("null", True)
+        kwargs.setdefault("editable", False)
         super(JSONField, self).__init__(*args, **kwargs)
 
     def get_internal_type(self):
@@ -157,17 +168,19 @@ class CountTrue(models.Sum):
     """
     A custom count for when a field's value is True.
     """
-    template = 'SUM(CASE WHEN %(field)s = TRUE THEN 1 ELSE 0 END)'
+
+    template = "SUM(CASE WHEN %(field)s = TRUE THEN 1 ELSE 0 END)"
 
 
 class MealService(models.Model):
     """
     A model that represents a meal service record for a day
     """
+
     breakfast = models.BooleanField(default=False)
     lunch = models.BooleanField(default=False)
-    user = models.ForeignKey(SlackUser)
-    untapped = JSONField('Untapped', default=untapped_default, blank=True)
+    user = models.ForeignKey(SlackUser, on_delete=models.CASCADE)
+    untapped = JSONField("Untapped", default=untapped_default, blank=True)
     date = models.DateField()
     date_modified = models.DateTimeField(null=True)
 
@@ -197,22 +210,34 @@ class MealService(models.Model):
             self.lunch = not reverse
         return self
 
-    def __unicode__(self):
+    def string_repr(self):
         """
         A method that returns a printable representation of the model
         """
         has_untapped = len(self.untapped) != 0
-        return "{user} {has_breakfast} {has_lunch} {has_untapped} {date}"\
-            .format(
-                user=self.user_id, has_breakfast=self.breakfast,
-                has_lunch=self.lunch, has_untapped=has_untapped,
-                date=self.date)
+        return "{user} {has_breakfast} {has_lunch} {has_untapped} {date}".format(
+            user=self.user_id,
+            has_breakfast=self.breakfast,
+            has_lunch=self.lunch,
+            has_untapped=has_untapped,
+            date=self.date,
+        )
+
+    def __repr__(self):
+        return self.string_repr()
+
+    def __str__(self):
+        return self.string_repr()
+
+    def __unicode__(self):
+        return self.string_repr()
 
 
 class Passphrase(models.Model):
     """
     A model that represents a passphrase
     """
+
     word = models.CharField(max_length=100, unique=True)
 
     @classmethod
@@ -237,6 +262,7 @@ class MealSession(models.Model):
     """
     A model that represents a meal session
     """
+
     status = models.BooleanField(default=False)
     date = models.DateField()
 

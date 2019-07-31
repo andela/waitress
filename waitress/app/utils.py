@@ -1,9 +1,11 @@
-from app.models import SlackUser
-from django.conf import settings
 import pytz
 import re
 import string
 import random
+
+from app.models import SlackUser
+
+from django.conf import settings
 from django.utils import timezone
 from django.db import transaction
 from slacker import Slacker
@@ -16,6 +18,7 @@ class UserRepository(object):
     """
     A wrapper class for methods that update the list of users.
     """
+
     @staticmethod
     def manual_transaction(records):
         transaction.set_autocommit(False)
@@ -28,7 +31,8 @@ class UserRepository(object):
     def regularize_guests():
         """ Regularize guest names"""
         ordered_guests = SlackUser.objects.filter(
-            firstname__startswith='Guest').order_by('id')
+            firstname__startswith="Guest"
+        ).order_by("id")
         regularized_guests = regularize_guest_names(list(ordered_guests))
         try:
             UserRepository.manual_transaction(regularized_guests)
@@ -41,17 +45,16 @@ class UserRepository(object):
         """Generates unique id for a user type.
         """
         dict_ids = {}
-        print user_type
         uc_first_letter = user_type[0].upper()
-        alphabet = string.uppercase + string.digits
+        alphabet = string.ascii_uppercase + string.digits
 
         for i in ids:
             dict_ids[i] = True  # make a dictionary of ids for quick lookup.
 
         def gen_id():  # generate 8-char id.
             return "{0}{1}".format(
-                uc_first_letter,
-                ''.join([random.choice(alphabet) for _ in range(8)]))
+                uc_first_letter, "".join([random.choice(alphabet) for _ in range(8)])
+            )
 
         new_id = gen_id()
 
@@ -66,37 +69,48 @@ class UserRepository(object):
 
     @classmethod
     def add(cls, **kwargs):
-        utype = kwargs.get('utype')
-        users = SlackUser.objects.filter(user_type=utype).order_by('id')
-        if kwargs.get("utype") != "guest":
+        utype = kwargs.get("utype")
+        users = SlackUser.objects.filter(user_type=utype).order_by("id")
+        if kwargs.get("utype").lower() != "guest":
             user = SlackUser(
-                firstname=kwargs.get("firstname"),
-                lastname=kwargs.get("lastname"),)
+                firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname")
+            )
         else:
-            last_guest = filter(lambda x: x.firstname.startswith("Guest"),
-                                list(users))[-1] if len(users) else None
+            last_guest = (
+                filter(lambda x: x.firstname.startswith("Guest"), list(users))[-1]
+                if len(users)
+                else None
+            )
 
             if not last_guest:
                 username = kwargs.get("name", "Guest 1")
             else:
                 last_num = int(
-                    re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[0])
+                    re.match("^Guest ([\d]*)".format(), last_guest.firstname).groups()[
+                        0
+                    ]
+                )
 
-                username = 'Guest {}'.format(last_num + 1)
+                username = "Guest {}".format(last_num + 1)
 
             user = SlackUser(firstname=username)
 
         user.slack_id = cls.generate_unique(
-            utype, [individual.slack_id for individual in users] if len(users) else [])
+            utype, [individual.slack_id for individual in users] if len(users) else []
+        )
         user.user_type = utype
 
         try:
             user.save()
-            return "{} ({}) was created successfully.".format(user.firstname, utype,), user.id
+            return (
+                "{} ({}) was created successfully.".format(user.firstname, utype),
+                user.id,
+            )
 
-        except Exception, e:
-            return "{0} user couldn't be created. Error: {1}".format(
-                utype.upper(), type(e)), None
+        except Exception as e:
+            user_type = utype.upper()
+            error_type = type(e)
+            return f"{user_type} user couldn't be created. Error: {error_type}"
 
     @classmethod
     def update(cls, trim=False):
@@ -109,7 +123,7 @@ class UserRepository(object):
         group_info = slack.groups.info(settings.SLACK_GROUP)
         user_info = slack.users.list()
         if group_info.successful:
-            members = group_info.body['group']['members']
+            members = group_info.body["group"]["members"]
             cls.user_queryset = SlackUser.objects.all()
             difference = cls.difference(members, cls.user_queryset)
 
@@ -117,7 +131,7 @@ class UserRepository(object):
                 # get user info
                 if user_info.successful:
                     return cls.filter_add_user(
-                        user_info.body['members'], difference, trim
+                        user_info.body["members"], difference, trim
                     )
             else:
                 return "Users list wasn't changed."
@@ -128,98 +142,86 @@ class UserRepository(object):
         A method that gets the difference between users in the system and
         users in slack group.
         """
-        users = {}
-        unsaved_users = []
-        if len(db_users):
-            for user in db_users:
-                users.setdefault(user.slack_id, 0)
+        users = (user.slack_id for user in db_users)
 
-        for user in repo_users:
-            if user not in users:
-                unsaved_users.append(user)
+        # return all users from slack that don't exist in the db
+        return [user for user in repo_users if user not in users]
 
-        # if user is in slack group and not in database
-        for user in db_users:
-            if user not in users:
-                unsaved_users.append(user)
+    @classmethod
+    def is_user_invalid(user):
+        is_deleted = user.get("deleted")
+        is_bot = user.get("is_bot")
+        email = user.get("profile").get("email", "")
+        is_email_valid = email.endswith(settings.DOMAIN_LIST)
 
-        return unsaved_users
+        return is_deleted or is_bot or (not is_email_valid)
+
+    @classmethod
+    def _construct_user_details(item):
+        firstname = item.get("profile").get("first_name", "")
+        lastname = item.get("profile").get("last_name", "")
+        return {
+            "slack_id": item["id"],
+            "email": item["profile"]["email"],
+            "photo": item["profile"].get(
+                "image_original", item["profile"].get("image_192")
+            ),
+            "firstname": firstname.title(),
+            "lastname": lastname.title(),
+        }
+
+    @classmethod
+    def normalize(info):
+        """
+        A function that normalizes retrieved information from Slack.
+        """
+        invalid_users = [item["id"] for item in info if cls.is_user_invalid(item)]
+        valid_users = {
+            item["id"]: cls._construct_user_details(item)
+            for item in info
+            if not cls.is_user_invalid(item)
+        }
+
+        return valid_users, invalid_users
 
     @classmethod
     def filter_add_user(cls, info, difference, trim):
         """
         A method that retrieves users' info using the difference.
         """
-        def normalize(info):
-            """
-            A function that normalizes retrieved information from Slack.
-            """
-            user_dict = {}
-            not_user_list = []
 
-            for item in info:
-                if 'deleted' in item and item['deleted'] is True:
-                    not_user_list.append(item['id'])
-                    continue
-                if 'is_bot' in item and item['is_bot'] is True:
-                    not_user_list.append(item['id'])
-                    continue
-                if 'email' not in item['profile'] or item['profile'].get('email') is None:
-                    not_user_list.append(item['id'])
-                    continue
+        valid_users, invalid_users = cls.normalize(info)
 
-                if not item['profile']['email'].endswith(settings.DOMAIN_LIST):
-                    not_user_list.append(item['id'])
-                    continue
+        valid_slack_users = [user for user in difference if user not in invalid_users]
 
-                firstname = item.get('profile').get('first_name', '')
-                lastname = item.get('profile').get('last_name', '')
-                user_dict[item['id']] = {
-                    'slack_id': item['id'],
-                    'email': item['profile']['email'],
-                    # use slack default image
-                    'photo': item['profile'].get('image_original', item['profile'].get('image_192')),
-                    'firstname': firstname.title(),
-                    'lastname': lastname.title()
-                }
-
-            return user_dict, not_user_list
-
-        info, not_user = normalize(info)
-
-        difference = cls.get_real_users(difference[:], not_user)
-
-        if len(difference) == 0:
-            return "Users list not changed"
+        if not valid_slack_users:
+            return "No new user found on slack."
 
         if trim:
-            return cls.trim_away(not_user)
+            return cls.trim_away(invalid_users)
 
         try:
-            for user in difference:
-                if user in info:
-                    with transaction.atomic():
-                        SlackUser.create(info[user])
-            return "Users updated successfully"
+            for user_slack_id in valid_slack_users:
+                current_user = valid_users[user_slack_id]
+                with transaction.atomic():
+                    SlackUser.create(current_user)
+            return "Users updated successfully."
         except Exception as e:
-            return "Users couldn't be updated successfully - %s" % e.message
-
-    @staticmethod
-    def get_real_users(difference, not_user):
-        """Get the users that are legit."""
-        return [item for item in difference if item not in not_user]
+            return f"Users couldn't be updated successfully - {e.args[0]}"
 
     @classmethod
-    def trim_away(cls, not_user):
+    def trim_away(cls, invalid_users):
         """Trims away users for the system that have been deleted off Slack."""
-        trim_user = []
-        for user in cls.user_queryset:
-            if user.slack_id in not_user:
-                trim_user.append("%s %s" % (user.firstname, user.lastname))
-                user.delete()
-        if len(trim_user):
-            return "Users deleted: %s" % (', '.join(trim_user))
-        return "Users list not changed"
+        deleted_users = [
+            user.delete()
+            for user in cls.user_queryset
+            if user.slack_id in invalid_users
+        ]
+
+        number_of_deleted_users = len(deleted_users)
+        if number_of_deleted_users:
+            return f"{number_of_deleted_users} Users deleted"
+        return "There are no invalid users found on slack."
 
 
 class Time:
@@ -232,7 +234,7 @@ class Time:
         """
         A method that return True if the time is before midday.
         """
-        timezone.activate(pytz.timezone('Africa/Lagos'))
+        timezone.activate(pytz.timezone("Africa/Lagos"))
         time = timezone.now().hour
         if 0 < time < 12:
             return True
@@ -243,6 +245,7 @@ def regularize_guest_names(guest_list):
     """Regularizes the names of guest.
     """
     guest_list_cp = guest_list[:]
-    for i in xrange(len(guest_list_cp)):
+    number_of_guests = len(guest_list_cp)
+    for i in range(number_of_guests):
         guest_list_cp[i].firstname = "Guest {}".format(i + 1)
     return guest_list_cp
