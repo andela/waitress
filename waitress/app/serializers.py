@@ -26,7 +26,7 @@ class SecureUserSerializer(UserSerializer):
 
 
 class FilterSerializer(serializers.Serializer):
-    filter = serializers.CharField()
+    filter = serializers.CharField(required=False)
 
 
 # class PassPhraseSerializer(serializers.Serializer):

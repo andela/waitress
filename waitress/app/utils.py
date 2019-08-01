@@ -143,12 +143,13 @@ class UserRepository(object):
         users in slack group.
         """
         users = (user.slack_id for user in db_users)
+        import pdb; pdb.set_trace()
 
         # return all users from slack that don't exist in the db
         return [user for user in repo_users if user not in users]
 
     @classmethod
-    def is_user_invalid(user):
+    def is_user_invalid(cls, user):
         is_deleted = user.get("deleted")
         is_bot = user.get("is_bot")
         email = user.get("profile").get("email", "")
@@ -157,7 +158,7 @@ class UserRepository(object):
         return is_deleted or is_bot or (not is_email_valid)
 
     @classmethod
-    def _construct_user_details(item):
+    def _construct_user_details(cls, item):
         firstname = item.get("profile").get("first_name", "")
         lastname = item.get("profile").get("last_name", "")
         return {
@@ -171,7 +172,7 @@ class UserRepository(object):
         }
 
     @classmethod
-    def normalize(info):
+    def normalize(cls, info):
         """
         A function that normalizes retrieved information from Slack.
         """

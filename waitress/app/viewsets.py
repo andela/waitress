@@ -53,7 +53,6 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.data, status_code.HTTP_200_OK)
 
     @swagger_auto_schema()
-    @guard
     @action(methods=["post"], url_path="retrieve-secure", detail=True)
     def retrieve_securely(self, request, pk):
         """
