@@ -126,7 +126,6 @@ class UserRepository(object):
             members = group_info.body["group"]["members"]
             cls.user_queryset = SlackUser.objects.all()
             difference = cls.difference(members, cls.user_queryset)
-            import pdb; pdb.set_trace()
 
             if len(difference):
                 # get user info
