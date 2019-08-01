@@ -126,6 +126,7 @@ class UserRepository(object):
             members = group_info.body["group"]["members"]
             cls.user_queryset = SlackUser.objects.all()
             difference = cls.difference(members, cls.user_queryset)
+            import pdb; pdb.set_trace()
 
             if len(difference):
                 # get user info
@@ -142,8 +143,7 @@ class UserRepository(object):
         A method that gets the difference between users in the system and
         users in slack group.
         """
-        users = (user.slack_id for user in db_users)
-        import pdb; pdb.set_trace()
+        users = [user.slack_id for user in db_users]
 
         # return all users from slack that don't exist in the db
         return [user for user in repo_users if user not in users]
