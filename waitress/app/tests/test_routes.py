@@ -33,14 +33,9 @@ class ServiceTestCase(TestCase):
             email="testuser@mail.com",
             photo="http://...",
         )
-<<<<<<< HEAD
-        user = User.objects.create_user("username", password="userpassword")
-=======
-        admin_user = User.objects.create()
         user=User.objects.create_user('username', password='userpassword')
         user.is_superuser=False
         user.is_staff=False
->>>>>>> write tests for auth page
         user.save()
         cls.user_id = slack_user.id
         Passphrase.objects.create(word="passphrase")
