@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
-from .base import *
 import urlparse
-import os
+
+from dotenv import load_dotenv, find_dotenv
+
+from .base import *
 
 
-STAGING_DOMAIN = "waitress-staging.herokuapp.com"
+load_dotenv(find_dotenv())
+STAGING_DOMAIN = os.getenv("STAGING_DOMAIN")
 
 db_url = urlparse.urlparse(os.environ.get("OPENSHIFT_POSTGRESQL_DB_URL"))
 DEBUG = False
