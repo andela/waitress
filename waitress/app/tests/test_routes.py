@@ -34,9 +34,9 @@ class ServiceTestCase(TestCase):
             photo="http://...",
         )
         admin_user = User.objects.create()
-        user=User.objects.create_user('username', password='userpassword')
-        user.is_superuser=False
-        user.is_staff=False
+        user = User.objects.create_user("username", password="userpassword")
+        user.is_superuser = False
+        user.is_staff = False
         user.save()
         cls.user_id = slack_user.id
         Passphrase.objects.create(word="passphrase")
@@ -217,22 +217,24 @@ class ServiceTestCase(TestCase):
         assert regularized[-1].firstname == "Guest 10"
 
     def test_user_can_view_admin_login_page(self):
-        response = self.client.get('')
+        response = self.client.get("")
         assert response.status_code == 200
-        assert response.templates[0].name == 'login.html'
+        assert response.templates[0].name == "login.html"
 
     def test_user_redirects_to_login_page_on_login_failure(self):
-        user_data = dict(username='user', password='password')
-        response = self.client.post('', data=user_data, follow=True)
+        user_data = dict(username="user", password="password")
+        response = self.client.post("", data=user_data, follow=True)
         assert response.status_code == 200
-        assert response.templates[0].name == 'login.html'
+        assert response.templates[0].name == "login.html"
 
     def test_user_redirects_to_dashboard_page_on_login_success(self):
-        user_data = dict(username='username', password='userpassword')
-        response = self.client.post('', data=user_data, follow=True)
-        from nose.tools import set_trace; set_trace()
+        user_data = dict(username="username", password="userpassword")
+        response = self.client.post("", data=user_data, follow=True)
+        from nose.tools import set_trace
+
+        set_trace()
         assert response.status_code == 200
-        assert response.templates[0].name == 'dashboard.html'
+        assert response.templates[0].name == "dashboard.html"
 
     @classmethod
     def tearDownClass(cls):
