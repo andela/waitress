@@ -248,9 +248,6 @@ class ServiceTestCase(TestCase):
     def test_user_redirects_to_dashboard_page_on_login_success(self):
         user_data = dict(username="username", password="userpassword")
         response = self.client.post("", data=user_data, follow=True)
-        from nose.tools import set_trace
-
-        set_trace()
         assert response.status_code == 200
 <<<<<<< HEAD
         assert response.templates[0].name == 'dashboard.html'
