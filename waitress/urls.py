@@ -5,8 +5,7 @@ from django.urls import path
 from rest_framework import routers
 
 from app.admin import admin_site
-from app.views import schema_view, LoginHandler, Dashboard
-
+from app.views import Dashboard, LoginHandler, schema_view
 
 router = routers.SimpleRouter()
 router.register(r"meal-sessions", MealSessionViewSet)
