@@ -6,6 +6,7 @@ import dj_database_url
 
 from .base import *
 
+from .base import *
 
 load_dotenv(find_dotenv())
 STAGING_DOMAIN = os.getenv("STAGING_DOMAIN")

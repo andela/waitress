@@ -1,4 +1,4 @@
-from django.forms import Form, CharField, PasswordInput, TextInput
+from django.forms import CharField, Form, PasswordInput, TextInput
 
 
 class LoginForm(Form):

@@ -1,6 +1,8 @@
 import unittest
-from app.models import Passphrase, SlackUser, MealSession, MealService
+
 from django.utils import timezone
+
+from app.models import MealService, MealSession, Passphrase, SlackUser
 
 
 def create_user():

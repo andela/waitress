@@ -2,13 +2,13 @@ from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.utils import timezone
 from rest_framework.test import APIRequestFactory
 
-from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
 from app.utils import UserRepository, regularize_guest_names
+from app.viewsets import UserViewSet
 
 
 def skipUnless(fn, *args, **kwargs):

@@ -6,7 +6,6 @@ from slacker import Slacker
 
 from waitress.app.models import SlackUser
 
-
 slack = Slacker(settings.SLACK_API_TOKEN)
 
 group_info = slack.groups.info(settings.SLACK_GROUP)

@@ -4,7 +4,6 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework import routers
 
-from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
 from app.admin import admin_site
 from app.views import schema_view, LoginHandler, Dashboard
 
