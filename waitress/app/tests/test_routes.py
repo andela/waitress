@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import User
-<<<<<<< HEAD
 from django.test import Client, TestCase
 from django.utils import timezone
 from rest_framework.test import APIRequestFactory
@@ -10,15 +9,6 @@ from rest_framework.test import APIRequestFactory
 from app.models import Passphrase, SlackUser
 from app.utils import UserRepository, regularize_guest_names
 from app.viewsets import UserViewSet
-=======
-from django.test import TestCase, Client
-from django.utils import timezone
-from rest_framework.test import APIRequestFactory
-
-from app.viewsets import UserViewSet
-from app.models import Passphrase, SlackUser
-from app.utils import UserRepository, regularize_guest_names
->>>>>>> write tests for auth page
 
 
 def skipUnless(fn, *args, **kwargs):
@@ -225,6 +215,7 @@ class ServiceTestCase(TestCase):
 
     def test_user_can_view_admin_login_page(self):
 <<<<<<< HEAD
+<<<<<<< HEAD
         response = self.client.get("")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, "login.html")
@@ -242,22 +233,31 @@ class ServiceTestCase(TestCase):
         self.assertEqual(response.templates[0].name, "dashboard.html")
 =======
         response = self.client.get('')
+=======
+        response = self.client.get("")
+>>>>>>> lint shit up
         assert response.status_code == 200
-        assert response.templates[0].name == 'login.html'
+        assert response.templates[0].name == "login.html"
 
     def test_user_redirects_to_login_page_on_login_failure(self):
-        user_data = dict(username='user', password='password')
-        response = self.client.post('', data=user_data, follow=True)
+        user_data = dict(username="user", password="password")
+        response = self.client.post("", data=user_data, follow=True)
         assert response.status_code == 200
-        assert response.templates[0].name == 'login.html'
+        assert response.templates[0].name == "login.html"
 
     def test_user_redirects_to_dashboard_page_on_login_success(self):
-        user_data = dict(username='username', password='userpassword')
-        response = self.client.post('', data=user_data, follow=True)
-        from nose.tools import set_trace; set_trace()
+        user_data = dict(username="username", password="userpassword")
+        response = self.client.post("", data=user_data, follow=True)
+        from nose.tools import set_trace
+
+        set_trace()
         assert response.status_code == 200
+<<<<<<< HEAD
         assert response.templates[0].name == 'dashboard.html'
 >>>>>>> write tests for auth page
+=======
+        assert response.templates[0].name == "dashboard.html"
+>>>>>>> lint shit up
 
     @classmethod
     def tearDownClass(cls):
