@@ -214,8 +214,6 @@ class ServiceTestCase(TestCase):
         assert regularized[-1].firstname == "Guest 10"
 
     def test_user_can_view_admin_login_page(self):
-<<<<<<< HEAD
-<<<<<<< HEAD
         response = self.client.get("")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, "login.html")
@@ -223,48 +221,16 @@ class ServiceTestCase(TestCase):
     def test_user_redirects_to_login_page_on_login_failure(self):
         user_data = dict(username="user", password="password")
         response = self.client.post("", data=user_data, follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, "login.html")
 
     def test_user_redirects_to_dashboard_page_on_login_success(self):
         user_data = dict(username="username", password="userpassword")
         response = self.client.post("", data=user_data, follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, "dashboard.html")
-=======
-        response = self.client.get('')
-=======
-        response = self.client.get("")
-<<<<<<< HEAD
->>>>>>> lint shit up
-        assert response.status_code == 200
-        assert response.templates[0].name == "login.html"
-=======
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.templates[0].name, "login.html")
->>>>>>> make use of self.assertequal
-
-    def test_user_redirects_to_login_page_on_login_failure(self):
-        user_data = dict(username="user", password="password")
-        response = self.client.post("", data=user_data, follow=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.templates[0].name, "login.html")
-
-    def test_user_redirects_to_dashboard_page_on_login_success(self):
-        user_data = dict(username="username", password="userpassword")
-        response = self.client.post("", data=user_data, follow=True)
-<<<<<<< HEAD
-        assert response.status_code == 200
-<<<<<<< HEAD
-        assert response.templates[0].name == 'dashboard.html'
->>>>>>> write tests for auth page
-=======
-        assert response.templates[0].name == "dashboard.html"
->>>>>>> lint shit up
-=======
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.templates[0].name, "dashboard.html")
->>>>>>> make use of self.assertequal
 
     @classmethod
     def tearDownClass(cls):
