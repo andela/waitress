@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
+from django.views import View
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
@@ -20,12 +21,15 @@ schema_view = get_schema_view(
 )
 
 
-def login_handler(request):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
+class LoginHandler(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
 
-    context = dict(login_form=LoginForm)
-    if request.method == "POST":
+        context = dict(login_form=LoginForm)
+        return render(request, "login.html", context)
+
+    def post(self, request):
         error_message = "Username or Password incorrect."
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -43,8 +47,7 @@ def login_handler(request):
         login(request, user)
         return redirect("dashboard")
 
-    return render(request, "login.html", context)
 
-
-def dashboard(request):
-    return render(request, "dashboard.html")
+class Dashboard(View):
+    def get(self, request):
+        return render(request, "dashboard.html")

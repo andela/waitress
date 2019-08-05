@@ -6,7 +6,7 @@ from rest_framework import routers
 
 from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
 from app.admin import admin_site
-from app.views import schema_view, login_handler, dashboard
+from app.views import schema_view, LoginHandler, Dashboard
 
 
 router = routers.SimpleRouter()
@@ -17,8 +17,8 @@ router.register(r"reports", ReportViewSet)
 app_namespace = "waitress"
 
 urlpatterns = [
-    path("", login_handler, name="login"),
-    path("dashboard", dashboard, name="dashboard"),
+    path("", LoginHandler.as_view(), name="login"),
+    path("dashboard", Dashboard.as_view(), name="dashboard"),
     path("", include((router.urls, app_namespace), namespace="api")),
     path(
         "/", include((router.urls, app_namespace), namespace="api2")
