@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 ipdb = "*"
 black = "==19.3b0"
+isort = "*"
 
 [packages]
 coverage = "==4.5.3"
