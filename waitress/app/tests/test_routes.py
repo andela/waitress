@@ -217,20 +217,20 @@ class ServiceTestCase(TestCase):
 
     def test_user_can_view_admin_login_page(self):
         response = self.client.get("")
-        assert response.status_code == 200
-        assert response.templates[0].name == "login.html"
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "login.html")
 
     def test_user_redirects_to_login_page_on_login_failure(self):
         user_data = dict(username="user", password="password")
         response = self.client.post("", data=user_data, follow=True)
-        assert response.status_code == 200
-        assert response.templates[0].name == "login.html"
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "login.html")
 
     def test_user_redirects_to_dashboard_page_on_login_success(self):
         user_data = dict(username="username", password="userpassword")
         response = self.client.post("", data=user_data, follow=True)
-        assert response.status_code == 200
-        assert response.templates[0].name == "dashboard.html"
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "dashboard.html")
 
     @classmethod
     def tearDownClass(cls):
