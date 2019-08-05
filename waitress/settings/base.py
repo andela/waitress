@@ -109,7 +109,8 @@ STATICFILES_FINDERS = (
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Bower components
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT)
@@ -136,20 +137,14 @@ SWAGGER_SETTINGS = {
 
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': 'error.log',
-        },
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": "error.log",
+        }
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
+    "loggers": {"django": {"handlers": ["file"], "level": "ERROR", "propagate": True}},
 }

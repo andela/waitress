@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <form class="form-signin" role="form" method="POST" action="/">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Welcome to Waitress</h2>
+        <h3>Please sign in</h3>
+        {{ login_form.username }}
+        {{ login_form.password }}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <span {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+        </div>
+        {% endif %}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+</div>
+{% endblock content %}

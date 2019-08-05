@@ -5,6 +5,8 @@ import urlparse
 import os
 
 
+STAGING_DOMAIN = "waitress-staging.herokuapp.com"
+
 db_url = urlparse.urlparse(os.environ.get("OPENSHIFT_POSTGRESQL_DB_URL"))
 DEBUG = False
 
@@ -58,3 +60,5 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(os.environ["OPENSHIFT_REPO_DIR"], "static")
 STATICFILES_STORAGE = None
+
+ALLOWED_HOSTS = [STAGING_DOMAIN]

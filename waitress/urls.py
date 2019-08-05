@@ -1,12 +1,12 @@
-from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
-from app.admin import admin_site
-from app.views import schema_view
-
 from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.urls import path
 from rest_framework import routers
+
+from app.viewsets import MealSessionViewSet, UserViewSet, ReportViewSet
+from app.admin import admin_site
+from app.views import schema_view, login_handler, dashboard
 
 
 router = routers.SimpleRouter()
@@ -17,8 +17,12 @@ router.register(r"reports", ReportViewSet)
 app_namespace = "waitress"
 
 urlpatterns = [
+    path("", login_handler, name="login"),
+    path("dashboard", dashboard, name="dashboard"),
     path("", include((router.urls, app_namespace), namespace="api")),
-    path("/", include((router.urls, app_namespace), namespace="api2")), # hack because the mobile app makes use of //
+    path(
+        "/", include((router.urls, app_namespace), namespace="api2")
+    ),  # hack because the mobile app makes use of //
     path(
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),

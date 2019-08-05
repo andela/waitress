@@ -22,7 +22,7 @@ def _manual_transaction(records):
         record.save()
     transaction.commit()
     transaction.set_autocommit(True)
-    return 'Update completed!'
+    return "Update completed!"
 
 
 def _fetch_slack_users():
