@@ -50,7 +50,7 @@ class LoginHandler(View):
 
 
 class Dashboard(LoginRequiredMixin, View):
-    login_url = '/'
+    login_url = "/"
 
     def get(self, request):
         return render(request, "dashboard.html")
