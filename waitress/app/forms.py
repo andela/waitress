@@ -6,13 +6,13 @@ class LoginForm(Form):
         max_length=20,
         error_messages={"required": "Please enter your username"},
         widget=TextInput(
-            attrs={"class": "input form-control", "placeholder": "enter your username"}
+            attrs={"class": "input form-control mb-2", "placeholder": "Enter your username", "autofocus": "autofocus"}
         ),
     )
     password = CharField(
         max_length=20,
         error_messages={"required": "Password is required"},
         widget=PasswordInput(
-            attrs={"class": "input form-control", "placeholder": "enter your password"}
+            attrs={"class": "input form-control", "placeholder": "Enter your password"}
         ),
     )

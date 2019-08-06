@@ -1,16 +1,37 @@
 body {
     padding-top: 40px;
     padding-bottom: 40px;
-    background-color: #eee;
+    background-color: #ffffff;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.form-container {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    height: 500px;
+    margin: auto;
+    box-shadow: 0.5rem 0.5rem 3rem rgba(0,0,0,0.2)
 }
 
 .form-signin {
     max-width: 330px;
-    padding: 15px;
     margin: 0 auto;
 }
 
-.form-signin .form-signin-heading, .form-signin .checkbox {
+.form-signin-heading {
+    color: #394683;
+}
+
+.form-signin-info{
+  color: #aaa9a7;
+  text-align: center;
+  font-weight: 300;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.form-signin .form-signin .checkbox {
     margin-bottom: 10px;
 }
 
@@ -32,18 +53,26 @@ body {
     z-index: 2;
 }
 
-.form-signin input[type="email"] {
-    margin-bottom: -1px;
+.form-signin input[type="text"] {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
 
 .danger {
     color: red;
+}
+
+.mb-2 {
+    margin-bottom: 20px;
+}
+
+input::placeholder{
+    color: #ddd !important;
+    font-size: 14px;
 }
