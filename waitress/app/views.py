@@ -8,8 +8,8 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 
-from waitress.app.forms import LoginForm
 from app.models import SlackUser
+from waitress.app.forms import LoginForm
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -53,7 +53,7 @@ class Dashboard(LoginRequiredMixin, View):
     login_url = "/"
 
     def get(self, request):
-        users_list = SlackUser.objects.order_by('id').all()
+        users_list = SlackUser.objects.order_by("id").all()
         paginator = Paginator(users_list, 25)  # Show 25 users per page
         paginated_users = paginator.get_page(1)
         end_index = paginated_users.end_index()
@@ -64,6 +64,6 @@ class Dashboard(LoginRequiredMixin, View):
             total_users=len(users_list),
             total_active_users=10,
             total_inactive_users=5,
-            pages=range(end_index)
+            pages=range(end_index),
         )
         return render(request, "dashboard.html", context)
