@@ -12,9 +12,10 @@
             {% if messages %}
             <div class="messages">
                 {% for message in messages %}
-                <span {% if message.tags %} class="{{ message.tags }}"
-                    {% endif %}>{{ message }}</li>
-                    {% endfor %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
             </div>
             {% endif %}
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign

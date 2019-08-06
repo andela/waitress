@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from drf_yasg.views import get_schema_view
@@ -48,6 +49,8 @@ class LoginHandler(View):
         return redirect("dashboard")
 
 
-class Dashboard(View):
+class Dashboard(LoginRequiredMixin, View):
+    login_url = '/'
+
     def get(self, request):
         return render(request, "dashboard.html")
