@@ -53,7 +53,10 @@ class Dashboard(LoginRequiredMixin, View):
     login_url = "/"
 
     def get(self, request):
-        users_list = SlackUser.objects.order_by("id").all()
+        users_query_set = SlackUser.objects.order_by("id")
+        users_list = users_query_set.all()
+        active_users_count = users_query_set.filter(is_active=True).count()
+        inactive_users_count = users_query_set.filter(is_active=False).count()
         paginator = Paginator(users_list, 25)  # Show 25 users per page
         paginated_users = paginator.get_page(1)
         end_index = paginated_users.end_index()
@@ -62,8 +65,8 @@ class Dashboard(LoginRequiredMixin, View):
         context = dict(
             users=paginated_users,
             total_users=len(users_list),
-            total_active_users=10,
-            total_inactive_users=5,
+            total_active_users=active_users_count,
+            total_inactive_users=inactive_users_count,
             pages=range(end_index),
         )
         return render(request, "dashboard.html", context)
