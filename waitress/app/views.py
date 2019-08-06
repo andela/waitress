@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.views import View
 from drf_yasg import openapi
@@ -8,6 +9,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 
 from waitress.app.forms import LoginForm
+from app.models import SlackUser
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -51,4 +53,17 @@ class Dashboard(LoginRequiredMixin, View):
     login_url = "/"
 
     def get(self, request):
-        return render(request, "dashboard.html")
+        users_list = SlackUser.objects.order_by('id').all()
+        paginator = Paginator(users_list, 25)  # Show 25 users per page
+        paginated_users = paginator.get_page(1)
+        end_index = paginated_users.end_index()
+        # import pdb; pdb.set_trace()
+
+        context = dict(
+            users=paginated_users,
+            total_users=len(users_list),
+            total_active_users=10,
+            total_inactive_users=5,
+            pages=range(end_index)
+        )
+        return render(request, "dashboard.html", context)

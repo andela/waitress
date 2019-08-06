@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     padding-top: 40px;
     padding-bottom: 40px;
@@ -75,4 +79,39 @@ body {
 input::placeholder{
     color: #ddd !important;
     font-size: 14px;
+}
+
+.logo {
+    width: 2rem;
+    margin-right: 10px;
+}
+
+.login_body {
+    margin-top: 10rem;
+}
+
+.cta_group {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cta {
+    margin-right: 1rem;
+}
+
+.card_container {
+    margin: 1rem 0;
+}
+
+.table_container {
+    margin: 0 1rem;
+}
+
+.odd, .even {
+    cursor: pointer;
+}
+
+.odd:hover, .even:hover {
+    background: #007bff;
+    color: #fff;
 }
