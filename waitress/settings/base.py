@@ -18,9 +18,10 @@ load_dotenv(find_dotenv())
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
+ENVIRONMENT = os.getenv("ENV")
 
 ALLOWED_HOSTS = []
-
+DEBUG = not (ENVIRONMENT in ["production", "staging"])
 
 # Application definition
 INSTALLED_APPS = [

@@ -1,10 +1,12 @@
 import os
 
-if os.getenv("OPENSHIFT_REPO_DIR"):
-    from .staging import *
-elif os.getenv("TRAVIS_CI"):
-    from .testing import *
-elif os.getenv("HEROKU"):
-    from .production import *
+environment = os.getenv("ENV", "development")
+
+if environment == "staging":
+    from settings.staging import *
+elif os.getenv("TRAVIS_CI") or environment == "testing":
+    from settings.testing import *
+elif environment == "production":
+    from settings.production import *
 else:
-    from .development import *
+    from settings.development import *
