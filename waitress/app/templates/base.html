@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<head>
+    <title>Waitress {{title}}</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+    {% block header %}{% endblock header %}
+</head>
+
+<body>
+    {% block content %}
+    {% endblock content %}
+    <script src="{% static 'main.js' %}"></script>
+</body>
+
+</html>

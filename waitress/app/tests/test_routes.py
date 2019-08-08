@@ -1,11 +1,14 @@
+from unittest.mock import patch
+
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
-from django.conf import settings
 from rest_framework.test import APIRequestFactory
+
 from app.viewsets import UserViewSet
 from app.models import Passphrase, SlackUser
 from app.utils import UserRepository, regularize_guest_names
-from unittest.mock import patch
 
 
 def skipUnless(fn, *args, **kwargs):
@@ -30,6 +33,8 @@ class ServiceTestCase(TestCase):
             email="testuser@mail.com",
             photo="http://...",
         )
+        user = User.objects.create_user("username", password="userpassword")
+        user.save()
         cls.user_id = slack_user.id
         Passphrase.objects.create(word="passphrase")
         cls.client = Client()
@@ -207,6 +212,23 @@ class ServiceTestCase(TestCase):
             )
         regularized = regularize_guest_names(guest_list)
         assert regularized[-1].firstname == "Guest 10"
+
+    def test_user_can_view_admin_login_page(self):
+        response = self.client.get("")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "login.html")
+
+    def test_user_redirects_to_login_page_on_login_failure(self):
+        user_data = dict(username="user", password="password")
+        response = self.client.post("", data=user_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "login.html")
+
+    def test_user_redirects_to_dashboard_page_on_login_success(self):
+        user_data = dict(username="username", password="userpassword")
+        response = self.client.post("", data=user_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, "dashboard.html")
 
     @classmethod
     def tearDownClass(cls):
