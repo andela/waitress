@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 
-from dotenv import load_dotenv, find_dotenv
 import dj_database_url
+from dotenv import find_dotenv, load_dotenv
 
 from .base import *
 

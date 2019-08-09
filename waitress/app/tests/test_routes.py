@@ -33,9 +33,9 @@ class ServiceTestCase(TestCase):
             email="testuser@mail.com",
             photo="http://...",
         )
-        user=User.objects.create_user('username', password='userpassword')
-        user.is_superuser=False
-        user.is_staff=False
+        user = User.objects.create_user("username", password="userpassword")
+        user.is_superuser = False
+        user.is_staff = False
         user.save()
         cls.user_id = slack_user.id
         Passphrase.objects.create(word="passphrase")
