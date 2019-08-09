@@ -1,15 +1,14 @@
-import pytz
+import random
 import re
 import string
-import random
 
-from app.models import SlackUser
-
+import pytz
 from django.conf import settings
-from django.utils import timezone
 from django.db import transaction
+from django.utils import timezone
 from slacker import Slacker
 
+from app.models import SlackUser
 
 slack = Slacker(settings.SLACK_API_TOKEN)
 

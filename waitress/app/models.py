@@ -1,7 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-from django.utils import timezone
 import json
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.utils import timezone
 
 
 class SlackUserManager(models.Manager):

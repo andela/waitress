@@ -1,6 +1,8 @@
 #!/usr/bin/python
-import os, sys
+import os
+import sys
 
+from django.core.wsgi import get_wsgi_application
 
 if os.getenv("OPENSHIFT_REPO_DIR"):
     sys.path.append(os.path.join(os.environ["OPENSHIFT_REPO_DIR"]))
@@ -23,6 +25,5 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "waitress.settings"
 # line, it's possible required libraries won't be in your searchable path
 #
 
-from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()

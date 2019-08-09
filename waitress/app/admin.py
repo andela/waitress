@@ -1,8 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 
 # Register your models here.
-from app.models import SlackUser, MealService, Passphrase
-from django.contrib.auth.models import User
+from app.models import MealService, Passphrase, SlackUser
 
 
 class WaitressAdminSite(admin.AdminSite):

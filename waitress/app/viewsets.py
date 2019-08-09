@@ -1,23 +1,21 @@
+import json
+
+import pytz
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework import status as status_code, viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import action
-import json
-import pytz
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status as status_code
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from app.decorators import guard
-from app.models import SlackUser, MealSession, MealService
-from app.serializers import (
-    UserSerializer,
-    SecureUserSerializer,
-    ReportSerializer,
-    FilterSerializer,
-    AddUserSerializer,
-)
-from app.utils import UserRepository, Time
+from app.models import MealService, MealSession, SlackUser
+from app.serializers import (AddUserSerializer, FilterSerializer,
+                             ReportSerializer, SecureUserSerializer,
+                             UserSerializer)
+from app.utils import Time, UserRepository
 
 
 class UserViewSet(viewsets.ViewSet):

@@ -1,7 +1,9 @@
-from app.models import Passphrase
+from functools import wraps
+
 from rest_framework import status as status_code
 from rest_framework.response import Response
-from functools import wraps
+
+from app.models import Passphrase
 
 
 def guard(func):
