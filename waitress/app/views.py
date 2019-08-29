@@ -7,6 +7,7 @@ from django.views import View
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
+from django.http import JsonResponse
 
 from app.models import SlackUser
 from waitress.app.forms import LoginForm
@@ -49,6 +50,7 @@ class LoginHandler(View):
         login(request, user)
         return redirect("dashboard")
 
+
 class Dashboard(LoginRequiredMixin, View):
     login_url = "/"
 
@@ -60,7 +62,6 @@ class Dashboard(LoginRequiredMixin, View):
         paginator = Paginator(users_list, 25)  # Show 25 users per page
         paginated_users = paginator.get_page(1)
         end_index = paginated_users.end_index()
-        # import pdb; pdb.set_trace()
 
         context = dict(
             users=paginated_users,
@@ -70,3 +71,19 @@ class Dashboard(LoginRequiredMixin, View):
             pages=range(end_index),
         )
         return render(request, "dashboard.html", context)
+
+
+# class UserHandler(LoginRequiredMixin, View):
+class UserHandler(View):
+    login_url = "/"
+    limit = 25
+
+    def get(self, request):
+        users_query_set = SlackUser.objects.order_by("id")
+        users_list = users_query_set.all()
+        active_users_count = users_query_set.filter(is_active=True).count()
+        inactive_users_count = users_query_set.filter(is_active=False).count()
+        paginator = Paginator(users_list, self.limit)  # Show 25 users per page
+        paginated_users = paginator.get_page(1)
+        end_index = paginated_users.end_index()
+        return JsonResponse([], safe=False)

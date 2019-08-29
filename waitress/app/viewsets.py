@@ -3,6 +3,7 @@ import json
 import pytz
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status as status_code
@@ -91,7 +92,8 @@ class UserViewSet(viewsets.ViewSet):
         user.save()
         return Response(serializer.data, status_code.HTTP_200_OK)
 
-    @action(methods=["get"], url_path="update-users", detail=False)
+    @csrf_exempt
+    @action(methods=["put"], url_path="update-users", detail=False)
     def update_users(self, request):
         """
         A method that updates the list of users.

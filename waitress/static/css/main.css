@@ -3,10 +3,11 @@
 }
 
 body {
-    padding-top: 40px;
-    padding-bottom: 40px;
     background-color: #ffffff;
     font-family: 'Nunito Sans', sans-serif;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding-top: 60px;
 }
 
 .form-container {
