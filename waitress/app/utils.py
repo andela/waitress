@@ -73,6 +73,7 @@ class UserRepository(object):
         if kwargs.get("utype").lower() != "guest":
             user = SlackUser(firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname"))
         else:
+            # for some reason filter object is not subscriptable
             # last_guest = (
             #     filter(lambda x: x.firstname.startswith("Guest"), list(users))[-1]
             #     if len(users)
