@@ -14,6 +14,8 @@ def guard(func):
     @wraps(func)
     def decorated_func(viewset, request, pk=None, *args, **kwargs):
         passphrase = request.POST.get("passphrase", None)
+        if not passphrase:
+            passphrase = request.data.get("passphrase", None)
         exists = Passphrase.exists(passphrase)
         if exists.status:
             request.passphrase = exists.matched_list[0]

@@ -71,15 +71,14 @@ class UserRepository(object):
         utype = kwargs.get("utype")
         users = SlackUser.objects.filter(user_type=utype).order_by("id")
         if kwargs.get("utype").lower() != "guest":
-            user = SlackUser(
-                firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname")
-            )
+            user = SlackUser(firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname"))
         else:
-            last_guest = (
-                filter(lambda x: x.firstname.startswith("Guest"), list(users))[-1]
-                if len(users)
-                else None
-            )
+            # last_guest = (
+            #     filter(lambda x: x.firstname.startswith("Guest"), list(users))[-1]
+            #     if len(users)
+            #     else None
+            # )
+            last_guest = [x for x in list(users) if x.firstname.startswith("Guest")][-1]
 
             if not last_guest:
                 username = kwargs.get("name", "Guest 1")

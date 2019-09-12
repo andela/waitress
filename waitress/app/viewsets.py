@@ -12,9 +12,13 @@ from rest_framework.response import Response
 
 from app.decorators import guard
 from app.models import MealService, MealSession, SlackUser
-from app.serializers import (AddUserSerializer, FilterSerializer,
-                             ReportSerializer, SecureUserSerializer,
-                             UserSerializer)
+from app.serializers import (
+    AddUserSerializer,
+    FilterSerializer,
+    ReportSerializer,
+    SecureUserSerializer,
+    UserSerializer,
+)
 from app.utils import Time, UserRepository
 
 
@@ -121,7 +125,17 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
-    @swagger_auto_schema()
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "firstname": openapi.Schema(type=openapi.TYPE_STRING, description="firstname"),
+                "lastname": openapi.Schema(type=openapi.TYPE_STRING, description="lastname"),
+                "utype": openapi.Schema(type=openapi.TYPE_STRING, description="user type", default='guest'),
+                "passphrase": openapi.Schema(type=openapi.TYPE_STRING, description="Passphrase"),
+            },
+        )
+    )
     @guard
     @action(methods=["post"], url_path="add", detail=False)
     def add_user(self, request):
@@ -150,7 +164,8 @@ class UserViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
-        status, user_id = UserRepository.add(**request.POST.dict())
+        user_data = request.POST.dict() or request.data
+        status, user_id = UserRepository.add(**user_data)
         content = {"status": status}
         if user_id:
             content["user_id"] = user_id
