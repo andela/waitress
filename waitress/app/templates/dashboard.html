@@ -1,1 +1,25 @@
-SCOOP UP TWO MAMAs
+{% extends 'base.html' %}
+{% block content %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/dashboard">Waitress</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Daily Report</a></li>
+            <li><a href="#">Weekly Report</a></li>
+            <li><a href="#">Monthly Report</a></li>
+            <li><a href="/logout">Sign Out</a></li>
+        </ul>
+    </div>
+</nav>
+<!-- <section class="dashboard_actions_container">
+    <h1>Waitress</h1>
+    <section class="dashboard_actions">
+        <a href="#" class="dashboard__report_link">Daily Report</a>
+        <a href="#" class="dashboard__report_link">Weekly Report</a>
+        <a href="#" class="dashboard__report_link">Monthly Report</a>
+    </section>
+</section> -->
+{% endblock content %}

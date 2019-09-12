@@ -5,7 +5,7 @@ from django.urls import path
 from rest_framework import routers
 
 from app.admin import admin_site
-from app.views import Dashboard, LoginHandler, schema_view
+from app.views import Dashboard, LoginHandler, schema_view, LogoutHandler
 from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet
 
 router = routers.SimpleRouter()
@@ -18,6 +18,7 @@ app_namespace = "waitress"
 urlpatterns = [
     path("", LoginHandler.as_view(), name="login"),
     path("dashboard", Dashboard.as_view(), name="dashboard"),
+    path("logout", LogoutHandler.as_view(), name="logout"),
     path("", include((router.urls, app_namespace), namespace="api")),
     path(
         "/", include((router.urls, app_namespace), namespace="api2")

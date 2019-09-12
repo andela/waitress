@@ -53,3 +53,9 @@ class Dashboard(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, "dashboard.html")
+
+
+class LogoutHandler(View):
+    def get(self, request):
+        logout(request)
+        return redirect("login")
