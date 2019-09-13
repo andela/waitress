@@ -3,6 +3,7 @@ from datetime import date, datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Case, Count, Value, When
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
@@ -74,10 +75,18 @@ class DailyReportHandler(LoginRequiredMixin, View):
     def get(self, request):
         if request.GET.get("date"):
             report_date = request.GET.get("date")
-            meal_service = MealService.objects.filter(date=report_date).all()
-            return JsonResponse(
-                {"status": "success", "data": serialize_meal_service(meal_service)}
+            queryset = MealService.objects.filter(date=report_date)
+            meal_service = queryset.all()
+            meal_count = queryset.aggregate(
+                breakfast_count=Count(Case(When(breakfast=True, then=Value(1)))),
+                lunch_count=Count(Case(When(lunch=True, then=Value(1)))),
             )
+            response = {
+                "status": "success",
+                "data": serialize_meal_service(meal_service),
+                **meal_count,
+            }
+            return JsonResponse(response)
         return render(request, "daily_report.html")
 
 
@@ -85,6 +94,6 @@ class WeeklyReportHandler(LoginRequiredMixin, View):
     login_url = "/"
 
     def get(self, request):
-        from_date = request.GET.get("from");
-        to_date = request.GET.get("to");
+        from_date = request.GET.get("from")
+        to_date = request.GET.get("to")
         return render(request, "weekly_report.html")

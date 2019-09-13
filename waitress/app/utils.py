@@ -260,7 +260,7 @@ def serialize_meal_service(queryset):
             "email": x.user.email,
             "hadBreakfast": x.breakfast,
             "hadLunch": x.lunch,
-            "userId": x.user.id
+            "userId": x.user.id,
         }
         for x in queryset
     ]

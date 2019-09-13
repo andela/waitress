@@ -1,3 +1,6 @@
+// default actions
+document.querySelector('.report_details').style.display = 'none';
+
 const dailyReportBtn = document.getElementById('report__date_btn');
 const weeklyReportBtn = document.getElementById('weekly_report__date_btn');
 let dataTable = null;
@@ -5,6 +8,7 @@ let dataTable = null;
 const fetchDailyReport = async () => {
     try {
         const reportDate = document.getElementById('daily_report_date_picker').value;
+        document.querySelector('.report_details').style.display = 'none';
         if (!reportDate) {
             $('p#error-message').text('Please select a date.');
             return;
@@ -33,6 +37,10 @@ const fetchDailyReport = async () => {
                 'pdfHtml5'
             ]
         });
+        document.querySelector('.report_details').style.display = 'block';
+
+        document.getElementById('report__breakfast_count').textContent = resultJson.breakfast_count;
+        document.getElementById('report__lunch_count').textContent = resultJson.lunch_count;
     } catch (error) {
         $('p#error-message').text(error.message);
         $('p#error-message').show();

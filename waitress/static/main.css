@@ -104,3 +104,7 @@ input::placeholder{
     margin-bottom: 2rem;
     margin-left: 1rem;
 }
+
+.report_details p {
+    font-weight: bold;
+}
