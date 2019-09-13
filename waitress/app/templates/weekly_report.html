@@ -13,11 +13,11 @@
                 <a class="nav-link" href="/dashboard">Home</a>
             </li>
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/reports/daily">Daily Report <span class=" sr-only">(current)</span></a>
             </li>
 
-            <li class=" nav-item">
+            <li class=" nav-item active">
                 <a class="nav-link" href="/reports/weekly">Weekly Report</a>
             </li>
 
@@ -33,8 +33,11 @@
 </nav>
 <section class="report__container">
     <section class="report_date__picker">
-        <input type="date" id="daily_report_date_picker" name="report__date" />
-        <button id="report__date_btn">Fetch Report</button>
+        <label for="from_report__date">From:</label>
+        <input type="date" id="weekly_report_from_date_picker" name="from_report__date" />
+        <label for="to_report__date">To:</label>
+        <input type="date" id="weekly_report_to_date_picker" name="to_report__date" />
+        <button id="weekly_report__date_btn">Fetch Weekly Report</button>
     </section>
     <p id="error-message"></p>
     <table id="report__table"></table>

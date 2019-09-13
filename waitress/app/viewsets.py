@@ -12,13 +12,9 @@ from rest_framework.response import Response
 
 from app.decorators import guard
 from app.models import MealService, MealSession, SlackUser
-from app.serializers import (
-    AddUserSerializer,
-    FilterSerializer,
-    ReportSerializer,
-    SecureUserSerializer,
-    UserSerializer,
-)
+from app.serializers import (AddUserSerializer, FilterSerializer,
+                             ReportSerializer, SecureUserSerializer,
+                             UserSerializer)
 from app.utils import Time, UserRepository
 
 
@@ -129,10 +125,18 @@ class UserViewSet(viewsets.ViewSet):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "firstname": openapi.Schema(type=openapi.TYPE_STRING, description="firstname"),
-                "lastname": openapi.Schema(type=openapi.TYPE_STRING, description="lastname"),
-                "utype": openapi.Schema(type=openapi.TYPE_STRING, description="user type", default='guest'),
-                "passphrase": openapi.Schema(type=openapi.TYPE_STRING, description="Passphrase"),
+                "firstname": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="firstname"
+                ),
+                "lastname": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="lastname"
+                ),
+                "utype": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="user type", default="guest"
+                ),
+                "passphrase": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Passphrase"
+                ),
             },
         )
     )

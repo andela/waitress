@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -10,9 +10,9 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 
-from waitress.app.forms import LoginForm
 from app.models import MealService
 from app.utils import serialize_meal_service
+from waitress.app.forms import LoginForm
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -72,11 +72,19 @@ class DailyReportHandler(LoginRequiredMixin, View):
     login_url = "/"
 
     def get(self, request):
-        if request.GET.get('date'):
-            report_date = request.GET.get('date')
+        if request.GET.get("date"):
+            report_date = request.GET.get("date")
             meal_service = MealService.objects.filter(date=report_date).all()
-            return JsonResponse({
-                'status': 'success',
-                'data': serialize_meal_service(meal_service)
-            })
+            return JsonResponse(
+                {"status": "success", "data": serialize_meal_service(meal_service)}
+            )
         return render(request, "daily_report.html")
+
+
+class WeeklyReportHandler(LoginRequiredMixin, View):
+    login_url = "/"
+
+    def get(self, request):
+        from_date = request.GET.get("from");
+        to_date = request.GET.get("to");
+        return render(request, "weekly_report.html")

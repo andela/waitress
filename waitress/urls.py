@@ -5,7 +5,8 @@ from django.urls import path, re_path
 from rest_framework import routers
 
 from app.admin import admin_site
-from app.views import Dashboard, LoginHandler, schema_view, LogoutHandler, DailyReportHandler
+from app.views import (DailyReportHandler, Dashboard, LoginHandler,
+                       LogoutHandler, WeeklyReportHandler, schema_view)
 from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet
 
 router = routers.SimpleRouter()
@@ -20,6 +21,7 @@ urlpatterns = [
     path("dashboard", Dashboard.as_view(), name="dashboard"),
     path("logout", LogoutHandler.as_view(), name="logout"),
     re_path("reports/daily", DailyReportHandler.as_view(), name="daily_report"),
+    re_path("reports/weekly", WeeklyReportHandler.as_view(), name="weekly_report"),
     path("", include((router.urls, app_namespace), namespace="api")),
     path(
         "/", include((router.urls, app_namespace), namespace="api2")

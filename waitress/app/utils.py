@@ -71,7 +71,9 @@ class UserRepository(object):
         utype = kwargs.get("utype")
         users = SlackUser.objects.filter(user_type=utype).order_by("id")
         if kwargs.get("utype").lower() != "guest":
-            user = SlackUser(firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname"))
+            user = SlackUser(
+                firstname=kwargs.get("firstname"), lastname=kwargs.get("lastname")
+            )
         else:
             # for some reason filter object is not subscriptable
             # last_guest = (
@@ -253,11 +255,12 @@ def regularize_guest_names(guest_list):
 def serialize_meal_service(queryset):
     return [
         {
-            'firstname': x.user.firstname,
-            'lastname': x.user.lastname,
-            'email': x.user.email,
-            'hadBreakfast': x.breakfast,
-            'hadLunch': x.lunch
+            "firstname": x.user.firstname,
+            "lastname": x.user.lastname,
+            "email": x.user.email,
+            "hadBreakfast": x.breakfast,
+            "hadLunch": x.lunch,
+            "userId": x.user.id
         }
         for x in queryset
     ]
