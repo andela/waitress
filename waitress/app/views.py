@@ -1,6 +1,9 @@
+from datetime import datetime, date
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from drf_yasg import openapi
@@ -8,6 +11,8 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 
 from waitress.app.forms import LoginForm
+from app.models import MealService
+from app.utils import serialize_meal_service
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -55,7 +60,23 @@ class Dashboard(LoginRequiredMixin, View):
         return render(request, "dashboard.html")
 
 
-class LogoutHandler(View):
+class LogoutHandler(LoginRequiredMixin, View):
+    login_url = "/"
+
     def get(self, request):
         logout(request)
         return redirect("login")
+
+
+class DailyReportHandler(LoginRequiredMixin, View):
+    login_url = "/"
+
+    def get(self, request):
+        if request.GET.get('date'):
+            report_date = request.GET.get('date')
+            meal_service = MealService.objects.filter(date=report_date).all()
+            return JsonResponse({
+                'status': 'success',
+                'data': serialize_meal_service(meal_service)
+            })
+        return render(request, "daily_report.html")

@@ -248,3 +248,16 @@ def regularize_guest_names(guest_list):
     for i in range(number_of_guests):
         guest_list_cp[i].firstname = "Guest {}".format(i + 1)
     return guest_list_cp
+
+
+def serialize_meal_service(queryset):
+    return [
+        {
+            'firstname': x.user.firstname,
+            'lastname': x.user.lastname,
+            'email': x.user.email,
+            'hadBreakfast': x.breakfast,
+            'hadLunch': x.lunch
+        }
+        for x in queryset
+    ]

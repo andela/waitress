@@ -9,12 +9,12 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/dashboard"">Home <span class=" sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="/dashboard"">Home</a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/reports/daily"">Daily Report</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="/reports/daily">Daily Report <span class=" sr-only">(current)</span></a>
             </li>
 
             <li class=" nav-item">
@@ -31,7 +31,12 @@
         </ul>
     </div>
 </nav>
-<section class="dashboard__container">
-    Nothing to see here, {{user.first_name}}. <span>😌</span>
+<section class="report__container">
+    <section class="report_date__picker">
+        <input type="date" id="daily_report_date_picker" name="report__date" />
+        <button id="report__date_btn"">Fetch Report</button>
+    </section>
+    <p id="error-message"></p>
+    <table id="report__table"></table>
 </section>
 {% endblock content %}

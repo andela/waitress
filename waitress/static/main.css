@@ -91,3 +91,16 @@ input::placeholder{
 .dashboard__container span {
     opacity: 0.5;
 }
+
+#error-message {
+    color: red;
+}
+
+.report__container {
+    padding: 1.5rem 0;
+}
+
+.report_date__picker {
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+}
