@@ -81,9 +81,10 @@ class UserRepository(object):
             #     if len(users)
             #     else None
             # )
-            last_guest = [x for x in list(users) if x.firstname.startswith("Guest")][-1]
+            guests = [x for x in list(users) if x.firstname.startswith("Guest")]
+            last_guest = guests[-1] if len(guests) else None
 
-            if not last_guest:
+            if not guests:
                 username = kwargs.get("name", "Guest 1")
             else:
                 last_num = int(
