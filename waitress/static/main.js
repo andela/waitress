@@ -19,7 +19,6 @@ const fetchDailyReport = async () => {
             return;
         }
         $('p#error-message').hide();
-        console.log(dataTable);
         if (dataTable) dataTable.destroy();
         const url = `/reports/daily?date=${reportDate}&reportType=${reportType}`;
         const result = await fetch(url);
@@ -34,20 +33,14 @@ const fetchDailyReport = async () => {
             { data: 'userId', title: 'User ID' }
         ];
 
-        // if (reportType === 'breakfast') columns.splice(4, 1);
-        // if (reportType === 'lunch') columns.splice(3, 1);
-
         dataTable = $('table#report__table').DataTable({
             data: resultJson.data,
             columns,
-            dom: 'Blfrtip',
-            buttons: ['csv']
-            // buttons: [
-            //     'copyHtml5',
-            //     'excelHtml5',
-            //     'csvHtml5',
-            //     'pdfHtml5'
-            // ]
+            dom: 'fBrltip',
+            buttons: {
+                buttons: ['csv', 'pdf']
+            },
+            processing: true
         });
 
         if (reportType !== 'both') {
@@ -84,7 +77,6 @@ const fetchWeeklyReport = async () => {
 
         if (from && to) {
             const url = `/reports/weekly?from=${from}&to=${to}`;
-            console.log(url);
             return;
         }
         $('p#error-message').text('The from date and to date must be supplied');
