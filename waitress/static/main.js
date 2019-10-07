@@ -40,8 +40,8 @@ const fetchDailyReport = async () => {
         dataTable = $('table#report__table').DataTable({
             data: resultJson.data,
             columns,
-            dom: 'lBfrtip',
-            buttons: ['copy', 'excel', 'pdf']
+            dom: 'Blfrtip',
+            buttons: ['csv']
             // buttons: [
             //     'copyHtml5',
             //     'excelHtml5',
