@@ -8,35 +8,55 @@ let dataTable = null;
 const fetchDailyReport = async () => {
     try {
         const reportDate = document.getElementById('daily_report_date_picker').value;
-        document.querySelector('.report_details').style.display = 'none';
+        const reportType = document.getElementById('daily_report_type').value;
+
+        if (document.querySelector('.report_details')) {
+            document.querySelector('.report_details').style.display = 'none';
+        }
+
         if (!reportDate) {
             $('p#error-message').text('Please select a date.');
             return;
         }
         $('p#error-message').hide();
+        console.log(dataTable);
         if (dataTable) dataTable.destroy();
-        const url = `/reports/daily?date=${reportDate}`;
+        const url = `/reports/daily?date=${reportDate}&reportType=${reportType}`;
         const result = await fetch(url);
-        const resultJson = await result.json()
+        const resultJson = await result.json();
+
+        const columns = [
+            { data: 'firstname', title: 'First Name' },
+            { data: 'lastname', title: 'Last Name' },
+            { data: 'email', title: 'Email' },
+            { data: 'hadBreakfast', title: 'Breakfast' },
+            { data: 'hadLunch', title: 'Lunch' },
+            { data: 'userId', title: 'User ID' }
+        ];
+
+        // if (reportType === 'breakfast') columns.splice(4, 1);
+        // if (reportType === 'lunch') columns.splice(3, 1);
+
         dataTable = $('table#report__table').DataTable({
             data: resultJson.data,
-            columns: [
-                { data: 'firstname', title: 'First Name' },
-                { data: 'lastname', title: 'Last Name' },
-                { data: 'email', title: 'Email' },
-                { data: 'hadBreakfast', title: 'Breakfast' },
-                { data: 'hadLunch', title: 'Lunch' },
-                { data: 'userId', title: 'User ID' }
-            ],
+            columns,
             dom: 'lBfrtip',
-            // buttons: ['copy', 'excel', 'pdf']
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
-            ]
+            buttons: ['copy', 'excel', 'pdf']
+            // buttons: [
+            //     'copyHtml5',
+            //     'excelHtml5',
+            //     'csvHtml5',
+            //     'pdfHtml5'
+            // ]
         });
+
+        if (reportType !== 'both') {
+            const columnIndexToHide = reportType === 'breakfast' ? 4 : 3;
+            const column = dataTable.column(columnIndexToHide);
+            // Toggle the visibility
+            column.visible(false);
+        }
+
         document.querySelector('.report_details').style.display = 'block';
 
         document.getElementById('report__breakfast_count').textContent = resultJson.breakfast_count;

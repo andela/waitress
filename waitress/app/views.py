@@ -76,7 +76,15 @@ class DailyReportHandler(LoginRequiredMixin, View):
     def get(self, request):
         if request.GET.get("date"):
             report_date = request.GET.get("date")
-            queryset = MealService.objects.filter(date=report_date)
+            report_type = request.GET.get("reportType")
+
+            if (report_type == "lunch"):
+                queryset = MealService.objects.filter(date=report_date, lunch=True)
+            elif (report_type == "breakfast"):
+                queryset = MealService.objects.filter(date=report_date, breakfast=True)
+            else:
+                queryset = MealService.objects.filter(date=report_date)
+
             meal_service = queryset.all()
             meal_count = queryset.aggregate(
                 breakfast_count=Count(Case(When(breakfast=True, then=Value(1)))),

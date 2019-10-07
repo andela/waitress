@@ -39,6 +39,13 @@
 <section class="report__container">
     <section class="report_date__picker">
         <input type="date" id="daily_report_date_picker" name="report__date" />
+        <div class="form-group no-bottom">
+            <select class="form-control" id="daily_report_type">
+                <option value="both">Both (Breakfast & Lunch)</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+            </select>
+        </div>
         <button id="report__date_btn">Fetch Report</button>
     </section>
     <p id="error-message"></p>

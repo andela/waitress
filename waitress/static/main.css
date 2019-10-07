@@ -103,6 +103,16 @@ input::placeholder{
 .report_date__picker {
     margin-bottom: 2rem;
     margin-left: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.report_date__picker * {
+    margin-right: 1rem;
+}
+
+.no-bottom {
+    margin-bottom: 0;
 }
 
 .report_details p {
