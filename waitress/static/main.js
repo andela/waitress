@@ -55,12 +55,12 @@ const fetchDailyReport = async () => {
             const column = dataTable.column(columnIndexToHide);
             // Toggle the visibility
             column.visible(false);
+        } else {
+            document.querySelector('.report_details').style.display = 'block';
+
+            document.getElementById('report__breakfast_count').textContent = resultJson.breakfast_count;
+            document.getElementById('report__lunch_count').textContent = resultJson.lunch_count;
         }
-
-        document.querySelector('.report_details').style.display = 'block';
-
-        document.getElementById('report__breakfast_count').textContent = resultJson.breakfast_count;
-        document.getElementById('report__lunch_count').textContent = resultJson.lunch_count;
     } catch (error) {
         $('p#error-message').text(error.message);
         $('p#error-message').show();

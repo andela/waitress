@@ -78,9 +78,9 @@ class DailyReportHandler(LoginRequiredMixin, View):
             report_date = request.GET.get("date")
             report_type = request.GET.get("reportType")
 
-            if (report_type == "lunch"):
+            if report_type == "lunch":
                 queryset = MealService.objects.filter(date=report_date, lunch=True)
-            elif (report_type == "breakfast"):
+            elif report_type == "breakfast":
                 queryset = MealService.objects.filter(date=report_date, breakfast=True)
             else:
                 queryset = MealService.objects.filter(date=report_date)
