@@ -6,6 +6,7 @@ from rest_framework import routers
 
 from app.admin import admin_site
 from app.views import (
+    ChangePasswordHandler,
     DailyReportHandler,
     Dashboard,
     LoginHandler,
@@ -28,6 +29,7 @@ urlpatterns = [
     path("logout", LogoutHandler.as_view(), name="logout"),
     re_path("reports/daily", DailyReportHandler.as_view(), name="daily_report"),
     re_path("reports/weekly", WeeklyReportHandler.as_view(), name="weekly_report"),
+    path("change_password", ChangePasswordHandler.as_view(), name="change_password"),
     path("", include((router.urls, app_namespace), namespace="api")),
     path(
         "/", include((router.urls, app_namespace), namespace="api2")

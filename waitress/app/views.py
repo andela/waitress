@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -97,3 +98,24 @@ class WeeklyReportHandler(LoginRequiredMixin, View):
         from_date = request.GET.get("from")
         to_date = request.GET.get("to")
         return render(request, "weekly_report.html")
+
+
+class ChangePasswordHandler(LoginRequiredMixin, View):
+    login_url = "/"
+
+    def get(self, request):
+        return render(request, "change_password.html")
+
+    def patch(self, request):
+        # import pdb; pdb.set_trace()
+        payload = json.loads(request.body)
+        passwordText = payload.get("passwordText")
+        verifyPasswordText = payload.get("verifyPasswordText")
+
+        if passwordText != verifyPasswordText:
+            return JsonResponse({}, status=400)
+
+        request.user.set_password(passwordText)
+        request.user.save()
+
+        return JsonResponse({"status": "success"}, status=200)

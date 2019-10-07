@@ -108,3 +108,7 @@ input::placeholder{
 .report_details p {
     font-weight: bold;
 }
+
+.change_passwd_container {
+    margin-top: 3rem;
+}
