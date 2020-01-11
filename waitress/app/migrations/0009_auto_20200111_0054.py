@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0008_pantryservice'),
-    ]
+    dependencies = [("app", "0008_pantryservice")]
 
-    operations = [
-        migrations.RenameModel(
-            old_name='PantryService',
-            new_name='Pantry',
-        ),
-    ]
+    operations = [migrations.RenameModel(old_name="PantryService", new_name="Pantry")]

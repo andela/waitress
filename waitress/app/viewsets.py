@@ -296,7 +296,9 @@ class UserViewSet(viewsets.ViewSet):
         content = {"firstname": user.firstname, "lastname": user.lastname}
 
         if not user.is_active:
-            content["status"] = f"{user.firstname} has been deactivated. Contact the Ops team."
+            content[
+                "status"
+            ] = f"{user.firstname} has been deactivated. Contact the Ops team."
             return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
 
         if user_tapped:
@@ -308,6 +310,7 @@ class UserViewSet(viewsets.ViewSet):
         user_pantry_session.save()
 
         return Response(content, status=status_code.HTTP_200_OK)
+
 
 class MealSessionViewSet(viewsets.ViewSet):
     """

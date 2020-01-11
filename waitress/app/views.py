@@ -11,6 +11,8 @@ from django.views import View
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status as status_code
 
 from app.models import MealService
 from app.utils import serialize_meal_service
@@ -126,3 +128,9 @@ class ChangePasswordHandler(LoginRequiredMixin, View):
         request.user.save()
 
         return JsonResponse({"status": "success"}, status=200)
+
+
+class PantryAuthHander(View):
+    def post(self, request):
+        content = {"status": "success"}
+        return Response(content, status=status_code.HTTP_200_OK)
