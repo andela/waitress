@@ -115,7 +115,6 @@ class ChangePasswordHandler(LoginRequiredMixin, View):
         return render(request, "change_password.html")
 
     def patch(self, request):
-        # import pdb; pdb.set_trace()
         payload = json.loads(request.body)
         passwordText = payload.get("passwordText")
         verifyPasswordText = payload.get("verifyPasswordText")

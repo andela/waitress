@@ -11,7 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from app.decorators import guard
-from app.models import MealService, MealSession, SlackUser
+from app.models import MealService, MealSession, SlackUser, Pantry
 from app.serializers import (
     AddUserSerializer,
     FilterSerializer,
@@ -273,6 +273,41 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status)
 
+    @action(methods=["post"], url_path="pantrytap", detail=False)
+    def pantrytap(self, request):
+        """
+        A method that taps a user via an NFC card for the pantry service
+        ---
+        parameters:
+            - name: slackUserId
+              description: slack ID
+              required: true
+              type: string
+              paramType: form
+        """
+        slack_id = request.POST.get("slackUserId")
+
+        if not slack_id:
+            content = {"status": "You're  unauthorized to make this request"}
+            return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
+
+        user = get_object_or_404(self.queryset, slack_id=slack_id)
+        user_tapped = Pantry.is_tapped(user.id)
+        content = {"firstname": user.firstname, "lastname": user.lastname}
+
+        if not user.is_active:
+            content["status"] = f"{user.firstname} has been deactivated. Contact the Ops team."
+            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
+
+        if user_tapped:
+            content["status"] = f"{user.firstname} has tapped already for the day."
+            return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
+
+        content["status"] = "Tap was successful"
+        user_pantry_session = Pantry(user=user)
+        user_pantry_session.save()
+
+        return Response(content, status=status_code.HTTP_200_OK)
 
 class MealSessionViewSet(viewsets.ViewSet):
     """

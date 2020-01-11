@@ -277,7 +277,7 @@ class MealSession(models.Model):
         return cls.objects.filter(date=date_today, status=True)
 
 
-class PantryService(models.Model):
+class Pantry(models.Model):
     """
     Model representing the pantry service
     """
@@ -288,4 +288,5 @@ class PantryService(models.Model):
 
     @classmethod
     def is_tapped(cls, user_id):
-        cls.filter(user_id=user_id, date=date.today())
+        service = cls.objects.filter(user_id=user_id, date=date.today()).first()
+        return service
