@@ -273,7 +273,15 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status)
 
-    @action(methods=["post"], url_path="pantrytap", detail=False)
+
+class PantryViewSet(viewsets.ViewSet):
+    """
+    A simple ViewSet for accessing Pantry details
+    """
+
+    queryset = Pantry.objects.all()
+
+    @action(methods=["post"], url_path="tap", detail=False)
     def pantrytap(self, request):
         """
         A method that taps a user via an NFC card for the pantry service
@@ -291,7 +299,7 @@ class UserViewSet(viewsets.ViewSet):
             content = {"status": "You're  unauthorized to make this request"}
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
-        user = get_object_or_404(self.queryset, slack_id=slack_id)
+        user = SlackUser.objects.filter(slack_id=slack_id).first()
         user_tapped = Pantry.is_tapped(user.id)
         content = {"firstname": user.firstname, "lastname": user.lastname}
 
@@ -311,6 +319,11 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK)
 
+    @action(methods=["post"], url_path="auth", detail=False)
+    def auth(self, request):
+        print(request.POST)
+        content = {"status": "success"}
+        return Response(content, status=status_code.HTTP_200_OK)
 
 class MealSessionViewSet(viewsets.ViewSet):
     """

@@ -128,9 +128,3 @@ class ChangePasswordHandler(LoginRequiredMixin, View):
         request.user.save()
 
         return JsonResponse({"status": "success"}, status=200)
-
-
-class PantryAuthHander(View):
-    def post(self, request):
-        content = {"status": "success"}
-        return Response(content, status=status_code.HTTP_200_OK)

@@ -12,14 +12,15 @@ from app.views import (
     LoginHandler,
     LogoutHandler,
     WeeklyReportHandler,
-    schema_view,
+    schema_view
 )
-from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet
+from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet, PantryViewSet
 
 router = routers.SimpleRouter()
 router.register(r"meal-sessions", MealSessionViewSet)
 router.register(r"users", UserViewSet)
 router.register(r"reports", ReportViewSet)
+router.register(r"pantry", PantryViewSet)
 
 app_namespace = "waitress"
 
