@@ -34,6 +34,21 @@ class FilterSerializer(serializers.Serializer):
 #     passphrase = serializers.CharField()
 
 
+class PantryReportSerializer(serializers.Serializer):
+    @classmethod
+    def serialize(cls, queryset):
+        result = {}
+
+        for item in queryset:
+            itemDate = str(item.date)
+            if result.get(itemDate):
+                result[itemDate].append(item)
+            else:
+                result[itemDate] = [item]
+
+        return [{"date": k, "count": len(v)} for k, v in result.items()]
+
+
 class AddUserSerializer(serializers.Serializer):
     firstname = serializers.CharField()
     lastname = serializers.CharField()

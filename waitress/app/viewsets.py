@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 import pytz
 from django.shortcuts import get_object_or_404
@@ -11,13 +12,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from app.decorators import guard
-from app.models import MealService, MealSession, SlackUser, Pantry
+from app.models import MealService, MealSession, SlackUser, Pantry, Passphrase
 from app.serializers import (
     AddUserSerializer,
     FilterSerializer,
     ReportSerializer,
     SecureUserSerializer,
     UserSerializer,
+    PantryReportSerializer
 )
 from app.utils import Time, UserRepository
 
@@ -313,7 +315,7 @@ class PantryViewSet(viewsets.ViewSet):
             content["status"] = f"{user.firstname} has tapped already for the day."
             return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
 
-        content["status"] = "Tap was successful"
+        content["status"] = f"{user.firstname} has tapped for today."
         user_pantry_session = Pantry(user=user)
         user_pantry_session.save()
 
@@ -321,8 +323,32 @@ class PantryViewSet(viewsets.ViewSet):
 
     @action(methods=["post"], url_path="auth", detail=False)
     def auth(self, request):
-        print(request.POST)
-        content = {"status": "success"}
+        passphrase = request.POST.get('passphrase', '')
+
+        if not passphrase:
+            content = {"status": "failed", "message": "Passphrase not supplied"}
+            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
+
+        exists = Passphrase.exists(passphrase)
+
+        if not exists.status:
+            content = {"status": "failed", "message": "Invalid Passphrase. Reach out to Ops!"}
+            return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
+
+        content = {"status": "success", "message": "Successfully authenticated."}
+        return Response(content, status=status_code.HTTP_200_OK)
+
+    @action(methods=["get"], url_path="report", detail=False)
+    def report(self, request):
+        reportDate = request.GET.get('date', date.today())
+
+        queryset = self.queryset.filter(date=reportDate).order_by('date')
+
+        content = {"status": "success", "data": {
+            "date": reportDate,
+            "count": queryset.count()
+        }}
+
         return Response(content, status=status_code.HTTP_200_OK)
 
 class MealSessionViewSet(viewsets.ViewSet):
