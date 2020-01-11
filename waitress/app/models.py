@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
@@ -274,3 +275,17 @@ class MealSession(models.Model):
         """
         date_today = timezone.now().date()
         return cls.objects.filter(date=date_today, status=True)
+
+
+class PantryService(models.Model):
+    """
+    Model representing the pantry service
+    """
+
+    id = models.AutoField(unique=True, primary_key=True)
+    user = models.ForeignKey(SlackUser, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+
+    @classmethod
+    def is_tapped(cls, user_id):
+        cls.filter(user_id=user_id, date=date.today())
