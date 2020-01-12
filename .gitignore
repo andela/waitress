@@ -85,3 +85,4 @@ db.sqlite3
 staticfiles
 latest.dump
 error.log
+ngrok
