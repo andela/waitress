@@ -12,7 +12,7 @@ from app.views import (
     LoginHandler,
     LogoutHandler,
     WeeklyReportHandler,
-    schema_view
+    schema_view,
 )
 from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet, PantryViewSet
 

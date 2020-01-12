@@ -19,7 +19,7 @@ from app.serializers import (
     ReportSerializer,
     SecureUserSerializer,
     UserSerializer,
-    PantryReportSerializer
+    PantryReportSerializer,
 )
 from app.utils import Time, UserRepository
 
@@ -323,7 +323,7 @@ class PantryViewSet(viewsets.ViewSet):
 
     @action(methods=["post"], url_path="auth", detail=False)
     def auth(self, request):
-        passphrase = request.POST.get('passphrase', '')
+        passphrase = request.POST.get("passphrase", "")
 
         if not passphrase:
             content = {"status": "failed", "message": "Passphrase not supplied"}
@@ -332,7 +332,10 @@ class PantryViewSet(viewsets.ViewSet):
         exists = Passphrase.exists(passphrase)
 
         if not exists.status:
-            content = {"status": "failed", "message": "Invalid Passphrase. Reach out to Ops!"}
+            content = {
+                "status": "failed",
+                "message": "Invalid Passphrase. Reach out to Ops!",
+            }
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
         content = {"status": "success", "message": "Successfully authenticated."}
@@ -340,16 +343,17 @@ class PantryViewSet(viewsets.ViewSet):
 
     @action(methods=["get"], url_path="report", detail=False)
     def report(self, request):
-        reportDate = request.GET.get('date', date.today())
+        reportDate = request.GET.get("date", date.today())
 
-        queryset = self.queryset.filter(date=reportDate).order_by('date')
+        queryset = self.queryset.filter(date=reportDate).order_by("date")
 
-        content = {"status": "success", "data": {
-            "date": reportDate,
-            "count": queryset.count()
-        }}
+        content = {
+            "status": "success",
+            "data": {"date": reportDate, "count": queryset.count()},
+        }
 
         return Response(content, status=status_code.HTTP_200_OK)
+
 
 class MealSessionViewSet(viewsets.ViewSet):
     """
