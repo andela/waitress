@@ -294,6 +294,7 @@ class PantryViewSet(viewsets.ViewSet):
               paramType: form
         """
         slack_id = request.POST.get("slackUserId")
+        print(slack_id)
 
         if not slack_id:
             content = {"message": "You're  unauthorized to make this request"}
