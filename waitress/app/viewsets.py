@@ -293,14 +293,12 @@ class PantryViewSet(viewsets.ViewSet):
               type: string
               paramType: form
         """
-        payload = request.POST.get("slackUserId")
+        slack_id = request.POST.get("slackUserId")
 
-        if not payload:
+        if not slack_id:
             content = {"message": "You're  unauthorized to make this request"}
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
-        slack_id = payload[0]
-        print(slack_id)
         user = SlackUser.objects.filter(slack_id=slack_id).first()
 
         if not user:
