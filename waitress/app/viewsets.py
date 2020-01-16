@@ -294,7 +294,6 @@ class PantryViewSet(viewsets.ViewSet):
               paramType: form
         """
         slack_id = request.POST.get("slackUserId")
-        print(slack_id)
 
         if not slack_id:
             content = {"message": "You're  unauthorized to make this request"}
@@ -315,7 +314,7 @@ class PantryViewSet(viewsets.ViewSet):
             return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
 
         if user_tapped:
-            content["message"] = f"ERROR: {user.firstname} has tapped already."
+            content["message"] = f"{user.firstname} has tapped already."
             return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
 
         content["message"] = f"{user.firstname} has successfully tapped."
