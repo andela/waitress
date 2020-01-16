@@ -14,12 +14,10 @@ from rest_framework.response import Response
 from app.decorators import guard
 from app.models import MealService, MealSession, SlackUser, Pantry, Passphrase
 from app.serializers import (
-    AddUserSerializer,
     FilterSerializer,
     ReportSerializer,
     SecureUserSerializer,
     UserSerializer,
-    PantryReportSerializer,
 )
 from app.utils import Time, UserRepository
 
@@ -296,26 +294,31 @@ class PantryViewSet(viewsets.ViewSet):
               paramType: form
         """
         slack_id = request.POST.get("slackUserId")
+        print(request.POST, 'request posssssttt!')
 
         if not slack_id:
-            content = {"status": "You're  unauthorized to make this request"}
+            content = {"message": "You're  unauthorized to make this request"}
             return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
 
         user = SlackUser.objects.filter(slack_id=slack_id).first()
+
+        if not user:
+            content = {"message": "The user doesnt exist on waitress"}
+            return Response(content, status=status_code.HTTP_404_NOT_FOUND)
         user_tapped = Pantry.is_tapped(user.id)
         content = {"firstname": user.firstname, "lastname": user.lastname}
 
         if not user.is_active:
             content[
-                "status"
+                "message"
             ] = f"{user.firstname} has been deactivated. Contact the Ops team."
             return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
 
         if user_tapped:
-            content["status"] = f"{user.firstname} has tapped already for the day."
+            content["message"] = f"ERROR: {user.firstname} has tapped already."
             return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
 
-        content["status"] = f"{user.firstname} has tapped for today."
+        content["message"] = f"{user.firstname} has successfully tapped."
         user_pantry_session = Pantry(user=user)
         user_pantry_session.save()
 
