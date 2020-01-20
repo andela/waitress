@@ -7,6 +7,7 @@ verify_ssl = true
 ipdb = "*"
 black = "==19.3b0"
 isort = "*"
+flake8 = "*"
 
 [packages]
 coverage = "==4.5.3"
@@ -26,9 +27,10 @@ slacker = "==0.13.0"
 uritemplate = "==3.0.0"
 urllib3 = "==1.25.3"
 whitenoise = "==4.1.2"
-Django = "==2.2.8"
+Django = "==2.2.9"
 drf-yasg = "*"
 packaging = "*"
+slackclient = "*"
 
 [requires]
 python_version = "3.7"
