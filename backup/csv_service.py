@@ -33,6 +33,5 @@ def create_csv(payload):
             "LUNCH",
         ]
         writer.writerow(header)
-        import pdb; pdb.set_trace()
         writer.writerows(payload)
     return CSV_PATH, FILENAME
