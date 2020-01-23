@@ -6,11 +6,12 @@ import pytz
 from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
-from slacker import Slacker
+from slack import WebClient
 
 from app.models import SlackUser
 
-slack = Slacker(settings.SLACK_API_TOKEN)
+
+client = WebClient(token=settings.SLACK_API_TOKEN)
 
 
 class UserRepository(object):
@@ -115,6 +116,25 @@ class UserRepository(object):
             return f"{user_type} user couldn't be created. Error: {error_type}"
 
     @classmethod
+    def get_all_slack_users(cls):
+        result = []
+        status = None
+        cursor = None
+        initial_round = True
+
+        while (initial_round or cursor):
+            initial_round = False
+            kwargs = {}
+            if cursor:
+                kwargs['cursor'] = cursor
+            users = client.users_list(**kwargs)
+            result.extend(users.data['members'])
+            cursor = users.data.get('response_metadata', {}).get('next_cursor')
+            status = users.data['ok']
+
+        return result, status
+
+    @classmethod
     def update(cls, trim=False):
         """
         A method that update the user records.
@@ -122,32 +142,28 @@ class UserRepository(object):
         :param:
         trim:= determines if old users should be removed from the database.
         """
-        group_info = slack.groups.info(settings.SLACK_GROUP)
-        user_info = slack.users.list()
-        if group_info.successful:
-            members = group_info.body["group"]["members"]
-            cls.user_queryset = SlackUser.objects.all()
-            difference = cls.difference(members, cls.user_queryset)
+        workspace_members, status = cls.get_all_slack_users()
+        group_info = client.groups_info(channel=settings.SLACK_GROUP)
 
-            if len(difference):
-                # get user info
-                if user_info.successful:
-                    return cls.filter_add_user(
-                        user_info.body["members"], difference, trim
-                    )
+        if group_info.data['ok']:
+            members = group_info.data['group']['members']
+            cls.user_queryset = SlackUser.objects.all()
+            new_users = cls.difference(members, cls.user_queryset)
+
+            if len(new_users):
+                if status:
+                    return cls.filter_add_user(workspace_members, new_users, trim)
             else:
                 return "Users list wasn't changed."
 
     @classmethod
-    def difference(cls, repo_users, db_users):
+    def difference(cls, channel_members, queryset):
         """
         A method that gets the difference between users in the system and
         users in slack group.
         """
-        users = [user.slack_id for user in db_users]
-
-        # return all users from slack that don't exist in the db
-        return [user for user in repo_users if user not in users]
+        db_users = [record.slack_id for record in queryset]
+        return list(set(channel_members) - set(db_users))
 
     @classmethod
     def is_user_invalid(cls, user):
@@ -159,53 +175,57 @@ class UserRepository(object):
         return is_deleted or is_bot or (not is_email_valid)
 
     @classmethod
-    def _construct_user_details(cls, item):
-        firstname = item.get("profile").get("first_name", "")
-        lastname = item.get("profile").get("last_name", "")
+    def _construct_user_details(cls, user_info):
+        firstname = user_info.get("profile").get("first_name", "")
+        lastname = user_info.get("profile").get("last_name", "")
         return {
-            "slack_id": item["id"],
-            "email": item["profile"]["email"],
-            "photo": item["profile"].get(
-                "image_original", item["profile"].get("image_192")
+            "slack_id": user_info["id"],
+            "email": user_info["profile"]["email"],
+            "photo": user_info["profile"].get(
+                "image_original", user_info["profile"].get("image_192")
             ),
             "firstname": firstname.title(),
             "lastname": lastname.title(),
         }
 
     @classmethod
-    def normalize(cls, info):
+    def normalize(cls, users):
         """
         A function that normalizes retrieved information from Slack.
         """
-        invalid_users = [item["id"] for item in info if cls.is_user_invalid(item)]
-        valid_users = {
-            item["id"]: cls._construct_user_details(item)
-            for item in info
-            if not cls.is_user_invalid(item)
-        }
+
+        valid_users = {}
+        invalid_users = []
+        for user in users:
+            user_id = user.get('id')
+            is_user_invalid = cls.is_user_invalid(user)
+            if is_user_invalid:
+                invalid_users.append(user_id)
+            else:
+                valid_users[user_id] = cls._construct_user_details(user)
 
         return valid_users, invalid_users
 
     @classmethod
-    def filter_add_user(cls, info, difference, trim):
+    def filter_add_user(cls, workspace_members, new_users, trim):
         """
         A method that retrieves users' info using the difference.
-        """
+        # """
 
-        valid_users, invalid_users = cls.normalize(info)
+        valid_users, invalid_users = cls.normalize(workspace_members)
 
-        valid_slack_users = [user for user in difference if user not in invalid_users]
+        users_to_be_added = [user for user in new_users if user not in invalid_users]
 
-        if not valid_slack_users:
+        if not users_to_be_added:
             return "No new user found on slack."
 
         if trim:
             return cls.trim_away(invalid_users)
 
         try:
-            for user_slack_id in valid_slack_users:
-                current_user = valid_users[user_slack_id]
-                with transaction.atomic():
+            with transaction.atomic():
+                for user_slack_id in users_to_be_added:
+                    current_user = valid_users[user_slack_id]
                     SlackUser.create(current_user)
             return "Users updated successfully."
         except Exception as e:
