@@ -2,14 +2,15 @@ import logging
 
 from django.conf import settings
 from django.db import transaction
-from slacker import Slacker
+from slack import WebClient
 
 from waitress.app.models import SlackUser
 
-slack = Slacker(settings.SLACK_API_TOKEN)
 
-group_info = slack.groups.info(settings.SLACK_GROUP)
-user_info = slack.users.list()
+client = WebClient(token=settings.SLACK_API_TOKEN)
+
+group_info = client.groups_info(settings.SLACK_GROUP)
+user_info = client.users_list()
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -25,7 +26,6 @@ def _manual_transaction(records):
 
 
 def _fetch_slack_users():
-    user_info = slack.users.list()
     members = user_info.body.get("members", [])
     return members
 
