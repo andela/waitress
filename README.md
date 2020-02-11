@@ -13,26 +13,13 @@ For production it makes use of Python 3.7.6
 
 It can be found [here](https://waitressandela.herokuapp.com/docs)
 
-### Contribution
-
-Calling all developers ![call](markdown_imgs/call.png)
-
-All forms of contribution is welcome. Thank you for helping to make this project great!!!
-
-Please view this [documentation](https://docs.google.com/a/andela.co/document/d/1xiDfPL-JTebwav6jdW30SzwwnDNZmajJVZhpU6h4kxg/edit?usp=sharing) over here, prepared just for you
-
-## Setup
-
-1. Install Xcode command line tool `xcode-select --install`
-2. Install [homebrew](http://brew.sh/)
-
 ## Installation
 
 Before you start please ensure you have Python and PostgreSQL installed
 
 ### Python Setup
 
-1. Install Python from [here](http://www.python.org/download/) or run the command `brew install python`
+1. Install Python3 from [here](http://www.python.org/download/) or run the command `brew install python3`
 2. Install Pipenv with the command
 
     ```bash
@@ -49,7 +36,7 @@ Before you start please ensure you have Python and PostgreSQL installed
 
 1. Install [postgresql](http://postgresapp.com/) (Mac OS X)
 
-Copy the following into your `~/.bash_profile` or `~/.zshrc` if you use zsh
+Copy the following into your `~/.bash_profile` or `~/.zshrc` if you use zsh and you think your postgres isn't properly configured
 
 ```bash
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
