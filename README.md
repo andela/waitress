@@ -65,14 +65,14 @@ pipenv install
 * Migrate the models to your database
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+pipenv run python manage.py makemigrations
+pipenv run python manage.py migrate
 ```
 
 * Startup the server
 
 ```bash
-python manage.py runserver
+pipenv run python manage.py runserver
 ```
 
 * Navigate to the api [doc](http://localhost:8000/docs/) built with swagger
