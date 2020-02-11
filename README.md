@@ -5,7 +5,9 @@ _The meal tracking app of Andela Lagos_
 
 ## Waitress API
 
-This repository houses the API endpoints for the waitress project
+This repository houses the API endpoints for the waitress project.
+This project makes use of Python3.5 and above.
+For production it makes use of Python 3.7.6
 
 ### Available Endpoints
 
