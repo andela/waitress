@@ -19,14 +19,14 @@ def handle_ops(fetch_query, delete_query):
     print(fetch_query)
 
     if records:
-        print('There are records.')
+        print("There are records.")
         csv_path, filename = create_csv(records)
         execute_query(delete_query)
         upload_to_drive(csv_path, filename)
         os.remove(csv_path)
     else:
-        print('There are no records for this query.')
-        send_message('There are no records for this query.')
+        print("There are no records for this query.")
+        send_message("There are no records for this query.")
 
 
 def run():

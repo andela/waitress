@@ -122,15 +122,15 @@ class UserRepository(object):
         cursor = None
         initial_round = True
 
-        while (initial_round or cursor):
+        while initial_round or cursor:
             initial_round = False
             kwargs = {}
             if cursor:
-                kwargs['cursor'] = cursor
+                kwargs["cursor"] = cursor
             users = client.users_list(**kwargs)
-            result.extend(users.data['members'])
-            cursor = users.data.get('response_metadata', {}).get('next_cursor')
-            status = users.data['ok']
+            result.extend(users.data["members"])
+            cursor = users.data.get("response_metadata", {}).get("next_cursor")
+            status = users.data["ok"]
 
         return result, status
 
@@ -145,8 +145,8 @@ class UserRepository(object):
         workspace_members, status = cls.get_all_slack_users()
         group_info = client.groups_info(channel=settings.SLACK_GROUP)
 
-        if group_info.data['ok']:
-            members = group_info.data['group']['members']
+        if group_info.data["ok"]:
+            members = group_info.data["group"]["members"]
             cls.user_queryset = SlackUser.objects.all()
             new_users = cls.difference(members, cls.user_queryset)
 
@@ -197,7 +197,7 @@ class UserRepository(object):
         valid_users = {}
         invalid_users = []
         for user in users:
-            user_id = user.get('id')
+            user_id = user.get("id")
             is_user_invalid = cls.is_user_invalid(user)
             if is_user_invalid:
                 invalid_users.append(user_id)

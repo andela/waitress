@@ -12,7 +12,7 @@ CONTENT_TYPE = "application/json; charset=UTF-8"
 
 
 def upload_to_drive(filepath, filename):
-    token = os.getenv('GDRIVE_TOKEN', '')
+    token = os.getenv("GDRIVE_TOKEN", "")
     headers = {"Authorization": f"Bearer {token}"}
 
     parameter = {"name": filename, "parents": ["### folder ID ###"]}
