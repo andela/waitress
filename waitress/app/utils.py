@@ -135,12 +135,11 @@ class UserRepository(object):
         return result, status
 
     @classmethod
-    def update(cls, trim=False):
+    def update(cls):
         """
         A method that update the user records.
 
         :param:
-        trim:= determines if old users should be removed from the database.
         """
         workspace_members, status = cls.get_all_slack_users()
         group_info = client.groups_info(channel=settings.SLACK_GROUP)
@@ -152,9 +151,9 @@ class UserRepository(object):
 
             if len(new_users):
                 if status:
-                    return cls.filter_add_user(workspace_members, new_users, trim)
-            else:
-                return "Users list wasn't changed."
+                    return cls.filter_add_user(workspace_members, new_users)
+            return "Users list wasn't changed."
+        return "Cant connect to slack."
 
     @classmethod
     def difference(cls, channel_members, queryset):
@@ -193,9 +192,9 @@ class UserRepository(object):
         """
         A function that normalizes retrieved information from Slack.
         """
-
         valid_users = {}
         invalid_users = []
+
         for user in users:
             user_id = user.get("id")
             is_user_invalid = cls.is_user_invalid(user)
@@ -207,43 +206,44 @@ class UserRepository(object):
         return valid_users, invalid_users
 
     @classmethod
-    def filter_add_user(cls, workspace_members, new_users, trim):
+    def filter_add_user(cls, workspace_members, new_users):
         """
         A method that retrieves users' info using the difference.
         # """
 
         valid_users, invalid_users = cls.normalize(workspace_members)
 
-        users_to_be_added = [user for user in new_users if user not in invalid_users]
+        users_to_be_added = [
+            user
+            for user in new_users
+            if user not in invalid_users
+        ]
 
         if not users_to_be_added:
             return "No new user found on slack."
 
-        if trim:
-            return cls.trim_away(invalid_users)
-
         try:
             with transaction.atomic():
-                for user_slack_id in users_to_be_added:
-                    current_user = valid_users[user_slack_id]
-                    SlackUser.create(current_user)
+                cls._add_new_users(users_to_be_added, valid_users)
+                cls._deactivate_invalid_users(invalid_users)
             return "Users updated successfully."
         except Exception as e:
             return f"Users couldn't be updated successfully - {e.args[0]}"
 
     @classmethod
-    def trim_away(cls, invalid_users):
-        """Trims away users for the system that have been deleted off Slack."""
-        deleted_users = [
-            user.delete()
-            for user in cls.user_queryset
-            if user.slack_id in invalid_users
-        ]
+    def _deactivate_invalid_users(cls, invalid_users):
+        """Deactivate users for the system that have been deleted off Slack."""
 
-        number_of_deleted_users = len(deleted_users)
-        if number_of_deleted_users:
-            return f"{number_of_deleted_users} Users deleted"
-        return "There are no invalid users found on slack."
+        for user in cls.user_queryset:
+            if user.slack_id in invalid_users:
+                user.is_active = False
+                user.save()
+
+    @classmethod
+    def _add_new_users(cls, users_to_be_added, valid_users):
+        for user_slack_id in users_to_be_added:
+            current_user = valid_users[user_slack_id]
+            SlackUser.create(current_user)
 
 
 class Time:
