@@ -213,11 +213,7 @@ class UserRepository(object):
 
         valid_users, invalid_users = cls.normalize(workspace_members)
 
-        users_to_be_added = [
-            user
-            for user in new_users
-            if user not in invalid_users
-        ]
+        users_to_be_added = [user for user in new_users if user not in invalid_users]
 
         if not users_to_be_added:
             return "No new user found on slack."

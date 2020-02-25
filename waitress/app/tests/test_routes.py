@@ -1,19 +1,15 @@
-from unittest.mock import patch
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.utils import timezone
-from rest_framework.test import APIRequestFactory
 
 from app.models import Passphrase, SlackUser
-from app.utils import UserRepository, regularize_guest_names
-from app.viewsets import UserViewSet
+from app.utils import regularize_guest_names
 
 
 def skipUnless(fn, *args, **kwargs):
     engine = settings.DATABASES["default"]["ENGINE"]
-    if engine is "django.db.backends.postgresql_psycopg2":
+    if engine == "django.db.backends.postgresql_psycopg2":
         return fn(*args, **kwargs)
 
 
@@ -134,11 +130,7 @@ class ServiceTestCase(TestCase):
         """
         Test that guest can be added.
         """
-        self.data = {
-            "name": "Guest 1",
-            "utype": "guest",
-            "passphrase": "passphrase"
-        }
+        self.data = {"name": "Guest 1", "utype": "guest", "passphrase": "passphrase"}
         response = self.client.post("/users/add/", self.data)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data.get("user_id"))
