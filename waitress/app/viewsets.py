@@ -274,88 +274,45 @@ class UserViewSet(viewsets.ViewSet):
         return Response(content, status=status)
 
 
-class PantryViewSet(viewsets.ViewSet):
+class ReportViewSet(viewsets.ViewSet):
     """
-    A simple ViewSet for accessing Pantry details
+    A simple ViewSet for viewing reports on meal sessions.
     """
 
-    queryset = Pantry.objects.all()
+    queryset = MealService.objects.all()
 
-    @action(methods=["post"], url_path="tap", detail=False)
-    def pantrytap(self, request):
+    @swagger_auto_schema()
+    def list(self, request):
         """
-        A method that taps a user via an NFC card for the pantry service
+        A method that returns the reports for a meal service.\n
+        * If the to query parameter is missing, the report is crammed until the present date.
         ---
         parameters:
-            - name: slackUserId
-              description: slack ID
-              required: true
+            - name: from
+              description: format yyyy-mm-dd or yyyy-mm
+              required: false
               type: string
-              paramType: form
+              paramType: query
+            - name: to
+              description: format yyyy-mm-dd
+              required: false
+              type: string
+              paramType: query
         """
-        slack_id = request.POST.get("slackUserId")
+        date_today = timezone.now().date().strftime("%Y-%m-%d")
+        start_date = request.GET.get("from", None)
+        end_date = request.GET.get("to", None)
+        queryset = self.queryset
+        if start_date is None:
+            queryset = self.queryset.filter(date__startswith=date_today)
+        else:
+            if len(start_date.split("-")) < 3:
+                start_date = "{0}-{1}".format(start_date, "01")
+                end_date = end_date if end_date is not None else date_today
+            queryset = self.queryset.filter(date__range=[start_date, end_date])
+        report = ReportSerializer.count(queryset)
 
-        if not slack_id:
-            content = {"message": "You're  unauthorized to make this request"}
-            return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
-
-        user = SlackUser.objects.filter(slack_id=slack_id).first()
-
-        if not user:
-            content = {"message": "The user doesnt exist on waitress"}
-            return Response(content, status=status_code.HTTP_404_NOT_FOUND)
-        user_tapped = Pantry.is_tapped(user.id)
-        content = {"firstname": user.firstname, "lastname": user.lastname}
-
-        if not user.is_active:
-            content[
-                "message"
-            ] = f"{user.firstname} has been deactivated. Contact the Ops team."
-            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
-
-        if user_tapped:
-            content["message"] = f"{user.firstname} has tapped already."
-            return Response(content, status=status_code.HTTP_406_NOT_ACCEPTABLE)
-
-        content["message"] = f"{user.firstname} has successfully tapped."
-        user_pantry_session = Pantry(user=user)
-        user_pantry_session.save()
-
-        return Response(content, status=status_code.HTTP_200_OK)
-
-    @action(methods=["post"], url_path="auth", detail=False)
-    def auth(self, request):
-        passphrase = request.POST.get("passphrase", "")
-
-        if not passphrase:
-            content = {"status": "failed", "message": "Passphrase not supplied"}
-            return Response(content, status=status_code.HTTP_400_BAD_REQUEST)
-
-        exists = Passphrase.exists(passphrase)
-
-        if not exists.status:
-            content = {
-                "status": "failed",
-                "message": "Invalid Passphrase. Reach out to Ops!",
-            }
-            return Response(content, status=status_code.HTTP_401_UNAUTHORIZED)
-
-        content = {"status": "success", "message": "Successfully authenticated."}
-        return Response(content, status=status_code.HTTP_200_OK)
-
-    @action(methods=["get"], url_path="report", detail=False)
-    def report(self, request):
-        reportDate = request.GET.get("date", date.today())
-
-        queryset = self.queryset.filter(date=reportDate).order_by("date")
-
-        content = {
-            "status": "success",
-            "data": {"date": reportDate, "count": queryset.count()},
-        }
-
-        return Response(content, status=status_code.HTTP_200_OK)
-
+        return Response(report, status_code.HTTP_200_OK)
 
 class MealSessionViewSet(viewsets.ViewSet):
     """
@@ -446,43 +403,3 @@ class MealSessionViewSet(viewsets.ViewSet):
 
         return Response(content, status=status)
 
-
-class ReportViewSet(viewsets.ViewSet):
-    """
-    A simple ViewSet for viewing reports on meal sessions.
-    """
-
-    queryset = MealService.objects.all()
-
-    @swagger_auto_schema()
-    def list(self, request):
-        """
-        A method that returns the reports for a meal service.\n
-        * If the to query parameter is missing, the report is crammed until the present date.
-        ---
-        parameters:
-            - name: from
-              description: format yyyy-mm-dd or yyyy-mm
-              required: false
-              type: string
-              paramType: query
-            - name: to
-              description: format yyyy-mm-dd
-              required: false
-              type: string
-              paramType: query
-        """
-        date_today = timezone.now().date().strftime("%Y-%m-%d")
-        start_date = request.GET.get("from", None)
-        end_date = request.GET.get("to", None)
-        queryset = self.queryset
-        if start_date is None:
-            queryset = self.queryset.filter(date__startswith=date_today)
-        else:
-            if len(start_date.split("-")) < 3:
-                start_date = "{0}-{1}".format(start_date, "01")
-                end_date = end_date if end_date is not None else date_today
-            queryset = self.queryset.filter(date__range=[start_date, end_date])
-        report = ReportSerializer.count(queryset)
-
-        return Response(report, status_code.HTTP_200_OK)
