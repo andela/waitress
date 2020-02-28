@@ -115,16 +115,6 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(content, status=status_code.HTTP_200_OK if status else 500)
 
-    @action(methods=["get"], url_path="remove-old-friends", detail=False)
-    def trim_users(self, request):
-        """
-        A method that trims the list of users.
-        """
-        status = UserRepository.update(trim=True)
-        content = {"status": status}
-
-        return Response(content, status=status_code.HTTP_200_OK)
-
     @swagger_auto_schema(
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
