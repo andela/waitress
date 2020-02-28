@@ -22,8 +22,12 @@ def handle_ops(db_connection, fetch_query, delete_query):
     if records:
         print(f"{len(records)} records found.")
         csv_path, filename = csv_service.create_csv(records)
-        print("Executing delete_query...")
-        db.execute_query(db_connection, delete_query)
+        # enable/disable the delete action
+        if os.getenv("TURN_ON_BACKUP_DELETE_ACTION") is True:
+            print("Executing delete_query...")
+            db.execute_query(db_connection, delete_query)
+        else:
+            print("skipping delete, it is a dangerous action :)")
         print("Uploading csv file to GoogleDrive...")
         gdrive.upload_to_drive(csv_path, filename)
         print("Cleaning up csv files...")
@@ -37,7 +41,7 @@ def run():
     try:
         today = date.today()
 
-        if today.day > os.getenv('BACKUP_DAY'):
+        if today.day > os.getenv("BACKUP_DAY"):
             # fail silently because it's not the 1st of the month
             slack_service.send_message("It's not yet time for backup")
             return
