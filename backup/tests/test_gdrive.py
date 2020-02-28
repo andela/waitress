@@ -1,11 +1,10 @@
-import os
 import datetime
+import os
 import unittest
 from unittest import mock
 
 import app_mealservice_records as records
-from backup import csv_service
-from backup import gdrive
+from backup import csv_service, gdrive
 
 
 class GDriveTestCase(unittest.TestCase):

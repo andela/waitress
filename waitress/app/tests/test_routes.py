@@ -19,6 +19,7 @@ def skip_unless_postgres(fn):
         if engine == "django.db.backends.postgresql_psycopg2":
             return fn(*args, **kwargs)
         return unittest.skip("requires postgres database")
+
     return wrapped_fn
 
 
@@ -140,26 +141,11 @@ class ServiceTestCase(TestCase):
         )
         assert response.status_code == 200
 
-    @patch("app.utils.UserRepository.update", return_value=[])
-    def test_can_trim_users(self, mock_user_repository_update):
-        """
-        Tests that old friends on Slack can be removed.
-        """
-        factory = APIRequestFactory()
-        request = factory.get("/users/remove-old-friends/")
-        UserViewSet.as_view({"get": "trim_users"})(request)
-        assert mock_user_repository_update.called
-        assert mock_user_repository_update.called_once_with(trim=True)
-
     def test_can_add_guest_user(self):
         """
         Test that guest can be added.
         """
-        self.data = {
-            "name": "Guest 1",
-            "utype": "guest",
-            "passphrase": "passphrase"
-        }
+        self.data = {"name": "Guest 1", "utype": "guest", "passphrase": "passphrase"}
         response = self.client.post(USER_ADD_URL, self.data)
         assert response.status_code == 200
         assert response.data.get("user_id")

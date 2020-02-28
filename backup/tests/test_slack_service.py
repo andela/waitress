@@ -14,8 +14,8 @@ class SlackServiceTestCase(unittest.TestCase):
             "message": {
                 "text": "this is a test",
                 "type": "message",
-                "ts": "1503435956.000247"
-            }
+                "ts": "1503435956.000247",
+            },
         }
         mocked_slack_client.chat_postMessage.return_value = mock_response
 

@@ -26,7 +26,7 @@ Before you start please ensure you have Python and PostgreSQL installed
     pip install pipenv
     ```
 
-3. Create a vritual environment with the command
+3. Create a virtual environment with the command
 
     ```bash
     pipenv shell
@@ -78,6 +78,12 @@ pipenv run python manage.py runserver
 * Navigate to the api [doc](http://localhost:8000/docs/) built with swagger
 
 And you are all setup :)
+
+## Backups
+
+The backup process is automated and is schedule to run on the 1st of every month. The backup process involves fetching the meals data for the waitress and pantry Django apps from the database, write them to a CSV file and upload the file to google drive. It uses slack to handle notifications to the waitress team. Scheduling is handle by the Heroku Scheduler.
+
+To run the backup script, just execute the backup/main.py.
 
 ## Testing
 
