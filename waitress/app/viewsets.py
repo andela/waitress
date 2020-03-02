@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from app.decorators import guard
-from app.models import MealService, MealSession, SlackUser, Pantry, Passphrase
+from app.models import MealService, MealSession, SlackUser, Passphrase
 from app.serializers import (
     FilterSerializer,
     ReportSerializer,

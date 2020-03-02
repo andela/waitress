@@ -1,16 +1,13 @@
 from datetime import date
 
-import pytz
-from django.shortcuts import get_object_or_404
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status as status_code
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from app.decorators import guard
-from app.models import Pantry, SlackUser, Passphrase, MealSession
+from app.models import SlackUser, Passphrase
+
+from pantry.models import Pantry
 
 
 class PantryViewSet(viewsets.ViewSet):
