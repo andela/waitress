@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 import os
-from datetime import date
 
 import psycopg2
 from dotenv import find_dotenv, load_dotenv
-
 import csv_service
 import db
 import gdrive
-from slack_service import SlackService, make_slack_client
+import slack
+
+from slack_service import SlackService
 from sql_queries import (DELETE_MEAL_RECORDS, DELETE_PANTRY_RECORDS,
                          FETCH_MEAL_RECORDS, FETCH_PANTRY_RECORDS)
 
@@ -42,18 +42,16 @@ def handle_ops(db_connection, fetch_query, delete_query, **kwargs):
         slack_service.send_message("No records found for this query.")
 
 
-def local_chat_post_message(**kwargs):
-    """Dummy function that does nothing when SLACK_TOKEN is not set."""
-    return {}
-
-
 def run():
     try:
         enable_delete = os.getenv("ENABLE_BACKUP_DELETE_ACTION") == "True"
         enable_gdrive_upload = os.getenv("GDRIVE_TOKEN", "") != ""
 
         channel = os.getenv("SLACK_CHANNEL")
-        client = make_slack_client(local_chat_post_message)
+        client = None
+        slack_token = os.getenv("SLACK_API_TOKEN")
+        if slack_token != "":
+            client = slack.WebClient(token=slack_token)
         slack_service = SlackService(client, channel)
 
         DATABASE_URL = os.getenv("DATABASE_URL")

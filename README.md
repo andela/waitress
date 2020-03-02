@@ -83,9 +83,8 @@ And you are all setup :)
 
 The backup process is automated and is schedule to run on the 1st of every month. The backup process involves fetching the meals data for the waitress and pantry Django apps from the database, write them to a CSV file and upload the file to google drive. It uses slack to handle notifications to the waitress team. Scheduling is handle by the Heroku Scheduler.
 
-The backup process uses some environment variables like `BACKUP_DAY` and `TURN_ON_BACKUP_DELETE_ACTION` to give the user more control.
+The backup process uses some environment variables like `ENABLE_BACKUP_DELETE_ACTION` to give the user more control.
 
-`BACKUP_DAY`: specifies the day after which the backup will be skipped
 `ENABLE_BACKUP_DELETE_ACTION`: is a boolean value used to enable/disable the delete operation on the database, especially when testing/developing locally.
 
 To run the backup script, just execute:
