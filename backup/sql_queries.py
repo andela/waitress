@@ -1,6 +1,6 @@
 from datetime import date
 
-CURRENT_DATE = date.today().strftime("%Y-%m-%e")
+CURRENT_DATE = date.today().strftime("%Y-%m-%d")
 
 FETCH_MEAL_RECORDS = f"""
 SELECT
@@ -21,8 +21,7 @@ ON
 WHERE
     date < '{CURRENT_DATE}'
 ORDER BY
-    app_mealservice.date DESC
-LIMIT 10;
+    app_mealservice.date DESC;
 """
 
 DELETE_MEAL_RECORDS = f"""

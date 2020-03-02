@@ -7,4 +7,4 @@ test:
 	coverage run waitress/manage.py test
 
 run-backup:
-	python backup/main.py
+	pipenv run python backup/main.py

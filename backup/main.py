@@ -21,25 +21,25 @@ def handle_ops(db_connection, fetch_query, delete_query, **kwargs):
     slack_service = kwargs.get("slack_service")
     if records:
         print(f"{len(records)} records found.")
-        print("writing records to csv file...")
+        print("Writing records to csv file...")
         csv_path, filename = csv_service.create_csv(records)
         # enable/disable the delete action
-        if kwargs.get("enable_delete", False) is True:
+        if kwargs.get("enable_delete"):
             print("Executing delete_query...")
             db.execute_query(db_connection, delete_query)
         else:
-            print("skipping delete, it is a dangerous action :)")
+            print("Skipping delete, it is a dangerous action :)")
         # enable/disable gdrive upload
-        if kwargs.get("enable_gdrive_upload") is True:
+        if kwargs.get("enable_gdrive_upload"):
             print("Uploading csv file to GoogleDrive...")
             gdrive.upload_to_drive(csv_path, filename)
         else:
-            print("skipping gdrive upload, no GDRIVE_TOKEN set")
+            print("Skipping gdrive upload, no GDRIVE_TOKEN set")
         print("Cleaning up csv files...")
         os.remove(csv_path)
     else:
-        print("There are no records for this query.")
-        slack_service.send_message("There are no records for this query.")
+        print("No records found for this query.")
+        slack_service.send_message("No records found for this query.")
 
 
 def local_chat_post_message(**kwargs):
@@ -49,18 +49,12 @@ def local_chat_post_message(**kwargs):
 
 def run():
     try:
-        today = date.today()
-        enable_delete = os.getenv("ENABLE_BACKUP_DELETE_ACTION")
+        enable_delete = os.getenv("ENABLE_BACKUP_DELETE_ACTION") == "True"
         enable_gdrive_upload = os.getenv("GDRIVE_TOKEN", "") != ""
 
         channel = os.getenv("SLACK_CHANNEL")
         client = make_slack_client(local_chat_post_message)
         slack_service = SlackService(client, channel)
-
-        if today.day > int(os.getenv("BACKUP_DAY")):
-            # fail silently because it's not the 1st of the month
-            slack_service.send_message("It's not yet time for backup")
-            return
 
         DATABASE_URL = os.getenv("DATABASE_URL")
         with psycopg2.connect(DATABASE_URL) as conn:
@@ -80,9 +74,10 @@ def run():
                 enable_gdrive_upload=enable_gdrive_upload,
                 slack_service=slack_service,
             )
+        print("Done. See you soon... :)")
 
     except Exception as error:
-        error_message = f"""An error occurred while pushing backup to Google Drive.
+        error_message = f"""An error occurred while running the backup.
 
 Error information ====> ```{error.args[0] if error.args else 'weird error'}```
 """
