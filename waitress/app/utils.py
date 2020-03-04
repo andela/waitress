@@ -10,7 +10,6 @@ from slack import WebClient
 
 from app.models import SlackUser
 
-
 client = WebClient(token=settings.SLACK_API_TOKEN)
 
 

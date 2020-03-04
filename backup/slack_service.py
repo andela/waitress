@@ -1,8 +1,7 @@
 import os
 
-from slack import WebClient
 from dotenv import find_dotenv, load_dotenv
-
+from slack import WebClient
 
 load_dotenv(find_dotenv())
 

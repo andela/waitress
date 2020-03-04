@@ -6,7 +6,6 @@ from slack import WebClient
 
 from waitress.app.models import SlackUser
 
-
 client = WebClient(token=settings.SLACK_API_TOKEN)
 
 group_info = client.groups_info(settings.SLACK_GROUP)

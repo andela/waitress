@@ -2,16 +2,12 @@
 import os
 from datetime import date
 
-from sql_queries import (
-    FETCH_MEAL_RECORDS,
-    DELETE_MEAL_RECORDS,
-    FETCH_PANTRY_RECORDS,
-    DELETE_PANTRY_RECORDS,
-)
-from slack_service import send_message
 from csv_service import create_csv
 from db import execute_query
 from gdrive import upload_to_drive
+from slack_service import send_message
+from sql_queries import (DELETE_MEAL_RECORDS, DELETE_PANTRY_RECORDS,
+                         FETCH_MEAL_RECORDS, FETCH_PANTRY_RECORDS)
 
 
 def handle_ops(fetch_query, delete_query):

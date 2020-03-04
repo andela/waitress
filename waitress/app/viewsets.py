@@ -12,13 +12,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from app.decorators import guard
-from app.models import MealService, MealSession, SlackUser, Passphrase
-from app.serializers import (
-    FilterSerializer,
-    ReportSerializer,
-    SecureUserSerializer,
-    UserSerializer,
-)
+from app.models import MealService, MealSession, Passphrase, SlackUser
+from app.serializers import (FilterSerializer, ReportSerializer,
+                             SecureUserSerializer, UserSerializer)
 from app.utils import Time, UserRepository
 
 
@@ -304,6 +300,7 @@ class ReportViewSet(viewsets.ViewSet):
 
         return Response(report, status_code.HTTP_200_OK)
 
+
 class MealSessionViewSet(viewsets.ViewSet):
     """
     A simple ViewSet for listing or retrieving meal session.
@@ -392,4 +389,3 @@ class MealSessionViewSet(viewsets.ViewSet):
             meal_in_progress[0].save()
 
         return Response(content, status=status)
-
