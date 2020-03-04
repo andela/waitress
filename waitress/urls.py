@@ -14,7 +14,9 @@ from app.views import (
     WeeklyReportHandler,
     schema_view,
 )
-from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet, PantryViewSet
+from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet
+
+from pantry.viewsets import PantryViewSet
 
 router = routers.SimpleRouter()
 router.register(r"meal-sessions", MealSessionViewSet)
