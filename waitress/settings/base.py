@@ -21,8 +21,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ENVIRONMENT = os.getenv("ENV")
 
 ALLOWED_HOSTS = []
-# DEBUG = not (ENVIRONMENT in ["production", "staging"])
-DEBUG = True
+DEBUG = os.getenv("DEBUG", False)
 
 # Application definition
 INSTALLED_APPS = [
