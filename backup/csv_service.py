@@ -1,5 +1,5 @@
-from datetime import datetime
 import csv
+from datetime import datetime
 
 
 def generate_file_name():

@@ -5,8 +5,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from app.models import SlackUser, Passphrase
-
+from app.models import Passphrase, SlackUser
 from pantry.models import Pantry
 
 
@@ -91,4 +90,3 @@ class PantryViewSet(viewsets.ViewSet):
         }
 
         return Response(content, status=status_code.HTTP_200_OK)
-

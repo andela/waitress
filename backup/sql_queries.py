@@ -1,6 +1,5 @@
 from datetime import date
 
-
 CURRENT_DATE = date.today().strftime("%Y-%m-%e")
 
 # FETCH_MEAL_RECORDS = 'SELECT * FROM app_slackuser;'

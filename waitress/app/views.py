@@ -1,5 +1,5 @@
-from datetime import date, datetime
 import json
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -10,9 +10,9 @@ from django.shortcuts import redirect, render
 from django.views import View
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_framework import status as status_code
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import status as status_code
 
 from app.models import MealService
 from app.utils import serialize_meal_service

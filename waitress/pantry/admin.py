@@ -1,11 +1,13 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 
-# Register your models here.
 from pantry.models import Pantry
 
-class PantryAdminSite(admin.AdminSite):
-  site_header: "Pantry Administration"
 
+@admin.register(Pantry)
+class PantryAdmin(admin.ModelAdmin):
+    list_display = ("id", "date", "user_id", "owner")
+    verbose_name = "Pantry"
+    verbose_name_plural = "Pantries"
 
-admin_site = PantryAdminSite(name="admin")
+    def owner(self, pantry):
+        return f"{pantry.user.firstname} {pantry.user.lastname}"

@@ -1,21 +1,14 @@
 from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.urls import path, re_path
 from rest_framework import routers
 
-from app.admin import admin_site
-from app.views import (
-    ChangePasswordHandler,
-    DailyReportHandler,
-    Dashboard,
-    LoginHandler,
-    LogoutHandler,
-    WeeklyReportHandler,
-    schema_view,
-)
+from app.views import (ChangePasswordHandler, DailyReportHandler, Dashboard,
+                       LoginHandler, LogoutHandler, WeeklyReportHandler,
+                       schema_view)
 from app.viewsets import MealSessionViewSet, ReportViewSet, UserViewSet
-
 from pantry.viewsets import PantryViewSet
 
 router = routers.SimpleRouter()
@@ -42,5 +35,5 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path("admin/", admin_site.urls),
+    path("admin/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
