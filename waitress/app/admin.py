@@ -1,19 +1,13 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 
 # Register your models here.
 from app.models import MealService, Passphrase, SlackUser
 
-
-class WaitressAdminSite(admin.AdminSite):
-    site_header = "Waitress Administration"
+# from django.contrib.auth.models import User
 
 
-class UserAdminSite(admin.ModelAdmin):
-    search_fields = ["username", "firstname"]
-    readonly_fields = ("password",)
 
-
+@admin.register(SlackUser)
 class SlackUserAdmin(admin.ModelAdmin):
     search_fields = ["firstname", "lastname"]
     list_display = ("id", "firstname", "lastname", "email", "slack_id", "is_active")
@@ -21,6 +15,7 @@ class SlackUserAdmin(admin.ModelAdmin):
     readonly_fields = ("slack_id",)
 
 
+@admin.register(MealService)
 class MealServiceAdmin(admin.ModelAdmin):
     search_fields = ["user__firstname", "user__lastname"]
     exclude = ("date_modified",)
@@ -29,12 +24,6 @@ class MealServiceAdmin(admin.ModelAdmin):
     readonly_fields = ("date", "user")
 
 
+@admin.register(Passphrase)
 class PassphraseAdmin(admin.ModelAdmin):
     list_display = ("word",)
-
-
-admin_site = WaitressAdminSite(name="admin")
-admin_site.register(User, UserAdminSite)
-admin_site.register(SlackUser, SlackUserAdmin)
-admin_site.register(MealService, MealServiceAdmin)
-admin_site.register(Passphrase, PassphraseAdmin)
