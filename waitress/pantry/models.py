@@ -5,7 +5,6 @@ from django.db import models
 from app.models import SlackUser
 
 
-# Create your models here.
 class Pantry(models.Model):
     """
     Model representing the pantry service
