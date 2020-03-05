@@ -26,7 +26,7 @@ Before you start please ensure you have Python and PostgreSQL installed
     pip install pipenv
     ```
 
-3. Create a vritual environment with the command
+3. Create a virtual environment with the command
 
     ```bash
     pipenv shell
@@ -79,10 +79,24 @@ pipenv run python manage.py runserver
 
 And you are all setup :)
 
+## Backups
+
+The backup process is automated and is schedule to run on the 1st of every month. The backup process involves fetching the meals data for the waitress and pantry Django apps from the database, write them to a CSV file and upload the file to google drive. It uses slack to handle notifications to the waitress team. Scheduling is handle by the Heroku Scheduler.
+
+The backup process uses some environment variables like `ENABLE_BACKUP_DELETE_ACTION` to give the user more control.
+
+`ENABLE_BACKUP_DELETE_ACTION`: is a boolean value used to enable/disable the delete operation on the database, especially when testing/developing locally.
+
+To run the backup script, just execute:
+
+```sh
+make run-backup
+```
+
 ## Testing
 
 To test the application and see the coverage
 
-1. Run coverage `coverage run manage.py test` to know how much of the app is covered by automated testing.
+1. Run coverage `make test` to know how much of the app is covered by automated testing.
 2. View the report of the coverage on your terminal `coverage report`.
 3. Produce the html of coverage result `coverage html`.

@@ -1,48 +1,86 @@
 #!/usr/bin/python3
 import os
-from datetime import date
 
-from csv_service import create_csv
-from db import execute_query
-from gdrive import upload_to_drive
-from slack_service import send_message
+import psycopg2
+import slack
+from dotenv import find_dotenv, load_dotenv
+
+import csv_service
+import db
+import gdrive
+from slack_service import SlackService
 from sql_queries import (DELETE_MEAL_RECORDS, DELETE_PANTRY_RECORDS,
                          FETCH_MEAL_RECORDS, FETCH_PANTRY_RECORDS)
 
+load_dotenv(find_dotenv())
 
-def handle_ops(fetch_query, delete_query):
-    records = execute_query(fetch_query)
-    print(fetch_query)
 
+def handle_ops(db_connection, fetch_query, delete_query, **kwargs):
+    print("Executing fetch_query...")
+    records = db.execute_query(db_connection, fetch_query, fetch=True)
+    slack_service = kwargs.get("slack_service")
     if records:
-        print("There are records.")
-        csv_path, filename = create_csv(records)
-        execute_query(delete_query)
-        upload_to_drive(csv_path, filename)
+        print(f"{len(records)} records found.")
+        print("Writing records to csv file...")
+        csv_path, filename = csv_service.create_csv(records)
+        # enable/disable the delete action
+        if kwargs.get("enable_delete"):
+            print("Executing delete_query...")
+            db.execute_query(db_connection, delete_query)
+        else:
+            print("Skipping delete, it is a dangerous action :)")
+        # enable/disable gdrive upload
+        if kwargs.get("enable_gdrive_upload"):
+            print("Uploading csv file to GoogleDrive...")
+            gdrive.upload_to_drive(csv_path, filename)
+        else:
+            print("Skipping gdrive upload, no GDRIVE_TOKEN set")
+        print("Cleaning up csv files...")
         os.remove(csv_path)
     else:
-        print("There are no records for this query.")
-        send_message("There are no records for this query.")
+        print("No records found for this query.")
+        slack_service.send_message("No records found for this query.")
 
 
 def run():
     try:
-        today = date.today()
+        enable_delete = os.getenv("ENABLE_BACKUP_DELETE_ACTION") == "True"
+        enable_gdrive_upload = os.getenv("GDRIVE_TOKEN", "") != ""
 
-        if today.day > 1:
-            # fail silently because it's not the first of the month
-            send_message("It's not yet time for backup")
-            return
+        channel = os.getenv("SLACK_CHANNEL")
+        client = None
+        slack_token = os.getenv("SLACK_API_TOKEN")
+        if slack_token != "":
+            client = slack.WebClient(token=slack_token)
+        slack_service = SlackService(client, channel)
 
-        handle_ops(FETCH_MEAL_RECORDS, DELETE_MEAL_RECORDS)
-        handle_ops(FETCH_PANTRY_RECORDS, DELETE_PANTRY_RECORDS)
+        DATABASE_URL = os.getenv("DATABASE_URL")
+        with psycopg2.connect(DATABASE_URL) as conn:
+            handle_ops(
+                conn,
+                FETCH_MEAL_RECORDS,
+                DELETE_MEAL_RECORDS,
+                enable_delete=enable_delete,
+                enable_gdrive_upload=enable_gdrive_upload,
+                slack_service=slack_service,
+            )
+            handle_ops(
+                conn,
+                FETCH_PANTRY_RECORDS,
+                DELETE_PANTRY_RECORDS,
+                enable_delete=enable_delete,
+                enable_gdrive_upload=enable_gdrive_upload,
+                slack_service=slack_service,
+            )
+        print("Done. See you soon... :)")
+
     except Exception as error:
-        raise error
-        errorMessage = f"""An error occured while pushing backup to Google Drive.
+        error_message = f"""An error occurred while running the backup.
 
 Error information ====> ```{error.args[0] if error.args else 'weird error'}```
 """
-        send_message(errorMessage)
+        slack_service.send_message(error_message)
+        raise error
 
 
 if __name__ == "__main__":

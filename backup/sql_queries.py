@@ -1,8 +1,7 @@
 from datetime import date
 
-CURRENT_DATE = date.today().strftime("%Y-%m-%e")
+CURRENT_DATE = date.today().strftime("%Y-%m-%d")
 
-# FETCH_MEAL_RECORDS = 'SELECT * FROM app_slackuser;'
 FETCH_MEAL_RECORDS = f"""
 SELECT
     to_char(app_mealservice.date, 'DD-MM-YYYY'),
@@ -22,8 +21,7 @@ ON
 WHERE
     date < '{CURRENT_DATE}'
 ORDER BY
-    app_mealservice.date
-DESC;
+    app_mealservice.date DESC;
 """
 
 DELETE_MEAL_RECORDS = f"""
@@ -49,8 +47,7 @@ ON
 WHERE
     date <= '{CURRENT_DATE}'
 ORDER BY
-    app_pantry.date
-DESC;
+    app_pantry.date DESC;
 """
 
 DELETE_PANTRY_RECORDS = f"""

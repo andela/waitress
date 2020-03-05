@@ -6,7 +6,6 @@ from app.models import MealService, Passphrase, SlackUser
 # from django.contrib.auth.models import User
 
 
-
 @admin.register(SlackUser)
 class SlackUserAdmin(admin.ModelAdmin):
     search_fields = ["firstname", "lastname"]

@@ -1,12 +1,11 @@
-import os
+class SlackService:
+    """SlackService allows communication with Slack."""
 
-from dotenv import find_dotenv, load_dotenv
-from slack import WebClient
+    def __init__(self, client, channel):
+        self.client = client
+        self.channel = channel
 
-load_dotenv(find_dotenv())
-
-client = WebClient(token=os.getenv("SLACK_API_TOKEN"))
-
-
-def send_message(message):
-    return client.chat_postMessage(channel="C0J8M5QMN", text=message)
+    def send_message(self, message):
+        if self.client is None:
+            return print(message)
+        return self.client.chat_postMessage(channel=self.channel, text=message)
