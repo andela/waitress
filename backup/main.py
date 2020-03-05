@@ -2,12 +2,12 @@
 import os
 
 import psycopg2
+import slack
 from dotenv import find_dotenv, load_dotenv
+
 import csv_service
 import db
 import gdrive
-import slack
-
 from slack_service import SlackService
 from sql_queries import (DELETE_MEAL_RECORDS, DELETE_PANTRY_RECORDS,
                          FETCH_MEAL_RECORDS, FETCH_PANTRY_RECORDS)

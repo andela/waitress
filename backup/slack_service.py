@@ -1,5 +1,6 @@
 class SlackService:
     """SlackService allows communication with Slack."""
+
     def __init__(self, client, channel):
         self.client = client
         self.channel = channel
